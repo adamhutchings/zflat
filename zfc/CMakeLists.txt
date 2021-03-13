@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+set (CMAKE_CXX_STANDARD 11)
+project(zflat)
+file(GLOB_RECURSE SOURCES ./*.cpp)
+add_executable(zfc ${SOURCES})
+target_include_directories(zfc PRIVATE .)
