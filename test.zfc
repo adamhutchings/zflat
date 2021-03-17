@@ -1,0 +1,4 @@
+~ comment ~
+break;
+a: int;
+a *= 3;
