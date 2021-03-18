@@ -42,4 +42,6 @@ enum TreeComp {
     USE_STATEMENT,
     PROGRAM,
 
+    TEOF,
+
 };
