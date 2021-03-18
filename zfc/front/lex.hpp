@@ -19,6 +19,7 @@ struct Token {
 
     inline const char* raw_content();
     Token(TreeComp t, std::string s);
+    Token();
 
 };
 
