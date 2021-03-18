@@ -109,16 +109,16 @@ void add_char(char c) {
 }
 
 Token process_character(std::ifstream& file) {
-    char c = file.get();
-    nexttok = file.peek();
     lasttok = curtok;
-    curtok = nexttok;
+    curtok = file.get();
+    nexttok = file.peek();
     if (cend >= TOK_MAX)
         return Token(TreeComp::ETOOLARGE, cbuf);
     if (ends_token(lasttok, curtok, nexttok)) {
-        add_char(c);
+        add_char(curtok);
         Token tok(TreeComp::DOT, cbuf);
         cend = 0;
+        memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);
         if (file.peek() == EOF) {
             tok.type = TreeComp::TEOF;
         }
