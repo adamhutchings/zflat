@@ -119,6 +119,9 @@ Token process_character(std::ifstream& file) {
         add_char(c);
         Token tok(TreeComp::DOT, cbuf);
         cend = 0;
+        if (file.peek() == EOF) {
+            tok.type = TreeComp::TEOF;
+        }
         return tok;
     } else {
         if (begins_token(lasttok, curtok, nexttok)) {
