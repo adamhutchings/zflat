@@ -9,6 +9,7 @@ enum TreeComp {
     COMMENT, // blank, discarded later
 
     // Errors
+    EGENERALERROR,
     ETOOLARGE,
     EOPENQUOTE,
     EOPENCOMMENT,
