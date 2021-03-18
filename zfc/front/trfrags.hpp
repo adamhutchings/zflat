@@ -8,6 +8,11 @@ enum TreeComp {
 
     COMMENT, // blank, discarded later
 
+    // Errors
+    ETOOLARGE,
+    EOPENQUOTE,
+    EOPENCOMMENT,
+
     // Token types
     IDENTIFIER,
     TYPENAME,
