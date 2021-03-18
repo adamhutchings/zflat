@@ -6,6 +6,8 @@
 
 enum TreeComp {
 
+    COMMENT, // blank, discarded later
+
     // Token types
     IDENTIFIER,
     TYPENAME,
