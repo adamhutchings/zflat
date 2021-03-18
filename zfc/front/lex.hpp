@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include <string.h>
+
 #include <front/trfrags.hpp>
 
 struct Token {
