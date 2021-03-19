@@ -33,13 +33,11 @@ enum TreeComp {
 
     // Tree fragments
     EXPRESSION,
-    BARE_VAR_DECL, // x: int
-    FULL_VAR_DECL, // x: int = 3
+    VAR_DECL,
     FLOW_STATEMENT, // break, return, continue
     STATEMENT,
     BLOCK_STATEMENT,
     FUNCTION_DECL,
-    USE_STATEMENT,
     PROGRAM,
 
     TEOF,
