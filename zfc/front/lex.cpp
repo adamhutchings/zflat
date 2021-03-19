@@ -186,7 +186,7 @@ Token process_character(std::ifstream& file) {
         ++linepos;
     }
     if (cend >= TOK_MAX)
-        return Token(TreeComp::ETOOLARGE, cbuf);
+        ZF_ERROR("token on line %u exceeded limit", line);
     if (ends_token(curtok, nexttok)) {
         lastwascolon = curtok == ':';
         add_char(curtok);

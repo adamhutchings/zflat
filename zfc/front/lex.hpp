@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include <front/trfrags.hpp>
+#include <util/error.hpp>
 
 struct Token {
 
