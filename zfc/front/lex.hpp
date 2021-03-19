@@ -19,7 +19,7 @@ struct Token {
     int line;
     int linepos;
 
-    inline const char* raw_content();
+    const char* raw_content();
     Token(TreeComp t, std::string s);
     Token();
 
@@ -27,4 +27,5 @@ struct Token {
 
 namespace lex {
     Token lex(std::ifstream& file);
+    void unlex(Token token);
 }

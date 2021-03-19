@@ -9,7 +9,7 @@ Token::Token(TreeComp t, std::string s)
 
 }
 
-inline const char* Token::raw_content() {
+const char* Token::raw_content() {
     return this->str.c_str();
 }
 
@@ -172,6 +172,8 @@ TreeComp get_type(std::string name) {
     return TreeComp::IDENTIFIER;
 }
 
+std::vector<Token> put_back_tokens;
+
 Token process_character(std::ifstream& file) {
     if (eofhit) return Token(TreeComp::TEOF, "");
     lasttok = curtok;
@@ -223,6 +225,13 @@ Token inner_get_token(std::ifstream& file) {
 
 Token lex::lex(std::ifstream& file) {
     Token tok;
-    while ( (tok = inner_get_token(file)).type == TreeComp::COMMENT );
+    if (put_back_tokens.size() > 0)
+        tok = put_back_tokens[put_back_tokens.size() - 1];
+    else
+        while ( (tok = inner_get_token(file)).type == TreeComp::COMMENT );
     return tok;
+}
+
+void lex::unlex(Token token) {
+    put_back_tokens.push_back(token);
 }
