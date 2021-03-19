@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <fstream>
 #include <vector>
 #include <string>
 
@@ -14,6 +15,8 @@ class ASTNode {
 public:
 
     virtual TreeComp type() = 0;
+
+    virtual void read(std::ifstream& file) = 0;
 
 };
 
@@ -30,6 +33,7 @@ struct VarDeclNode;
 struct ProgramNode : public ASTNode {
     std::vector<ProgramSub> components;
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
 
 struct ProgramSub : public ASTNode {};
@@ -39,15 +43,18 @@ struct FunctionNode : public ProgramSub {
     std::string retType;
     BlockStatementNode* body;
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
 
 struct StatementNode : public ProgramSub {
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
 
 struct BlockStatementNode : public StatementNode {
     std::vector<StatementNode> statements;
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
 
 struct ExprNode : public StatementNode {
@@ -56,17 +63,20 @@ struct ExprNode : public StatementNode {
     std::string op;
     ExprNode* right;
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
 
 struct FuncCallNode : public ExprNode {
     std::vector<ExprNode> args;
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
 
 struct ControlFlowNode : public StatementNode {
     std::string statement;
-    ExprNode expression;
+    ExprNode* expression;
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
 
 struct VarDeclNode : public StatementNode {
@@ -74,4 +84,5 @@ struct VarDeclNode : public StatementNode {
     std::string name;
     ExprNode* expr;
     TreeComp type() override;
+    void read(std::ifstream& file) override;
 };
