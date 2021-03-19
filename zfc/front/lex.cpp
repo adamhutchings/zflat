@@ -115,6 +115,8 @@ bool eofhit = false;
 
 bool lastwascolon = false;
 
+int line = 1, linepos = 1;
+
 TreeComp get_type(std::string name) {
     if (curtok == EOF) return TreeComp::TEOF;
     switch (curtok) {
@@ -175,6 +177,12 @@ Token process_character(std::ifstream& file) {
     lasttok = curtok;
     curtok = file.get();
     nexttok = file.peek();
+    if (curtok == '\n') {
+        ++line;
+        linepos = 1;
+    } else {
+        ++linepos;
+    }
     if (cend >= TOK_MAX)
         return Token(TreeComp::ETOOLARGE, cbuf);
     if (ends_token(curtok, nexttok)) {
@@ -206,6 +214,8 @@ Token process_character(std::ifstream& file) {
 Token inner_get_token(std::ifstream& file) {
     Token ret;
     while ( (ret = process_character(file)).type == TreeComp::EGENERALERROR );
+    ret.line = line;
+    ret.linepos = linepos;
     return ret;
 }
 
