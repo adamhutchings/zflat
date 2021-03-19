@@ -20,6 +20,6 @@ int main(int argc, char** argv) {
     }
     Token tok;
     while ( (tok = lex::lex(file)).type != TreeComp::TEOF ) {
-        printf("token: %-10s, type: %-5d\n", tok.str.c_str(), tok.type);
+        printf("token: %-10s, type: %-5d, line: %-5d, pos: %-5d\n", tok.str.c_str(), tok.type, tok.line, tok.linepos);
     }
 }
