@@ -68,6 +68,7 @@ bool is_always_tok(char c) {
         case '(':
         case ')':
         case ',':
+        case '.':
             return true;
         default:
             return false;
@@ -112,6 +113,63 @@ char lasttok = 0, curtok = 0, nexttok = 0;
 
 bool eofhit = false;
 
+bool lastwascolon = false;
+
+TreeComp get_type(std::string name) {
+    if (curtok == EOF) return TreeComp::TEOF;
+    switch (curtok) {
+        case '~':
+            return TreeComp::COMMENT;   
+        case '!':
+        case '%':
+        case '^':
+        case '&':
+        case '*':
+        case '-':
+        case '+':
+        case '|':
+        case '/':
+        case '<':
+        case '>':
+        case '=':
+            return TreeComp::OPERATOR;
+        case ':':
+            return TreeComp::COLON;
+        case ';':
+            return TreeComp::SEMICOLON;
+        case '[':
+            return TreeComp::OBRACKET;
+        case ']':
+            return TreeComp::CBRACKET;
+        case '{':
+            return TreeComp::OBRACE;
+        case '}':
+            return TreeComp::CBRACE;
+        case '(':
+            return TreeComp::OPAREN;
+        case ')':
+            return TreeComp::CPAREN;
+        case ',':
+            return TreeComp::COMMA;
+        case '.':
+            return TreeComp::DOT;
+        default:;
+    }
+    if (name == "break" || name == "continue" || name == "return")
+        return TreeComp::FLOW;
+    if (
+        name == "int" || name == "double" || name == "float" || name == "char"
+    ||  name == "short" || name == "long" || name == "bool" || name == "void"
+    ) return TreeComp::TYPENAME;
+    if (is_alpha(name[0])) {
+        return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
+    }
+    if (is_numeric(name[0]))
+        return TreeComp::LITERAL;
+    // when in doubt ...
+    return TreeComp::IDENTIFIER;
+}
+
 Token process_character(std::ifstream& file) {
     if (eofhit) return Token(TreeComp::TEOF, "");
     lasttok = curtok;
@@ -120,15 +178,14 @@ Token process_character(std::ifstream& file) {
     if (cend >= TOK_MAX)
         return Token(TreeComp::ETOOLARGE, cbuf);
     if (ends_token(curtok, nexttok)) {
+        lastwascolon = curtok == ':';
         add_char(curtok);
-        Token tok(TreeComp::DOT, cbuf);
+        Token tok(get_type(cbuf), cbuf);
         cend = 0;
         memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);
         if (curtok == EOF) {
-            tok.type = TreeComp::TEOF;
             eofhit = true;
         } else if (curtok == '~') {
-            tok.type = TreeComp::COMMENT;
             in_comment = false;
         }
         return tok;
