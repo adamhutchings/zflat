@@ -20,6 +20,6 @@ int main(int argc, char** argv) {
     }
     Token tok;
     while ( (tok = lex::lex(file)).type != TreeComp::TEOF ) {
-        std::cout << "token: " << tok.str << "\n";
+        printf("token: %-10s, type: %-5d\n", tok.str.c_str(), tok.type);
     }
 }
