@@ -74,59 +74,69 @@ bool is_always_tok(char c) {
     }
 }
 
-bool begins_token(char prev, char cur, char next) {
-    if (cur == '~')                 return (!in_comment);
-    if (in_comment)                 return false;
-    if (is_whitespace(cur))         return false;
-    if (is_whitespace(prev))        return true;
-    if (prev == '\0')               return true;
-    if (is_op_token(cur))           return true;
-    if (is_always_tok(cur))         return true;
-    return false;
-}
-
-bool ends_token(char prev, char cur, char next) {
-    if (cur == '~')                 return in_comment;
-    if (in_comment)                 return false;
-    if (is_whitespace(cur))         return false;
-    if (is_whitespace(next))        return true;
-    if (next  < 1)                  return true;
-    if (cur == '=')                 return !is_op_token(prev);
-    if (is_op_token(cur))           return true;
-    if (is_always_tok(cur))         return true;
-    return false;
-}
-
-char lasttok = 0, curtok = 0, nexttok = 0;
-
 const int TOK_MAX = 256;
 
 char cbuf[TOK_MAX + 1];
-char cend = 0;
+int cend = 0;
 
 void add_char(char c) {
     cbuf[cend++] = c;
 }
 
+bool begins_token(char prev, char cur) {
+    if (cur == '~')                 return (!in_comment);
+    if (in_comment)                 return false;
+    if (is_whitespace(cur))         return false;
+    if (is_whitespace(prev))        return true;
+    if (cend == 0)                  return true;
+    if (prev == '\0')               return true;
+    if (is_op_token(cur))           return true;
+    if (is_always_tok(cur))         return true;
+    if (is_always_tok(prev))         return true;
+    return false;
+}
+
+bool ends_token(char cur, char next) {
+    if (cur == '~')                 return in_comment;
+    if (in_comment)                 return false;
+    if (is_whitespace(cur))         return false;
+    if (is_whitespace(next))        return true;
+    if (next < 1)                   return true;
+    if (is_op_token(cur))           return (next != '=');
+    if (is_always_tok(cur))         return true;
+    if (is_always_tok(next))        return true;
+    return false;
+}
+
+char lasttok = 0, curtok = 0, nexttok = 0;
+
+bool eofhit = false;
+
 Token process_character(std::ifstream& file) {
+    if (eofhit) return Token(TreeComp::TEOF, "");
     lasttok = curtok;
     curtok = file.get();
     nexttok = file.peek();
     if (cend >= TOK_MAX)
         return Token(TreeComp::ETOOLARGE, cbuf);
-    if (ends_token(lasttok, curtok, nexttok)) {
+    if (ends_token(curtok, nexttok)) {
         add_char(curtok);
         Token tok(TreeComp::DOT, cbuf);
         cend = 0;
         memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);
-        if (file.peek() == EOF) {
+        if (curtok == EOF) {
             tok.type = TreeComp::TEOF;
+            eofhit = true;
+        } else if (curtok == '~') {
+            tok.type = TreeComp::COMMENT;
+            in_comment = false;
         }
         return tok;
     } else {
-        if (begins_token(lasttok, curtok, nexttok)) {
+        if (begins_token(lasttok, curtok)) {
             cend = 0;
-        } else if (curtok == '~') {
+        }
+        if (curtok == '~') {
             in_comment = !in_comment;
         }
         if (!is_whitespace(curtok)) {
