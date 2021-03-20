@@ -25,7 +25,11 @@ void ExprNode::read(std::ifstream& file) {
             left_expr->op = "";
             this->left = left_expr;
         } else if (next.type == TreeComp::OPAREN) {
-            // TODO - function call
+            // Put back this and last, parse function call
+            lex::unlex(next);
+            lex::unlex(start);
+            this->left = new FuncCallNode();
+            this->left->read(file);
         } else if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
             this->literal = next.str;
             this->left = this->right = nullptr;
