@@ -26,7 +26,7 @@ void ExprNode::read(std::ifstream& file) {
             this->left = left_expr;
         } else if (next.type == TreeComp::OPAREN) {
             // TODO - function call
-        } else if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN) {
+        } else if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
             this->literal = next.str;
             this->left = this->right = nullptr;
             this->op = "";

@@ -4,21 +4,15 @@
 #include <front/lex.hpp>
 #include <util/error.hpp>
 
-namespace parse {
-
-ControlFlowNode control_flow(std::ifstream& file) {
-    ControlFlowNode ret;
+void ControlFlowNode::read(std::ifstream& file) {
     Token tok = lex::lex(file);
     if (tok.type != TreeComp::FLOW)
         ZF_ERROR("expected \"break\", \"continue\", or \"return\" on line %d, instead got \"%u\".", tok.line, tok.type);
-    ret.statement = tok.str;
+    this->statement = tok.str;
     Token next = lex::lex(file);
     if (next.type == TreeComp::SEMICOLON) {
-        ret.expression = NULL;
+        this->expression = NULL;
     } else {
-        // TODO: parse expression here
+        this->expression->read(file);
     }
-    return ret;
-}
-
 }
