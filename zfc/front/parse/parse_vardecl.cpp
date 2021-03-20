@@ -13,11 +13,11 @@ void VarDeclNode::read(std::ifstream& file) {
     }
     Token next = lex::lex(file);
     if (next.type != TreeComp::COLON) {
-        ZF_ERROR("expected ':' on line %u, got \"%s\" instead", next.line, next.str);
+        ZF_ERROR("expected ':' on line %u, got \"%s\" instead", next.line, next.raw_content());
     }
     next = lex::lex(file);
     if (next.type != TreeComp::TYPENAME) {
-        ZF_ERROR("expected type name on line %u, found \"%s\" instead", next.line, next.str);
+        ZF_ERROR("expected type name on line %u, found \"%s\" instead", next.line, next.raw_content());
     } else {
         this->ntype = next.str;
     }
