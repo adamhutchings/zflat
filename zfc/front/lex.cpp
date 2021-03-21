@@ -175,7 +175,7 @@ TreeComp get_type(std::string name) {
 std::vector<Token> put_back_tokens;
 
 Token process_character(std::ifstream& file) {
-    if (eofhit) return Token(TreeComp::TEOF, "");
+    if (eofhit) return Token(TreeComp::TEOF, "[end of file]");
     lasttok = curtok;
     curtok = file.get();
     nexttok = file.peek();
