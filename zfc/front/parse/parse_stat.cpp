@@ -16,6 +16,7 @@ void StatementNode::read(std::ifstream& file) {
             this->inner->read(file);
             return;
         case TreeComp::IDENTIFIER:
+        case TreeComp::LITERAL:
             // Either expression or declaration.
             bool decl;
             next = lex::lex(file);
