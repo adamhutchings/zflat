@@ -9,7 +9,7 @@ void BlockStatementNode::read(std::ifstream& file) {
     Token tok = lex::lex(file);
 
     if (tok.type != OBRACE) {
-        ZF_ERROR("expected '{' on line %u, found \"%s\" instead", tok.line, tok.raw_content());
+        ZF_TOK_ERR(tok, "'{'");
     }
     while (true) {
         // Parse until we hit a closing brace
