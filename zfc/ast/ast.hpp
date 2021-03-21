@@ -10,6 +10,8 @@
 
 #include <front/trfrags.hpp>
 
+#define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.str)
+
 class ASTNode {
 
 public:
