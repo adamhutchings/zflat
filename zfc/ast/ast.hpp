@@ -33,7 +33,7 @@ struct ControlFlowNode;
 struct VarDeclNode;
 
 struct ProgramNode : public ASTNode {
-    std::vector<ProgramSub> components;
+    std::vector<ProgramSub*> components;
     TreeComp type() override;
     void read(std::ifstream& file) override;
 };
