@@ -78,7 +78,6 @@ struct FuncCallNode : public ExprNode {
     std::vector<ExprNode> args;
     std::string name;
     TreeComp type() override;
-    void read(std::ifstream& file) override;
 };
 
 struct ControlFlowNode : public InnerStatementNode {
