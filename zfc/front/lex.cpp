@@ -225,8 +225,10 @@ Token inner_get_token(std::ifstream& file) {
 
 Token lex::lex(std::ifstream& file) {
     Token tok;
-    if (put_back_tokens.size() > 0)
+    if (put_back_tokens.size() > 0) {
         tok = put_back_tokens[put_back_tokens.size() - 1];
+        put_back_tokens.pop_back();
+    }
     else
         while ( (tok = inner_get_token(file)).type == TreeComp::COMMENT );
     return tok;
