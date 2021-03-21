@@ -35,7 +35,7 @@ void StatementNode::read(std::ifstream& file) {
             this->inner->read(file);
             return;
         default:
-            ZF_TOK_ERR(initial, "control flow statement, identifier, or '{'");
+            ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
     }
 
     // Make sure to parse a trailing semicolon, except for block statements
