@@ -51,7 +51,6 @@ struct FunctionNode : public ProgramSub {
 
 struct InnerStatementNode : public ProgramSub {
     TreeComp type() override;
-    void read(std::ifstream& file) override;
 };
 
 struct StatementNode : public ProgramSub {
