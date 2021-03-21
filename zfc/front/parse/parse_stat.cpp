@@ -19,7 +19,7 @@ void StatementNode::read(std::ifstream& file) {
             // Either expression or declaration.
             bool decl;
             next = lex::lex(file);
-            decl = (next.type == TreeComp::DOT);
+            decl = (next.type == TreeComp::COLON);
             lex::unlex(next);
             lex::unlex(initial);
             if (decl)
