@@ -5,7 +5,8 @@
 #include <fstream>
 #include <iostream>
 
-#include <front/lex.hpp>
+#include <ast/ast.hpp>
+#include <front/parser.hpp>
 
 int main(int argc, char** argv) {
     if (argc == 1) {
@@ -18,8 +19,6 @@ int main(int argc, char** argv) {
         std::cerr << "Unable to open " << argv[1] << "\n";
         exit(-1);
     }
-    Token tok;
-    while ( (tok = lex::lex(file)).type != TreeComp::TEOF ) {
-        printf("token: %-10s, type: %-5d, line: %-5d, pos: %-5d\n", tok.str.c_str(), tok.type, tok.line, tok.linepos);
-    }
+    ProgramNode program;
+    program.read(file);
 }
