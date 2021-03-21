@@ -10,7 +10,7 @@
 
 #include <front/trfrags.hpp>
 
-#define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.str)
+#define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
 
 class ASTNode {
 
@@ -61,7 +61,7 @@ struct StatementNode : public ProgramSub {
 };
 
 struct BlockStatementNode : public InnerStatementNode {
-    std::vector<StatementNode> statements;
+    std::vector<StatementNode*> statements;
     TreeComp type() override;
     void read(std::ifstream& file) override;
 };
