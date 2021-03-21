@@ -37,5 +37,13 @@ void StatementNode::read(std::ifstream& file) {
         default:
             ZF_TOK_ERR(initial, "control flow statement, identifier, or '{'");
     }
+
+    // Make sure to parse a trailing semicolon, except for block statements
+    if (initial.type != TreeComp::OBRACE) {
+        Token sc = lex::lex(file);
+        if (sc.type != TreeComp::SEMICOLON)
+            ZF_TOK_ERR(sc, "semicolon");
+    }
+
 }
 
