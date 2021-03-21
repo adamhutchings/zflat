@@ -18,8 +18,8 @@ void BlockStatementNode::read(std::ifstream& file) {
             break;
         } else {
             lex::unlex(pclose);
-            StatementNode st;
-            st.read(file);
+            StatementNode* st = new StatementNode();
+            st->read(file);
             this->statements.push_back(st);
         }
     }
