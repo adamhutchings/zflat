@@ -13,6 +13,8 @@ void ProgramNode::read(std::ifstream& file) {
         if (endcheck.type == TEOF)
             break;
 
+        lex::unlex(endcheck);
+
         // Quick and dirty function definition check - check if second token is open paren
         auto first = lex::lex(file);
         auto opn = lex::lex(file);
