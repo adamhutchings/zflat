@@ -8,6 +8,10 @@ TreeComp FunctionNode::type() {
     return TreeComp::FUNCTION_DECL;
 }
 
+TreeComp InnerStatementNode::type() {
+    return TreeComp::STATEMENT;
+}
+
 TreeComp StatementNode::type() {
     return TreeComp::STATEMENT;
 }

@@ -46,18 +46,24 @@ struct FunctionNode : public ProgramSub {
     void read(std::ifstream& file) override;
 };
 
-struct StatementNode : public ProgramSub {
+struct InnerStatementNode : public ProgramSub {
     TreeComp type() override;
     void read(std::ifstream& file) override;
 };
 
-struct BlockStatementNode : public StatementNode {
+struct StatementNode : public ProgramSub {
+    InnerStatementNode* inner;
+    TreeComp type() override;
+    void read(std::ifstream& file) override; // DO NOT USE
+};
+
+struct BlockStatementNode : public InnerStatementNode {
     std::vector<StatementNode> statements;
     TreeComp type() override;
     void read(std::ifstream& file) override;
 };
 
-struct ExprNode : public StatementNode {
+struct ExprNode : public InnerStatementNode {
     std::string literal;
     ExprNode* left;
     std::string op;
@@ -73,14 +79,14 @@ struct FuncCallNode : public ExprNode {
     void read(std::ifstream& file) override;
 };
 
-struct ControlFlowNode : public StatementNode {
+struct ControlFlowNode : public InnerStatementNode {
     std::string statement;
     ExprNode* expression;
     TreeComp type() override;
     void read(std::ifstream& file) override;
 };
 
-struct VarDeclNode : public StatementNode {
+struct VarDeclNode : public InnerStatementNode {
     std::string ntype;
     std::string name;
     ExprNode* expr;
