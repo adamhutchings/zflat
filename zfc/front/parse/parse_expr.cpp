@@ -13,7 +13,7 @@ void ExprNode::read(std::ifstream& file) {
         // An extra closing ) should exist.
         auto close = lex::lex(file);
         if (close.type != TreeComp::CPAREN) {
-            ZF_ERROR("expected ) on line %u, found \"%s\" instead.", close.line, close.raw_content());
+            ZF_TOK_ERR(close, ")");
         }
     } else if (start.type == TreeComp::LITERAL || start.type == TreeComp::IDENTIFIER) {
         // We expect an operator or a function call.
@@ -37,11 +37,11 @@ void ExprNode::read(std::ifstream& file) {
             // Put back the next token, which is not part of the expr.
             lex::unlex(next);
         } else {
-            ZF_ERROR("expected an operator, ';' or '(' after %s on line %u, found %s instead.", start.raw_content(), start.line, next.raw_content());
+            ZF_TOK_ERR(next, "operator, ';', or '('");
         }
     } else {
         // Unary operators - not supported yet
-        ZF_ERROR("expected a value on line %u, found \"%s\" instead", start.line, start.str.c_str());
+        ZF_TOK_ERR(start, "value");
     }
 
 }
