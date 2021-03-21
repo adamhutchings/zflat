@@ -39,8 +39,9 @@ struct ProgramNode : public ASTNode {
 struct ProgramSub : public ASTNode {};
 
 struct FunctionNode : public ProgramSub {
+    std::string name;
     std::vector<VarDeclNode> args;
-    std::string retType;
+    std::string ret_type;
     BlockStatementNode* body;
     TreeComp type() override;
     void read(std::ifstream& file) override;
