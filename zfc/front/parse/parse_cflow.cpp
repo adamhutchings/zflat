@@ -7,7 +7,7 @@
 void ControlFlowNode::read(std::ifstream& file) {
     Token tok = lex::lex(file);
     if (tok.type != TreeComp::FLOW)
-        ZF_ERROR("expected \"break\", \"continue\", or \"return\" on line %d, instead got \"%u\".", tok.line, tok.type);
+        ZF_TOK_ERR(tok, "break, continue, or return");
     this->statement = tok.str;
     Token next = lex::lex(file);
     if (next.type == TreeComp::SEMICOLON) {

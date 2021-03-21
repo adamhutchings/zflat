@@ -7,17 +7,17 @@
 void VarDeclNode::read(std::ifstream& file) {
     Token init = lex::lex(file);
     if (init.type != TreeComp::IDENTIFIER) {
-        ZF_ERROR("expected identifier on line %u, found \"%s\"", init.line, init.raw_content());
+        ZF_TOK_ERR(init, "identifier");
     } else {
         this->name = init.str;
     }
     Token next = lex::lex(file);
     if (next.type != TreeComp::COLON) {
-        ZF_ERROR("expected ':' on line %u, got \"%s\" instead", next.line, next.raw_content());
+        ZF_TOK_ERR(next, "':'");
     }
     next = lex::lex(file);
     if (next.type != TreeComp::TYPENAME) {
-        ZF_ERROR("expected type name on line %u, found \"%s\" instead", next.line, next.raw_content());
+        ZF_TOK_ERR(next, "type name");
     } else {
         this->ntype = next.str;
     }

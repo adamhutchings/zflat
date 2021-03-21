@@ -9,13 +9,13 @@ void FuncCallNode::read(std::ifstream& file) {
     Token name = lex::lex(file);
 
     if (name.type != TreeComp::IDENTIFIER) {
-        ZF_ERROR("expected name on line %u, found \"%s\"", name.line, name.raw_content());
+        ZF_TOK_ERR(name, "identifier");
     } else {
         this->name = name.str;
     }
     Token opn = lex::lex(file);
     if (opn.type != TreeComp::OPAREN) {
-        ZF_ERROR("expected '(' on line %u, found \"%s\"", opn.line, opn.raw_content());
+        ZF_TOK_ERR(opn, "'('");
     }
 
     // Now we parse expressions, expect commas between them, and a closing paren at the end.
@@ -28,7 +28,7 @@ void FuncCallNode::read(std::ifstream& file) {
         else if (sep.type == TreeComp::CPAREN)
             break; // end of arg list
         else
-            ZF_ERROR("expected ',' or ')' after argument on line %u, found \"%s\" instead", sep.line, sep.raw_content());
+            ZF_TOK_ERR(sep, "',' or ')'");
     }
 
 }

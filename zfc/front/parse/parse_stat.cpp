@@ -33,8 +33,7 @@ void StatementNode::read(std::ifstream& file) {
             this->inner->read(file);
             return;
         default:
-            ZF_ERROR("Expected control flow statement, identifier, or '{' "
-            "on line %u, found \"%s\".", initial.line, initial.raw_content());
+            ZF_TOK_ERR(initial, "control flow statement, identifier, or '{'");
     }
 }
 
