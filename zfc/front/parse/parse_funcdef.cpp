@@ -28,7 +28,7 @@ void FunctionNode::read(std::ifstream& file) {
         Token peek = lex::lex(file);
         if (peek.type == TreeComp::CPAREN)
             break;
-        else if (peek.type == TreeComp::COMMA) /* next */;
+        else if (peek.type == TreeComp::COMMA || peek.type == TreeComp::OPAREN) /* next */;
         else
             ZF_TOK_ERR(peek, "',' or ')'");
         VarDeclNode* node = new VarDeclNode();
