@@ -16,9 +16,9 @@ bool check_fn(std::ifstream& file) {
     auto cl = lex::lex(file);
 
     return (first.type == TreeComp::IDENTIFIER
-    && opn == TreeComp::OPAREN
-    && un == TreeComp::IDENTIFIER
-    && cl == TreeComp::COLON);
+    && opn.type == TreeComp::OPAREN
+    && un.type == TreeComp::IDENTIFIER
+    && cl.type == TreeComp::COLON);
 
     lex::unlex(cl);
     lex::unlex(un);
