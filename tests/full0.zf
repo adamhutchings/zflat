@@ -1,0 +1,10 @@
+~/ full0 - test the first iteration of the parser.
+ / Here, we just have variable declarations, operators, functions, and control
+ / flow. No loops or ifs, or imports, or anything.
+ /~
+
+int function(x: int): int {
+    int y = x;
+    y *= 4;
+    return y / 3 + 5;
+}
