@@ -14,6 +14,7 @@ void ControlFlowNode::read(std::ifstream& file) {
         this->expression = NULL;
         lex::unlex(next); // statement expects a trailing ';'
     } else {
+        this->expression = new ExprNode();
         this->expression->read(file);
     }
 }
