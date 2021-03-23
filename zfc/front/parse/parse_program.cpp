@@ -38,15 +38,15 @@ void ProgramNode::read(std::ifstream& file) {
 
         lex::unlex(endcheck);
 
+        ProgramSub* sub;
+
         if (check_fn(file)) {
-            FunctionNode* node = new FunctionNode();
-            node->read(file);
-            this->components.push_back(node);
+            sub = new FunctionNode();
         } else {
-            StatementNode* node = new StatementNode();
-            node->read(file);
-            this->components.push_back(node);
+            sub = new StatementNode();
         }
+        sub->read(file);
+        this->components.push_back(sub);
 
     }
 
