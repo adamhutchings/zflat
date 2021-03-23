@@ -25,10 +25,14 @@ void VarDeclNode::read(std::ifstream& file) {
     // followed by anything valid (end of statement)              (end of function arg list) (next argument)
     if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
         this->expr = nullptr;
-    } else {
-        // parse an expression
         lex::unlex(next);
+    } else if (next.type == TreeComp::OPERATOR) {
+        // parse an expression (after an equals sign, check for this later)
         this->expr = new ExprNode();
         this->expr->read(file);
+    }
+    next = lex::lex(file);
+    if (next.type != TreeComp::SEMICOLON) {
+        ZF_TOK_ERR(next, "';'");
     }
 }
