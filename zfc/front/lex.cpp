@@ -98,11 +98,11 @@ bool begins_token(char prev, char cur) {
 }
 
 bool ends_token(char cur, char next) {
+    if (next < 1)                   return true;
     if (cur == '~')                 return in_comment;
     if (in_comment)                 return false;
     if (is_whitespace(cur))         return false;
     if (is_whitespace(next))        return true;
-    if (next < 1)                   return true;
     if (is_op_token(cur))           return (next != '=');
     if (is_always_tok(cur))         return true;
     if (is_always_tok(next))        return true;
@@ -175,7 +175,10 @@ TreeComp get_type(std::string name) {
 std::vector<Token> put_back_tokens;
 
 Token process_character(std::ifstream& file) {
-    if (eofhit) return Token(TreeComp::TEOF, "[end of file]");
+    if (eofhit) {
+        if (in_comment) ZF_ERROR("Open comment");
+        return Token(TreeComp::TEOF, "[end of file]");
+    }
     lasttok = curtok;
     curtok = file.get();
     nexttok = file.peek();
@@ -206,7 +209,7 @@ Token process_character(std::ifstream& file) {
         if (curtok == '~') {
             in_comment = !in_comment;
         }
-        if (!is_whitespace(curtok)) {
+        if (!is_whitespace(curtok) && !in_comment) {
             add_char(curtok);
         }
     }
