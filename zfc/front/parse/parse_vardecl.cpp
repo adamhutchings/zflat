@@ -35,4 +35,5 @@ void VarDeclNode::read(std::ifstream& file) {
     if (next.type != TreeComp::SEMICOLON) {
         ZF_TOK_ERR(next, "';'");
     }
+    lex::unlex(next);
 }
