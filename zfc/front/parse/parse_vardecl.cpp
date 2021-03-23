@@ -31,9 +31,4 @@ void VarDeclNode::read(std::ifstream& file) {
         this->expr = new ExprNode();
         this->expr->read(file);
     }
-    next = lex::lex(file);
-    if (next.type != TreeComp::SEMICOLON) {
-        ZF_TOK_ERR(next, "';'");
-    }
-    lex::unlex(next);
 }
