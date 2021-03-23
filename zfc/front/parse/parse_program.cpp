@@ -15,15 +15,17 @@ bool check_fn(std::ifstream& file) {
     auto un = lex::lex(file);
     auto cl = lex::lex(file);
 
-    return (first.type == TreeComp::IDENTIFIER
+    bool fn = first.type == TreeComp::IDENTIFIER
     && opn.type == TreeComp::OPAREN
     && un.type == TreeComp::IDENTIFIER
-    && cl.type == TreeComp::COLON);
+    && cl.type == TreeComp::COLON;
 
     lex::unlex(cl);
     lex::unlex(un);
     lex::unlex(opn);
     lex::unlex(first);
+
+    return fn;
 
 }
 
@@ -45,6 +47,7 @@ void ProgramNode::read(std::ifstream& file) {
         } else {
             sub = new StatementNode();
         }
+
         sub->read(file);
         this->components.push_back(sub);
 
