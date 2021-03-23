@@ -14,7 +14,7 @@ void StatementNode::read(std::ifstream& file) {
             lex::unlex(initial);
             this->inner = new ControlFlowNode();
             this->inner->read(file);
-            return;
+            goto out;
         case TreeComp::IDENTIFIER:
         case TreeComp::LITERAL:
             // Either expression or declaration.
@@ -28,7 +28,7 @@ void StatementNode::read(std::ifstream& file) {
             else
                 this->inner = new ExprNode();
             this->inner->read(file);
-            return;
+            goto out;
         case TreeComp::OBRACE:
             lex::unlex(initial);
             this->inner = new BlockStatementNode();
@@ -37,6 +37,8 @@ void StatementNode::read(std::ifstream& file) {
         default:
             ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
     }
+
+out:
 
     // Make sure to parse a trailing semicolon, except for block statements
     if (initial.type != TreeComp::OBRACE) {
