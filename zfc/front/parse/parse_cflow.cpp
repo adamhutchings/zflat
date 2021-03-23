@@ -13,6 +13,8 @@ void ControlFlowNode::read(std::ifstream& file) {
     if (next.type == TreeComp::SEMICOLON) {
         this->expression = NULL;
     } else {
+        if (next.type != TreeComp::OPERATOR)
+            ZF_TOK_ERR(next, "'='");
         this->expression->read(file);
     }
 }
