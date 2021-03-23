@@ -19,6 +19,10 @@ void FunctionNode::read(std::ifstream& file) {
     if (opn.type != TreeComp::OPAREN) {
         ZF_TOK_ERR(opn, "'('");
     }
+
+    // for while loop, start reading at 1st arg
+    lex::unlex(opn);
+
     while (true) {
         // Loop through to get function arguments
         Token peek = lex::lex(file);
