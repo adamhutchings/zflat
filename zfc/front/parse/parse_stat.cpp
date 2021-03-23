@@ -33,7 +33,7 @@ void StatementNode::read(std::ifstream& file) {
             lex::unlex(initial);
             this->inner = new BlockStatementNode();
             this->inner->read(file);
-            return;
+            goto out;
         default:
             ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
     }
