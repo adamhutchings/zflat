@@ -4,7 +4,7 @@
  /~
 
 function(x: int): int {
-    int y = x;
+    y: int = x;
     y *= 4;
     return y / 3 + 5;
 }
