@@ -12,6 +12,7 @@ void ControlFlowNode::read(std::ifstream& file) {
     Token next = lex::lex(file);
     if (next.type == TreeComp::SEMICOLON) {
         this->expression = NULL;
+        lex::unlex(next); // statement expects a trailing ';'
     } else {
         if (next.type != TreeComp::OPERATOR)
             ZF_TOK_ERR(next, "'='");
