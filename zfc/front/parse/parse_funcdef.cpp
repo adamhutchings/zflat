@@ -19,8 +19,6 @@ void FunctionNode::read(std::ifstream& file) {
     if (opn.type != TreeComp::OPAREN) {
         ZF_TOK_ERR(opn, "'('");
     }
-
-    VarDeclNode* node = new VarDeclNode();
     while (true) {
         // Loop through to get function arguments
         Token peek = lex::lex(file);
@@ -29,6 +27,7 @@ void FunctionNode::read(std::ifstream& file) {
         else if (peek.type == TreeComp::COMMA) /* next */;
         else
             ZF_TOK_ERR(peek, "',' or ')'");
+        VarDeclNode* node = new VarDeclNode();
         node->read(file);
         this->args.push_back(node);
     }
