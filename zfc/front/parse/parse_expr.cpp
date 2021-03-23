@@ -24,6 +24,8 @@ void ExprNode::read(std::ifstream& file) {
             left_expr->left = left_expr->right = nullptr;
             left_expr->op = "";
             this->left = left_expr;
+            this->right = new ExprNode();
+            this->right->read(file);
         } else if (next.type == TreeComp::OPAREN) {
             // Put back this and last, parse function call
             lex::unlex(next);
