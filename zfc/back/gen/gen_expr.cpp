@@ -5,6 +5,7 @@ void ExprNode::write(std::ofstream& file) {
 
     if (this->literal != "") {
         gen::write(file, literal);
+        return;
     }
 
     if (this->left == nullptr || this->right == nullptr || this->op == "")
