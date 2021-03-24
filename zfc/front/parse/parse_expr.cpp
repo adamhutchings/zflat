@@ -25,6 +25,7 @@ void ExprNode::read(std::ifstream& file) {
             left_expr->op = "";
             this->left = left_expr;
             this->op = next.str;
+            this->literal = nullptr;
             this->right = new ExprNode();
             this->right->read(file);
         } else if (next.type == TreeComp::OPAREN) {
