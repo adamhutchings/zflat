@@ -1,6 +1,6 @@
 # Z-Flat
 
-[!logo](https://github.com/adamhutchings/zflat/blob/main/logo.png)
+![logo](https://github.com/adamhutchings/zflat/blob/main/logo.png)
 
 ## Overview
 
