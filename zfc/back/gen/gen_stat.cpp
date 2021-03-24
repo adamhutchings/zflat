@@ -3,7 +3,8 @@
 
 void StatementNode::write(std::ofstream& file) {
 
+    gen::writeln(file, "");
     this->inner->write(file);
-    gen::writeln(file, ";");
+    gen::write(file, ";\n");
 
 }
