@@ -35,8 +35,9 @@ void ProgramNode::read(std::ifstream& file) {
 
         auto endcheck = lex::lex(file);
 
-        if (endcheck.type == TEOF)
-            break;
+        if (endcheck.type == TEOF) {
+            return;
+        }
 
         lex::unlex(endcheck);
 
