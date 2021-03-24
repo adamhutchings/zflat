@@ -12,15 +12,15 @@ void write(std::ostream& file, std::string str) {
 
     // tabs
     for (int i = 0; i < indentation_level; ++i)
-        file.write("\t");
+        file << "\t";
 
-    file.write(str.c_str());
+    file << str;
 
 }
 
 void writeln(std::ofstream& file, std::string str) {
     write(file, str);
-    file.write("\n");
+    file << "\t";
 }
 
 void indent() {
