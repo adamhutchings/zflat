@@ -8,15 +8,19 @@ int indentation_level = 0;
 
 namespace gen {
 
-void writeln(std::ostream& file, std::string str) {
+void write(std::ostream& file, std::string str) {
 
     // tabs
     for (int i = 0; i < indentation_level; ++i)
         file.write("\t");
 
     file.write(str.c_str());
-    file.write("\n");
 
+}
+
+void writeln(std::ofstream& file, std::string str) {
+    write(file, str);
+    file.write("\n");
 }
 
 void indent() {

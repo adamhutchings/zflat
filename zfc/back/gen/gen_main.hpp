@@ -14,6 +14,7 @@
 namespace gen {
 
 void writeln(std::ofstream& file, std::string str);
+void write(std::ofstream& file, std::string str);
 
 void indent();
 
