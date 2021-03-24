@@ -10,12 +10,11 @@ void gen::write(std::ofstream& file, std::string str) {
     file << str;
 }
 
-void gen::writeln(std::ofstream& file, std::string str) {
+void gen::newline(std::ofstream& file {
     file << "\n";
     // tabs
     for (int i = 0; i < indentation_level; ++i)
         file << "\t";
-    write(file, str);
 }
 
 void gen::indent() {

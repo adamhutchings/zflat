@@ -13,8 +13,8 @@
 
 namespace gen {
 
-void writeln(std::ofstream& file, std::string str);
 void write(std::ofstream& file, std::string str);
+void newline(std::ofstream& file);
 
 void indent();
 
