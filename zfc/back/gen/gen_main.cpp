@@ -6,7 +6,7 @@ int indentation_level = 0;
 
 }
 
-void gen::write(std::ostream& file, std::string str) {
+void gen::write(std::ofstream& file, std::string str) {
 
     // tabs
     for (int i = 0; i < indentation_level; ++i)
