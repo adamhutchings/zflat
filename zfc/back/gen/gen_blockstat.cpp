@@ -3,14 +3,17 @@
 
 void BlockStatementNode::write(std::ofstream& file) {
 
-    gen::write(file," {");
+    gen::newline(file);
+    gen::write(file, "{");
     gen::indent();
-    gen::writeln(file, "");
+    gen::newline(file);
     
     for (auto stmt : this->statements)
         stmt->write(file);
 
     gen::unindent();
-    gen::writeln(file, "}\n");
+    gen::newline(file);
+    gen::write(file, "}");
+    gen::newline(file);
 
 }
