@@ -19,6 +19,7 @@ public:
     virtual TreeComp type() = 0;
 
     virtual void read(std::ifstream& file) = 0;
+    virtual void write(std::ofstream& file) = 0;
 
 };
 
@@ -36,9 +37,13 @@ struct ProgramNode : public ASTNode {
     std::vector<ProgramSub*> components;
     TreeComp type() override;
     void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~ProgramNode();
 };
 
-struct ProgramSub : public ASTNode {};
+struct ProgramSub : public ASTNode {
+    virtual ~ProgramSub();
+};
 
 struct FunctionNode : public ProgramSub {
     std::string name;
@@ -47,22 +52,29 @@ struct FunctionNode : public ProgramSub {
     BlockStatementNode* body;
     TreeComp type() override;
     void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~FunctionNode();
 };
 
 struct InnerStatementNode : public ProgramSub {
     TreeComp type() override;
+    virtual ~InnerStatementNode() = 0;
 };
 
 struct StatementNode : public ProgramSub {
     InnerStatementNode* inner;
     TreeComp type() override;
-    void read(std::ifstream& file) override; // DO NOT USE
+    void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~StatementNode();
 };
 
 struct BlockStatementNode : public InnerStatementNode {
     std::vector<StatementNode*> statements;
     TreeComp type() override;
     void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~BlockStatementNode();
 };
 
 struct ExprNode : public InnerStatementNode {
@@ -72,12 +84,16 @@ struct ExprNode : public InnerStatementNode {
     ExprNode* right;
     TreeComp type() override;
     void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~ExprNode();
 };
 
 struct FuncCallNode : public ExprNode {
     std::vector<ExprNode*> args;
     std::string name;
     void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~FuncCallNode();
 };
 
 struct ControlFlowNode : public InnerStatementNode {
@@ -85,6 +101,8 @@ struct ControlFlowNode : public InnerStatementNode {
     ExprNode* expression;
     TreeComp type() override;
     void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~ControlFlowNode();
 };
 
 struct VarDeclNode : public InnerStatementNode {
@@ -93,4 +111,6 @@ struct VarDeclNode : public InnerStatementNode {
     ExprNode* expr;
     TreeComp type() override;
     void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~VarDeclNode();
 };
