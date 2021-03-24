@@ -21,6 +21,8 @@ void FuncCallNode::read(std::ifstream& file) {
     // Now we parse expressions, expect commas between them, and a closing paren at the end.
     ExprNode* expr = new ExprNode();
     while (1) {
+        Token ec = lex::lex(file);
+        if (ec.type == TreeComp::CPAREN) break;
         expr->read(file);
         this->args.push_back(expr);
         Token sep = lex::lex(file);
