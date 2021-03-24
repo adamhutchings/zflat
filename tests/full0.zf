@@ -3,8 +3,11 @@
  / flow. No loops or ifs, or imports, or anything.
  /~
 
-function(x: int): int {
-    y: int = x;
-    y *= 4;
-    return y / 3 + 5;
+foo(x: int, y: char): int {
+    z: int = x + y;
+    return z * 2 - (3 +  5);
+}
+
+bar(): int {
+    return foo(5, 6 - 7);
 }
