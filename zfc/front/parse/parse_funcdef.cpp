@@ -26,7 +26,6 @@ void FunctionNode::read(std::ifstream& file) {
     while (true) {
         // Loop through to get function arguments
         Token peek = lex::lex(file);
-        printf("peek: %s\n", peek.raw_content());
         if (peek.type == TreeComp::CPAREN)
             break;
         else if (peek.type == TreeComp::COMMA || peek.type == TreeComp::OPAREN) /* next */;
