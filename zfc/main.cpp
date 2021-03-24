@@ -5,20 +5,12 @@
 #include <fstream>
 #include <iostream>
 
-#include <ast/ast.hpp>
-#include <front/parser.hpp>
+#include <compile.hpp>
 
 int main(int argc, char** argv) {
-    if (argc == 1) {
-        std::cerr << "Expected file" << "\n";
+    if (argc < 3) {
+        std::cerr << "Expected files (for input and output)" << "\n";
         exit(-1);
     }
-    std::ifstream file;
-    file.open(argv[1]);
-    if (!file) {
-        std::cerr << "Unable to open " << argv[1] << "\n";
-        exit(-1);
-    }
-    ProgramNode program;
-    program.read(file);
+    compile(argv[1], argv[2]);
 }
