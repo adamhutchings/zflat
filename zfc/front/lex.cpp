@@ -98,11 +98,11 @@ bool begins_token(char prev, char cur) {
 }
 
 bool ends_token(char cur, char next) {
-    if (next < 1)                   return true;
     if (cur == '~')                 return in_comment;
     if (in_comment)                 return false;
     if (is_whitespace(cur))         return false;
     if (is_whitespace(next))        return true;
+    if (next < 1)                   return true;
     if (is_op_token(cur))           return (next != '=');
     if (is_always_tok(cur))         return true;
     if (is_always_tok(next))        return true;
