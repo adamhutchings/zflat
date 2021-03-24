@@ -9,7 +9,7 @@
 
 #include <util/error.hpp>
 
-#define ZF_BACK_ERR(msg, ...) ZF_ERROR("internal backend error: " __VA_ARGS__);
+#define ZF_BACK_ERR(...) ZF_ERROR("internal backend error: " __VA_ARGS__);
 
 namespace gen {
 

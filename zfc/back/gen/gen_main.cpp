@@ -7,18 +7,15 @@ int indentation_level = 0;
 }
 
 void gen::write(std::ofstream& file, std::string str) {
-
-    // tabs
-    for (int i = 0; i < indentation_level; ++i)
-        file << "\t";
-
     file << str;
-
 }
 
 void gen::writeln(std::ofstream& file, std::string str) {
+// tabs
+    for (int i = 0; i < indentation_level; ++i)
+        file << "\t";
     write(file, str);
-    file << "\t";
+    file << "\n";
 }
 
 void gen::indent() {
