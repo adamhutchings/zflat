@@ -18,20 +18,22 @@ void FuncCallNode::read(std::ifstream& file) {
         ZF_TOK_ERR(opn, "'('");
     }
 
-    // Now we parse expressions, expect commas between them, and a closing paren at the end.
-    ExprNode* expr = new ExprNode();
+    Token ctok = lex::lex(file);
+
+    if (ctok.type == TreeComp::CPAREN)
+        return; // no arguments
+
+    lex::unlex(ctok);
+
     while (1) {
-        Token ec = lex::lex(file);
-        if (ec.type == TreeComp::CPAREN) break;
-        lex::unlex(ec);
-        expr->read(file);
-        this->args.push_back(expr);
-        Token sep = lex::lex(file);
-        if (sep.type == TreeComp::COMMA) /* go on to the next */;
-        else if (sep.type == TreeComp::CPAREN)
-            break; // end of arg list
+        ExprNode* exp = new ExprNode();
+        exp->read(file);
+        this->args.push_back(exp);
+        Token peek = lex::lex(file);
+        if (peek.type == TreeComp::COMMA) continue;
+        else if (peek.type == TreeComp::CPAREN) return;
         else
-            ZF_TOK_ERR(sep, "',' or ')'");
+            ZF_TOK_ERR(peek, "',' or ')'");
     }
 
 }
