@@ -8,13 +8,17 @@ void ExprNode::write(std::ofstream& file) {
         return;
     }
 
-    if (this->left == nullptr || this->right == nullptr || this->op == "")
-        ZF_BACK_ERR("expression did not have both left and right");
+    if (this->left == nullptr)
+        ZF_BACK_ERR("expression did not have any content");
 
     this->left->write(file);
-    gen::write(file, " ");   
-    gen::write(file, this->op);
-    gen::write(file, " ");
-    this->right->write(file);
+    if (this->op != "") {
+        gen::write(file, " ");   
+        gen::write(file, this->op);
+    }
+    if (this->right != nullptr) {
+        gen::write(file, " ");
+        this->right->write(file);
+    }
 
 }
