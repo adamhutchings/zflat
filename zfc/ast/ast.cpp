@@ -15,6 +15,12 @@ TreeComp FunctionNode::type() {
     return TreeComp::FUNCTION_DECL;
 }
 
+FuncCallNode::~FuncCallNode() {
+    for (auto arg : this->args) {
+        delete arg;
+    }
+}
+
 FunctionNode::~FunctionNode() {
     for (auto decl : this->args) {
         delete decl;
@@ -25,6 +31,8 @@ FunctionNode::~FunctionNode() {
 TreeComp InnerStatementNode::type() {
     return TreeComp::STATEMENT;
 }
+
+InnerStatementNode::~InnerStatementNode() {}
 
 TreeComp StatementNode::type() {
     return TreeComp::STATEMENT;
