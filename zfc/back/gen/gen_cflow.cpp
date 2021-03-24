@@ -8,6 +8,4 @@ void ControlFlowNode::write(std::ofstream& file) {
     if (this->expression != nullptr)
         this->expression->write(file);
 
-    gen::writeln(file, ";");
-
 }
