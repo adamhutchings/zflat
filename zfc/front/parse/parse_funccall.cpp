@@ -23,6 +23,7 @@ void FuncCallNode::read(std::ifstream& file) {
     while (1) {
         Token ec = lex::lex(file);
         if (ec.type == TreeComp::CPAREN) break;
+        lex::unlex(ec);
         expr->read(file);
         this->args.push_back(expr);
         Token sep = lex::lex(file);
