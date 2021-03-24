@@ -35,7 +35,7 @@ void ExprNode::read(std::ifstream& file) {
             this->left = new FuncCallNode();
             this->left->read(file);
         } else if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
-            this->literal = next.str;
+            this->literal = start.str;
             this->left = this->right = nullptr;
             this->op = "";
             // Put back the next token, which is not part of the expr.
