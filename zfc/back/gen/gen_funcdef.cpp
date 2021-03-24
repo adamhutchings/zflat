@@ -1,5 +1,5 @@
 #include <ast/ast.hpp>
-#include <gen_main.hpp>
+#include <zfc/back/gen/gen_main.hpp>
 
 void FunctionNode::write(std::ofstream& file) {
 
