@@ -20,12 +20,17 @@ bool check_fn(std::ifstream& file) {
     && un.type == TreeComp::IDENTIFIER
     && cl.type == TreeComp::COLON;
 
+    bool pless = first.type == TreeComp::IDENTIFIER
+    && opn.type == TreeComp::OPAREN
+    && un.type == TreeComp::CPAREN
+    && cl.type == TreeComp::COLON;
+
     lex::unlex(cl);
     lex::unlex(un);
     lex::unlex(opn);
     lex::unlex(first);
 
-    return fn;
+    return fn || pless;
 
 }
 
