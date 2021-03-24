@@ -9,8 +9,9 @@ void FunctionNode::write(std::ofstream& file) {
 
     gen::write(file, "(");
     for (auto arg : this->args) {
+        if (arg != this->args[0])
+            gen::write(file, ",");
         arg->write(file);
-        gen::write(file, ", ");
     }
     gen::write(file, ")");
 
