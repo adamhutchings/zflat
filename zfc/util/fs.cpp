@@ -2,6 +2,9 @@
 
 namespace fs {
 
+std::ifstream ifile;
+std::ofstream ofile;
+
 std::vector<std::string> get_compile_list(std::string dir, std::string prefix=std::string(".")) {
     std::vector<std::string> ret;
     auto direc = opendir(dir.c_str());
