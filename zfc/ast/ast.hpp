@@ -13,9 +13,9 @@
 
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
 
-class ASTNode {
+struct ASTNode {
 
-public:
+    int line = -1;
 
     virtual TreeComp type() = 0;
 
