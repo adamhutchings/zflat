@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 
+#include <back/sym/symtab.hpp>
 #include <front/trfrags.hpp>
 
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
@@ -75,6 +76,7 @@ struct BlockStatementNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~BlockStatementNode();
+    sym::SymbolTable table; // the symbol table associated with this block
 };
 
 struct ExprNode : public InnerStatementNode {
