@@ -77,6 +77,7 @@ struct BlockStatementNode : public InnerStatementNode {
     void write(std::ofstream& file) override;
     virtual ~BlockStatementNode();
     sym::SymbolTable table; // the symbol table associated with this block
+    void build_symtab();
 };
 
 struct ExprNode : public InnerStatementNode {
