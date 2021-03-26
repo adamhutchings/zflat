@@ -28,6 +28,8 @@ struct FunctionSymbol : Symbol {
 
 struct SymbolTable {
     std::vector<Symbol*> syms;
+    void add(Symbol* sym);
+    void pop();
 };
 
 void open(SymbolTable tab);
