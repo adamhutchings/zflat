@@ -10,6 +10,7 @@
 
 #include <back/sym/symtab.hpp>
 #include <front/trfrags.hpp>
+#include <util/error.hpp>
 
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
 
@@ -21,6 +22,7 @@ struct ASTNode {
 
     virtual void read(std::ifstream& file) = 0;
     virtual void write(std::ofstream& file) = 0;
+    virtual void validate();
 
 };
 
@@ -40,6 +42,7 @@ struct ProgramNode : public ASTNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~ProgramNode();
+    void validate() override;
 };
 
 struct ProgramSub : public ASTNode {
@@ -55,6 +58,7 @@ struct FunctionNode : public ProgramSub {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~FunctionNode();
+    void validate() override;
 };
 
 struct InnerStatementNode : public ProgramSub {
@@ -68,6 +72,7 @@ struct StatementNode : public ProgramSub {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~StatementNode();
+    void validate() override;
 };
 
 struct BlockStatementNode : public InnerStatementNode {
@@ -76,8 +81,9 @@ struct BlockStatementNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~BlockStatementNode();
-    sym::SymbolTable table; // the symbol table associated with this block
+    sym::SymbolTable* table; // the symbol table associated with this block
     void build_symtab();
+    void validate() override;
 };
 
 struct ExprNode : public InnerStatementNode {
@@ -89,6 +95,7 @@ struct ExprNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~ExprNode();
+    void validate() override;
 };
 
 struct FuncCallNode : public ExprNode {
@@ -97,6 +104,7 @@ struct FuncCallNode : public ExprNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~FuncCallNode();
+    void validate() override;
 };
 
 struct ControlFlowNode : public InnerStatementNode {
@@ -106,6 +114,7 @@ struct ControlFlowNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~ControlFlowNode();
+    void validate() override;
 };
 
 struct VarDeclNode : public InnerStatementNode {
@@ -116,4 +125,5 @@ struct VarDeclNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~VarDeclNode();
+    void validate() override;
 };
