@@ -4,6 +4,8 @@
 
 ![screenshot](https://github.com/adamhutchings/zflat/blob/main/screenshot.png)
 
+[Discord](https://discord.gg/UPqeyvzPcq)
+
 
 ## Overview
 
