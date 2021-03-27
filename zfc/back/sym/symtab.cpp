@@ -1,12 +1,8 @@
 #include "symtab.hpp"
 
-namespace {
+namespace sym {
 
 std::vector<sym::SymbolTable*> tables;
-
-}
-
-namespace sym {
 
 void SymbolTable::add(Symbol* sym) {
     this->syms.push_back(sym);

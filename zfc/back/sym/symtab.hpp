@@ -32,8 +32,10 @@ struct SymbolTable {
     void pop();
 };
 
-void open(SymbolTable tab);
+void open(SymbolTable* tab);
 
 void close();
+
+extern std::vector<sym::SymbolTable*> tables;
 
 }
