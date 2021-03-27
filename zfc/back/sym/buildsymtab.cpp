@@ -3,6 +3,8 @@
 
 void BlockStatementNode::build_symtab() {
 
+    this->table = new sym::SymbolTable();
+
     VarDeclNode* vd;
 
     for (StatementNode* st : this->statements) {
@@ -11,7 +13,7 @@ void BlockStatementNode::build_symtab() {
             sym::Symbol* sym = new sym::Symbol;
             sym->name = vd->name;
             sym->type = vd->ntype;
-            this->table.add(sym);
+            this->table->add(sym);
         }
     }
 
