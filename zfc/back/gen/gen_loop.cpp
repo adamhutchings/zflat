@@ -11,26 +11,24 @@ void LoopNode::write(std::ofstream& file) {
     ++loopdepth;
 
     // CURSED - figuring out if the expression is a boolean or a number. Someone help!
-    if (this->expr->literal != "") {
-        if (this->expr->literal[0] >= '0' && this->expr->literal[0] <= '9') {
-            // It's a number. We need to figure out a loop variable.
-            std::string begin = "for (int ";
-            std::string counterv;
-            if (this->pred == nullptr) {
-                counterv = "lc_loop_";
-                counterv += std::to_string(loopdepth);
-            } else {
-                counterv = this->pred->name;
-            }
-            gen::write(file, begin + counterv + "= 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
-            this->stmt->write(file);
+    if (this->expr->get_type() == "int") {
+        // It's a number. We need to figure out a loop variable.
+        std::string begin = "for (int ";
+        std::string counterv;
+        if (this->pred == nullptr) {
+            counterv = "lc_loop_";
+            counterv += std::to_string(loopdepth);
         } else {
-            // Anything else is a boolean. For now.
-            gen::write(file, "while (");
-            this->expr->write(file);
-            gen::write(file, ")");
-            this->stmt->write(file);
+            counterv = this->pred->name;
         }
+        gen::write(file, begin + counterv + "= 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
+        this->stmt->write(file);
+    } else {
+        // Anything else is a boolean. For now.
+        gen::write(file, "while (");
+        this->expr->write(file);
+        gen::write(file, ")");
+        this->stmt->write(file);
     }
 
     --loopdepth;
