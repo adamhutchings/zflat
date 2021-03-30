@@ -18,6 +18,7 @@ std::string ExprNode::get_type() {
         if (this->right == nullptr) {
             ZF_ERROR("symbol tables not yet supported");
         } else {
+            if (this->op == "!=" || this->op[0] == '<' || this->op[0] == '>' || this->op == "==") return "bool";
             return this->left->get_type();
         }
     }
