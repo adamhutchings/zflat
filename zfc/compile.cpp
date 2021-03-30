@@ -7,6 +7,7 @@ void compile(std::string in, std::string out) {
         ZF_ERROR("Could not open %s for reading", in.c_str());
     ProgramNode pnode;
     pnode.read(ifile);
+    pnode.validate();
     std::ofstream ofile;
     ofile.open(out);
     if (!ofile)
