@@ -137,13 +137,13 @@ void FuncCallNode::validate() {
         ZF_ERROR("could not find function %s", this->name.c_str());
     }
     if (fn->argtypes.size() != this->args.size()) {
-        ZF_ERROR("incorrect number of arguments to function %s (expected %d, got %d)",
+        ZF_ERROR("incorrect number of arguments to function %s (expected %lu, got %lu)",
         this->name.c_str(), fn->argtypes.size(), this->args.size());
     }
     for (int i = 0; i < fn->argtypes.size(); i++) {
         if (this->args[i]->get_type() != op::strToType(fn->argtypes[i])) {
-            ZF_ERROR("incorrect argument type to function %s (expected %s, got %s)",
-            this->name.c_str(), fn->argtypes[i], this->args[i]->get_type());
+            ZF_ERROR("incorrect argument type to function %s (expected %s, got (ID) %d)",
+            this->name.c_str(), fn->argtypes[i].c_str(), this->args[i]->get_type());
         }
     }
 }
@@ -157,7 +157,7 @@ op::BuiltinType ExprNode::get_type() {
         } else {
             sym::Symbol* asym = sym::lookup(this->literal);
             if (asym == nullptr) {
-                ZF_ERROR("could not find name %s in expr", this->literal);
+                ZF_ERROR("could not find name %s in expr", this->literal.c_str());
             } else {
                 return op::strToType(asym->type);
             }
