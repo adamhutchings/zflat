@@ -38,6 +38,7 @@ void StatementNode::read(std::ifstream& file) {
             lex::unlex(initial);
             this->inner = new LoopNode();
             this->inner->read(file);
+            goto out;
         default:
             ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
     }
