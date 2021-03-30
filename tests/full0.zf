@@ -12,7 +12,7 @@ bar(): int {
     return foo(5, 6 - 7);
 }
 
-loops() {
+loops(): int {
     loop (3 < 5) {
         ~ effective infinite loop ~
     }
