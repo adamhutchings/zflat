@@ -23,7 +23,7 @@ struct ASTNode {
 
     virtual void read(std::ifstream& file) = 0;
     virtual void write(std::ofstream& file) = 0;
-    virtual void validate();
+    virtual void validate() = 0;
 
 };
 
