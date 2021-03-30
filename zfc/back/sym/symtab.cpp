@@ -30,6 +30,7 @@ Symbol* lookup(std::string name) {
                 return scopesymbol;
         }
     }
+    return nullptr;
 }
 
 }
