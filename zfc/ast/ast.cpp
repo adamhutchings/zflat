@@ -106,7 +106,7 @@ ControlFlowNode::~ControlFlowNode() {
 void ControlFlowNode::validate() {
     if (this->statement != "break")
         if (this->expression != nullptr)
-            ZF_ERROR("found expression after %s statement", this->statement);
+            ZF_ERROR("found expression after %s statement", this->statement.c_str());
 }
 
 TreeComp VarDeclNode::type() {
@@ -119,11 +119,31 @@ VarDeclNode::~VarDeclNode() {
 
 void VarDeclNode::validate() {
     this->expr->validate();
-    // TODO
+    auto* vsym = new sym::VariableSymbol();
+    vsym->name = this->name;
+    vsym->type = this->ntype;
+    sym::tables[sym::tables.size() - 1]->add(vsym);
 }
 
 FuncCallNode::~FuncCallNode() {
     for (auto arg : this->args) {
         delete arg;
+    }
+}
+
+void FuncCallNode::validate() {
+    sym::FunctionSymbol* fn = static_cast<sym::FunctionSymbol*>(sym::lookup(this->name));
+    if (fn == nullptr) {
+        ZF_ERROR("could not find function %s", this->name.c_str());
+    }
+    if (fn->argtypes.size() != this->args.size()) {
+        ZF_ERROR("incorrect number of arguments to function %s (expected %d, got %d)",
+        this->name.c_str(), fn->argtypes.size(), this->args.size());
+    }
+    for (int i = 0; i < fn->argtypes.size(); i++) {
+        if (this->args[i]->get_type() != fn->argtypes[i]) {
+            ZF_ERROR("incorrect argument type to function %s (expected %s, got %s)",
+            this->name.c_str(), fn->argtypes[i], this->args[i]->get_type());
+        }
     }
 }
