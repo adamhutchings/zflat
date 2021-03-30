@@ -17,19 +17,19 @@ void LoopNode::write(std::ofstream& file) {
             std::string begin = "for (int ";
             std::string counterv;
             if (this->pred == nullptr) {
-                counterv = "$lc_";
+                counterv = "___lc_";
                 counterv += loopdepth;
             } else {
                 counterv = this->pred->name;
             }
-            gen::write(file, begin + counterv + "= 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv);
-            this->expr->write(file);
+            gen::write(file, begin + counterv + "= 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
+            this->stmt->write(file);
         } else {
             // Anything else is a boolean. For now.
             gen::write(file, "while (");
             this->expr->write(file);
             gen::write(file, ")");
-            this->expr->write(file);
+            this->stmt->write(file);
         }
     }
 
