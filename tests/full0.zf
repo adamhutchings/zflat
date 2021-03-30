@@ -13,10 +13,9 @@ bar(): int {
 }
 
 loops(): int {
-    loop (3 < 5) {
-        ~ effective infinite loop ~
-    }
     loop (5) {
-        ~ loop five times ~
+        loop (10) {
+            f: char;
+        }
     }
 }
