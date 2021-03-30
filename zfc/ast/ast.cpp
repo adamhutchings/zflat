@@ -141,9 +141,38 @@ void FuncCallNode::validate() {
         this->name.c_str(), fn->argtypes.size(), this->args.size());
     }
     for (int i = 0; i < fn->argtypes.size(); i++) {
-        if (this->args[i]->get_type() != fn->argtypes[i]) {
+        if (this->args[i]->get_type() != op::strToType(fn->argtypes[i])) {
             ZF_ERROR("incorrect argument type to function %s (expected %s, got %s)",
             this->name.c_str(), fn->argtypes[i], this->args[i]->get_type());
+        }
+    }
+}
+
+op::BuiltinType ExprNode::get_type() {
+    if (this->literal != "") {
+        if (this->literal[0] >= '0' && this->literal[0] <= '9') {
+            // we have a number.
+            // TODO - decimal support
+            return op::BuiltinType::INT;
+        } else {
+            sym::Symbol* asym = sym::lookup(this->literal);
+            if (asym == nullptr) {
+                ZF_ERROR("could not find name %s in expr", this->literal);
+            } else {
+                return op::strToType(asym->type);
+            }
+        }
+    } else {
+        if (this->right != nullptr) {
+            return op::result(this->left->get_type(), op::strToOp(this->op), this->right->get_type());
+        } else {
+            this->left->validate(); // Should this be here for function calls? Not sure.
+            FuncCallNode* fn = dynamic_cast<FuncCallNode*> (this->left);
+            if (fn == nullptr) {
+                ZF_ERROR("internal error: found expr->left without expr->right");
+            }
+            sym::Symbol* fsym = static_cast<sym::FunctionSymbol*> (sym::lookup(fn->name));
+            return op::strToType(fsym->type);
         }
     }
 }
