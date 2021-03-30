@@ -34,6 +34,10 @@ void StatementNode::read(std::ifstream& file) {
             this->inner = new BlockStatementNode();
             this->inner->read(file);
             goto out;
+        case TreeComp::LOOP:
+            lex::unlex(initial);
+            this->inner = new LoopNode();
+            this->inner->read(file);
         default:
             ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
     }
@@ -41,7 +45,7 @@ void StatementNode::read(std::ifstream& file) {
 out:
 
     // Make sure to parse a trailing semicolon, except for block statements
-    if (initial.type != TreeComp::OBRACE) {
+    if (initial.type != TreeComp::OBRACE && initial.type != TreeComp::LOOP) {
         Token sc = lex::lex(file);
         if (sc.type != TreeComp::SEMICOLON)
             ZF_TOK_ERR(sc, "semicolon");
