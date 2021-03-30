@@ -38,4 +38,6 @@ void close();
 
 extern std::vector<sym::SymbolTable*> tables;
 
+Symbol* lookup(std::string name);
+
 }
