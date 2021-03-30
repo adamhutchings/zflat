@@ -1,19 +1,11 @@
 #include "ast.hpp"
 
-TreeComp ProgramNode::type() {
-    return TreeComp::PROGRAM;
-}
-
 ProgramNode::~ProgramNode() {
     for (auto sub : this->components)
         delete sub;
 }
 
 ProgramSub::~ProgramSub() {}
-
-TreeComp FunctionNode::type() {
-    return TreeComp::FUNCTION_DECL;
-}
 
 FuncCallNode::~FuncCallNode() {
     for (auto arg : this->args) {
@@ -28,22 +20,10 @@ FunctionNode::~FunctionNode() {
     delete this->body;
 }
 
-TreeComp InnerStatementNode::type() {
-    return TreeComp::STATEMENT;
-}
-
 InnerStatementNode::~InnerStatementNode() {}
-
-TreeComp StatementNode::type() {
-    return TreeComp::STATEMENT;
-}
 
 StatementNode::~StatementNode() {
     delete this->inner;
-}
-
-TreeComp BlockStatementNode::type() {
-    return TreeComp::BLOCK_STATEMENT;
 }
 
 BlockStatementNode::~BlockStatementNode() {
@@ -52,8 +32,10 @@ BlockStatementNode::~BlockStatementNode() {
     }
 }
 
-TreeComp ExprNode::type() {
-    return TreeComp::EXPRESSION;
+LoopNode::~LoopNode() {
+    delete this->expr;
+    delete this->pred;
+    delete this->stmt;
 }
 
 ExprNode::~ExprNode() {
@@ -61,16 +43,8 @@ ExprNode::~ExprNode() {
     if (this->right != nullptr) delete this->right;
 }
 
-TreeComp ControlFlowNode::type() {
-    return TreeComp::FLOW_STATEMENT;
-}
-
 ControlFlowNode::~ControlFlowNode() {
     if (this->expression != nullptr) delete this->expression;
-}
-
-TreeComp VarDeclNode::type() {
-    return TreeComp::VAR_DECL;
 }
 
 VarDeclNode::~VarDeclNode() {

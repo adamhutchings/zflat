@@ -11,3 +11,11 @@ foo(x: int, y: char): int {
 bar(): int {
     return foo(5, 6 - 7);
 }
+
+loops(): int {
+    loop (5) {
+        loop (10) {
+            f: char;
+        }
+    }
+}
