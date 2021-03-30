@@ -16,10 +16,12 @@ void LoopNode::write(std::ofstream& file) {
             // It's a number. We need to figure out a loop variable.
             std::string begin = "for (int ";
             std::string counterv;
-            if (this->pred == nullptr)
-                counterv = "$lc_" + loopdepth;
-            else
+            if (this->pred == nullptr) {
+                counterv = "$lc_";
+                counterv += loopdepth;
+            } else {
                 counterv = this->pred->name;
+            }
             gen::write(file, begin + counterv + "= 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv);
             this->expr->write(file);
         } else {
