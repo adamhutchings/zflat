@@ -17,8 +17,8 @@ void LoopNode::write(std::ofstream& file) {
             std::string begin = "for (int ";
             std::string counterv;
             if (this->pred == nullptr) {
-                counterv = "___lc_";
-                counterv += loopdepth;
+                counterv = "lc_loop_";
+                counterv += std::to_string(loopdepth);
             } else {
                 counterv = this->pred->name;
             }
