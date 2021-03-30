@@ -95,6 +95,7 @@ struct ExprNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~ExprNode();
+    std::string get_type();
     void validate() override;
 };
 
