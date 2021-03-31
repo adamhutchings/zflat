@@ -22,8 +22,8 @@ void VarDeclNode::read(std::ifstream& file) {
         this->ntype = next.str;
     }
     next = lex::lex(file);
-    // followed by anything valid (end of statement)              (end of function arg list) (next argument)
-    if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
+    // followed by anything valid (end of statement)              (end of function arg list) (next argument) opening loop block
+    if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA || next.type == OBRACE) {
         this->expr = nullptr;
         lex::unlex(next);
     } else if (next.type == TreeComp::OPERATOR) {
