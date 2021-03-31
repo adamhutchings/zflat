@@ -98,6 +98,7 @@ struct ExprNode : public InnerStatementNode {
     void write(std::ofstream& file) override;
     virtual ~ExprNode();
     std::string get_type();
+    void reorder();
 };
 
 struct FuncCallNode : public ExprNode {
