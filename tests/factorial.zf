@@ -1,0 +1,19 @@
+~/ factorial /~
+
+~ recursive implementation ~
+factorial_r(x: int): int {
+    if (x < 2) {
+        return 1;
+    } else {
+        return x * factorial(x - 1);
+    }
+}
+
+~ iterative implementation ~
+factorial_i(x: int): int {
+    ret: int = 1;
+    loop(x): i: int {
+        ret *= (i + 1);
+    }
+    return ret;
+}
