@@ -39,6 +39,9 @@ void StatementNode::read(std::ifstream& file) {
             this->inner = new LoopNode();
             this->inner->read(file);
             goto out;
+        case TreeComp::SEMICOLON:
+            this->inner = nullptr;
+            goto out;
         default:
             ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
     }
