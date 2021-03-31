@@ -5,6 +5,11 @@ void StatementNode::write(std::ofstream& file) {
 
     gen::newline(file);
     this->inner->write(file);
-    gen::write(file, ";\n");
+    if (
+        dynamic_cast<BlockStatementNode*> (this->inner) == nullptr
+        && dynamic_cast<IfNode*> (this->inner) == nullptr
+        && dynamic_cast<LoopNode*> (this->inner) == nullptr
+    )
+        gen::write(file, ";\n");
 
 }
