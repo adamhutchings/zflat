@@ -33,6 +33,7 @@ void IfNode::read(std::ifstream& file) {
         this->else_block->read(file);
     } else {
         lex::unlex(pot);
+        this->else_block = nullptr;
     }
 
 }
