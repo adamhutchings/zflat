@@ -80,6 +80,15 @@ struct LoopNode : public InnerStatementNode {
     virtual ~LoopNode();
 };
 
+struct IfNode : public InnerStatementNode {
+    ExprNode* expr;
+    StatementNode* stmt;
+    StatementNode* else_block; // may be nullptr
+    void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    virtual ~IfNode();
+};
+
 struct ExprNode : public InnerStatementNode {
     std::string literal;
     ExprNode* left;

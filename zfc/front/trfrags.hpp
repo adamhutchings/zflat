@@ -31,6 +31,8 @@ enum TreeComp {
     DOT,
     FLOW, // break, continue return
     LOOP, // loop
+    IF,
+    ELSE,
 
     // Tree fragments
     EXPRESSION,
