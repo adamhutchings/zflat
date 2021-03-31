@@ -39,6 +39,11 @@ void StatementNode::read(std::ifstream& file) {
             this->inner = new LoopNode();
             this->inner->read(file);
             goto out;
+        case TreeComp::IF:
+            lex::unlex(initial);
+            this->inner = new IfNode();
+            this->inner->read(file);
+            goto out;
         case TreeComp::SEMICOLON:
             lex::unlex(initial);
             this->inner = nullptr;
