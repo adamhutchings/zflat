@@ -40,6 +40,7 @@ void StatementNode::read(std::ifstream& file) {
             this->inner->read(file);
             goto out;
         case TreeComp::SEMICOLON:
+            lex::unlex(initial);
             this->inner = nullptr;
             goto out;
         default:
