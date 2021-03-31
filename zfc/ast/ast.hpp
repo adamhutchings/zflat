@@ -99,6 +99,7 @@ struct ExprNode : public InnerStatementNode {
     virtual ~ExprNode();
     std::string get_type();
     void reorder();
+    bool locked; // whether the expr should not be reordered (although its children may be)
 };
 
 struct FuncCallNode : public ExprNode {

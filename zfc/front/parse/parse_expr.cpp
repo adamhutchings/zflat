@@ -7,6 +7,8 @@
 void ExprNode::read(std::ifstream& file) {
 
     auto start = lex::lex(file);
+    
+    this->locked = false;
 
     if (start.type == TreeComp::OPAREN) {
         this->read(file);
@@ -36,6 +38,7 @@ void ExprNode::read(std::ifstream& file) {
             this->left->read(file);
             this->literal = this->op = "";
             this->right = nullptr;
+            this->locked = true;
         } else if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
             this->literal = start.str;
             this->left = this->right = nullptr;
