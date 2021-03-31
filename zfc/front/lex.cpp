@@ -164,6 +164,8 @@ TreeComp get_type(std::string name) {
     ||  name == "short" || name == "long" || name == "bool" || name == "void"
     ) return TreeComp::TYPENAME;
     if (name == "loop") return TreeComp::LOOP;
+    if (name == "if") return TreeComp::IF;
+    if (name == "else") return TreeComp::ELSE;
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }
