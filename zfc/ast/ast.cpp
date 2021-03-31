@@ -35,6 +35,7 @@ BlockStatementNode::~BlockStatementNode() {
 IfNode::~IfNode() {
     delete this->expr;
     delete this->stmt;
+    if (this->else_block != nullptr) delete this->else_block;
 }
 
 LoopNode::~LoopNode() {
