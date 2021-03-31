@@ -55,7 +55,7 @@ void StatementNode::read(std::ifstream& file) {
 out:
 
     // Make sure to parse a trailing semicolon, except for block statements
-    if (initial.type != TreeComp::OBRACE && initial.type != TreeComp::LOOP) {
+    if (initial.type != TreeComp::OBRACE && initial.type != TreeComp::LOOP && initial.type != TreeComp::IF) {
         Token sc = lex::lex(file);
         if (sc.type != TreeComp::SEMICOLON)
             ZF_TOK_ERR(sc, "semicolon");
