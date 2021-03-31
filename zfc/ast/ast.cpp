@@ -32,6 +32,11 @@ BlockStatementNode::~BlockStatementNode() {
     }
 }
 
+IfNode::~IfNode() {
+    delete this->expr;
+    delete this->stmt;
+}
+
 LoopNode::~LoopNode() {
     delete this->expr;
     delete this->pred;
