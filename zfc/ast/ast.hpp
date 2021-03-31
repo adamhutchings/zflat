@@ -83,6 +83,7 @@ struct LoopNode : public InnerStatementNode {
 struct IfNode : public InnerStatementNode {
     ExprNode* expr;
     StatementNode* stmt;
+    StatementNode* else_block; // may be nullptr
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     virtual ~IfNode();
