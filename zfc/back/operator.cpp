@@ -8,7 +8,7 @@ int binding_order(Operator a, Operator b) {
 }
 
 Operator strToOp(std::string in) {
-
+    return Operator::ADD; // TODO
 }
 
 }
