@@ -57,8 +57,8 @@ int binding_order(Operator a, Operator b);
 
 Operator strToOp(std::string in);
 
-void reorder(ProgramNode* pn);
-
 } // namespace op
+
+void reorder(ProgramNode* pn);
 
 #undef OP_GROUP_SIZE
