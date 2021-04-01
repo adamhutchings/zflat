@@ -8,7 +8,29 @@ int binding_order(Operator a, Operator b) {
 }
 
 Operator strToOp(std::string in) {
-    return Operator::ADD; // TODO
+    if (in == "=") return EQUALS;
+    if (in == "+=") return ADDEQ;
+    if (in == "-=") return SUBEQ;
+    if (in == "*=") return MULEQ;
+    if (in == "/=") return DIVEQ;
+    if (in == "%=") return REMEQ;
+    if (in == "&=") return ANDEQ;
+    if (in == "|=") return OREQ;
+    if (in == "^=") return XOREQ;
+    if (in == "==") return EQ;
+    if (in == "!=") return NEQ;
+    if (in == ">") return GREATER;
+    if (in == "<") return LESSER;
+    if (in == ">=") return GREQ;
+    if (in == "<=") return LESSEQ;
+    if (in == "+") return ADD;
+    if (in == "-") return SUB;
+    if (in == "*") return MUL;
+    if (in == "/") return DIV;
+    if (in == "%") return REM;
+    if (in == "&") return AND;
+    if (in == "|") return OR;
+    if (in == "^") return XOR;
 }
 
 }
