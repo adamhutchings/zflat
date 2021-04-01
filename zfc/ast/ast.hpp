@@ -22,7 +22,7 @@ public:
     // Apply a given function to all nodes and children.
     virtual void apply( void (*fn)(ASTNode*) ) = 0;
 
-    virtual ~ASTNode();
+    virtual ~ASTNode() {}
 
 };
 
@@ -46,7 +46,7 @@ struct ProgramNode : public ASTNode {
 };
 
 struct ProgramSub : public ASTNode {
-    virtual ~ProgramSub();
+    virtual ~ProgramSub() {}
 };
 
 struct FunctionNode : public ProgramSub {
@@ -57,11 +57,11 @@ struct FunctionNode : public ProgramSub {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~FunctionNode();
+    virtual ~FunctionNode() {}
 };
 
 struct InnerStatementNode : public ProgramSub {
-    virtual ~InnerStatementNode();
+    virtual ~InnerStatementNode() {}
 };
 
 struct StatementNode : public ProgramSub {
@@ -69,7 +69,7 @@ struct StatementNode : public ProgramSub {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~StatementNode();
+    virtual ~StatementNode() {}
 };
 
 struct BlockStatementNode : public InnerStatementNode {
@@ -77,7 +77,7 @@ struct BlockStatementNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~BlockStatementNode();
+    virtual ~BlockStatementNode() {}
 };
 
 struct LoopNode : public InnerStatementNode {
@@ -87,7 +87,7 @@ struct LoopNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~LoopNode();
+    virtual ~LoopNode() {}
 };
 
 struct IfNode : public InnerStatementNode {
@@ -97,7 +97,7 @@ struct IfNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~IfNode();
+    virtual ~IfNode() {}
 };
 
 struct ExprNode : public InnerStatementNode {
@@ -111,7 +111,7 @@ struct ExprNode : public InnerStatementNode {
     std::string get_type();
     void reorder();
     bool locked; // whether the expr should not be reordered (although its children may be)
-    virtual ~ExprNode();
+    virtual ~ExprNode() {}
 };
 
 struct FuncCallNode : public ExprNode {
@@ -120,7 +120,7 @@ struct FuncCallNode : public ExprNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~FuncCallNode();
+    virtual ~FuncCallNode() {}
 };
 
 struct ControlFlowNode : public InnerStatementNode {
@@ -129,7 +129,7 @@ struct ControlFlowNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~ControlFlowNode();
+    virtual ~ControlFlowNode() {}
 };
 
 struct VarDeclNode : public InnerStatementNode {
@@ -139,5 +139,5 @@ struct VarDeclNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    virtual ~VarDeclNode();
+    virtual ~VarDeclNode() {}
 };
