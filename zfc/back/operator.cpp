@@ -31,6 +31,7 @@ Operator strToOp(std::string in) {
     if (in == "&") return AND;
     if (in == "|") return OR;
     if (in == "^") return XOR;
+    return INVALID;
 }
 
 }

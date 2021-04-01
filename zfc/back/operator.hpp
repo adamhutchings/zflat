@@ -48,6 +48,8 @@ enum Operator {
     OR, // |
     XOR, // ^
 
+    INVALID,
+
 };
 
 // -1 if a binds more tightly than b
