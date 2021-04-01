@@ -13,7 +13,7 @@ void FunctionNode::write(std::ofstream& file) {
             gen::write(file, ",");
         arg->write(file);
     }
-    gen::write(file, ")");
+    gen::write(file, ") ");
 
     this->body->write(file);
 

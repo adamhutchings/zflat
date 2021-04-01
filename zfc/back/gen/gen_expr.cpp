@@ -3,9 +3,11 @@
 
 void ExprNode::write(std::ofstream& file) {
 
+    gen::write(file, "(");
+
     if (this->literal != "") {
         gen::write(file, literal);
-        return;
+        goto out;
     }
 
     if (this->left == nullptr)
@@ -20,5 +22,8 @@ void ExprNode::write(std::ofstream& file) {
         gen::write(file, " ");
         this->right->write(file);
     }
+
+out:
+    gen::write(file, ")");
 
 }
