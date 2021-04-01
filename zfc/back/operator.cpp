@@ -58,3 +58,13 @@ void ExprNode::reorder() {
     }
 
 }
+
+void g_reorder(ASTNode* node) {
+    ExprNode* xp;
+    if ( (xp = dynamic_cast<ExprNode*> (node)) != nullptr )
+        xp->reorder();
+}
+
+void reorder(ProgramNode* pn) {
+    pn->apply(g_reorder);
+}
