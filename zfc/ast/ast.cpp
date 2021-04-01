@@ -1,7 +1,7 @@
 #include "ast.hpp"
 
 namespace {
-void pdel(ASTNode* node) { delete node; }
+void pdel(ASTNode* node) { if (dynamic_cast<ProgramNode*>(node) == nullptr) delete node; }
 }
 
 ProgramNode::~ProgramNode() {
