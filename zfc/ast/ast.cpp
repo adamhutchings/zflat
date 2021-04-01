@@ -58,7 +58,7 @@ void LoopNode::apply(void(*fn)(ASTNode*)) {
 
 void ExprNode::apply(void(*fn)(ASTNode*)) {
     if (this->left != nullptr) fn(this->left);
-    if (this->right != nullptr) fn(this->left);
+    if (this->right != nullptr) fn(this->right);
     fn(this);
 }
 
