@@ -21,7 +21,7 @@ void LoopNode::write(std::ofstream& file) {
         } else {
             counterv = this->pred->name;
         }
-        gen::write(file, begin + counterv + "= 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
+        gen::write(file, begin + counterv + " = 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
         this->stmt->write(file);
     } else {
         // Anything else is a boolean. For now.
