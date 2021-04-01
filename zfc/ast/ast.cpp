@@ -45,7 +45,7 @@ void BlockStatementNode::apply(void(*fn)(ASTNode*)) {
 void IfNode::apply(void(*fn)(ASTNode*)) {
     fn(this->expr);
     fn(this->stmt);
-    if (this->else_block != nullptr) delete this->else_block;
+    if (this->else_block != nullptr) fn(this->else_block);
     fn(this);
 }
 
