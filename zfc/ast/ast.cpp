@@ -52,7 +52,7 @@ void IfNode::apply(void(*fn)(ASTNode*)) {
 void LoopNode::apply(void(*fn)(ASTNode*)) {
     fn(this);
     fn(this->expr);
-    fn(this->pred);
+    if (this->pred != nullptr) fn(this->pred);
     fn(this->stmt);
 }
 
