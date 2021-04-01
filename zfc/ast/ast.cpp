@@ -1,58 +1,63 @@
 #include "ast.hpp"
 
+namespace {
+void pdel(ASTNode* node) { delete node; }
+}
+
 ProgramNode::~ProgramNode() {
-    for (auto sub : this->components)
-        delete sub;
+    this->apply(pdel);
 }
 
-ProgramSub::~ProgramSub() {}
+void ProgramNode::apply(void(*fn)(ASTNode*)) {
+    for (auto sub : this->components) {
+        fn(sub);
+    }
+}
 
-FuncCallNode::~FuncCallNode() {
+void FuncCallNode::apply(void(*fn)(ASTNode*)) {
     for (auto arg : this->args) {
-        delete arg;
+        fn(arg);
     }
 }
 
-FunctionNode::~FunctionNode() {
+void FunctionNode::apply(void(*fn)(ASTNode*)) {
     for (auto decl : this->args) {
-        delete decl;
+        fn(decl);
     }
-    delete this->body;
+    fn(this->body);
 }
 
-InnerStatementNode::~InnerStatementNode() {}
-
-StatementNode::~StatementNode() {
-    delete this->inner;
+void StatementNode::apply(void(*fn)(ASTNode*)) {
+    fn(this->inner);
 }
 
-BlockStatementNode::~BlockStatementNode() {
+void BlockStatementNode::apply(void(*fn)(ASTNode*)) {
     for (auto stmt : this->statements) {
-        delete stmt;
+        fn(stmt);
     }
 }
 
-IfNode::~IfNode() {
-    delete this->expr;
-    delete this->stmt;
+void IfNode::apply(void(*fn)(ASTNode*)) {
+    fn(this->expr);
+    fn(this->stmt);
     if (this->else_block != nullptr) delete this->else_block;
 }
 
-LoopNode::~LoopNode() {
-    delete this->expr;
-    delete this->pred;
-    delete this->stmt;
+void LoopNode::apply(void(*fn)(ASTNode*)) {
+    fn(this->expr);
+    fn(this->pred);
+    fn(this->stmt);
 }
 
-ExprNode::~ExprNode() {
-    if (this->left != nullptr) delete this->left;
-    if (this->right != nullptr) delete this->right;
+void ExprNode::apply(void(*fn)(ASTNode*)) {
+    if (this->left != nullptr) fn(this->left);
+    if (this->right != nullptr) fn(this->left);
 }
 
-ControlFlowNode::~ControlFlowNode() {
-    if (this->expression != nullptr) delete this->expression;
+void ControlFlowNode::apply(void(*fn)(ASTNode*)) {
+    if (this->expression != nullptr) fn(this->expression);
 }
 
-VarDeclNode::~VarDeclNode() {
-    if (this->expr != nullptr) delete this->expr;
+void VarDeclNode::apply(void(*fn)(ASTNode*)) {
+    if (this->expr != nullptr) fn(this->expr);
 }
