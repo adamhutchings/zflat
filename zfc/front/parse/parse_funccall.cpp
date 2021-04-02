@@ -20,7 +20,7 @@ void FuncCallNode::read(std::ifstream& file) {
     if (opn.type != TreeComp::OPAREN) {
         ZF_TOK_ERR(opn, "'('");
     }
-    this->line = opn->line;
+    this->line = opn.line;
 
     Token ctok = lex::lex(file);
 
