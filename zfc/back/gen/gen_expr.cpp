@@ -19,7 +19,7 @@ void ExprNode::write(std::ofstream& file) {
         ZF_BACK_ERR("expression did not have any content");
 
     this->left->write(file);
-    if (op::opToStr(this->op) != "") {
+    if (op::opToStr(this->op) != "!!INVALID_OPERATOR!!") {
         gen::write(file, " ");   
         gen::write(file, op::opToStr(this->op));
     }
