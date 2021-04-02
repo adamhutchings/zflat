@@ -11,6 +11,9 @@ void BlockStatementNode::read(std::ifstream& file) {
     if (tok.type != OBRACE) {
         ZF_TOK_ERR(tok, "'{'");
     }
+
+    sym::enter_scope();
+
     while (true) {
         // Parse until we hit a closing brace
         Token pclose = lex::lex(file);
@@ -23,5 +26,7 @@ void BlockStatementNode::read(std::ifstream& file) {
             this->statements.push_back(st);
         }
     }
+
+    sym::exit_scope();
 
 }

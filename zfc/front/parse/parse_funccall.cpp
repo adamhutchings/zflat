@@ -11,7 +11,10 @@ void FuncCallNode::read(std::ifstream& file) {
     if (name.type != TreeComp::IDENTIFIER) {
         ZF_TOK_ERR(name, "identifier");
     } else {
-        this->name = name.str;
+        this->ref = sym::resolve(name.str);
+        if (this->ref == nullptr) {
+            ZF_ERROR("could not resolve function \"%s\" on line %d", name.raw_content(), name.line);
+        }
     }
     Token opn = lex::lex(file);
     if (opn.type != TreeComp::OPAREN) {

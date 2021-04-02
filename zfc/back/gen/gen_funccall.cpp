@@ -3,7 +3,7 @@
 
 void FuncCallNode::write(std::ofstream& file) {
 
-    gen::write(file, this->name);
+    gen::write(file, this->ref->name);
     gen::write(file, "(");
 
     for (auto arg : this->args) {

@@ -23,9 +23,9 @@ void FuncCallNode::apply(void(*fn)(ASTNode*)) {
 }
 
 void FunctionNode::apply(void(*fn)(ASTNode*)) {
-    for (auto decl : this->args) {
-        fn(decl);
-    }
+    // for (auto decl : this->args) {
+    //     fn(decl);
+    // }
     fn(this->body);
     fn(this);
 }

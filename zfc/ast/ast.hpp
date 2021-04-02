@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 
+#include <front/symbol.hpp>
 #include <front/trfrags.hpp>
 
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
@@ -50,9 +51,7 @@ struct ProgramSub : public ASTNode {
 };
 
 struct FunctionNode : public ProgramSub {
-    std::string name;
-    std::vector<VarDeclNode*> args;
-    std::string ret_type;
+    sym::Function* symbol;
     BlockStatementNode* body;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
@@ -101,7 +100,8 @@ struct IfNode : public InnerStatementNode {
 };
 
 struct ExprNode : public InnerStatementNode {
-    std::string literal;
+    std::string literal; // number, perhaps
+    sym::Symbol* ref;    // variable reference
     ExprNode* left;
     std::string op;
     ExprNode* right;
@@ -116,7 +116,7 @@ struct ExprNode : public InnerStatementNode {
 
 struct FuncCallNode : public ExprNode {
     std::vector<ExprNode*> args;
-    std::string name;
+    sym::Function* call;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
@@ -124,7 +124,7 @@ struct FuncCallNode : public ExprNode {
 };
 
 struct ControlFlowNode : public InnerStatementNode {
-    std::string statement;
+    std::string statement; // TODO
     ExprNode* expression;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
@@ -133,8 +133,7 @@ struct ControlFlowNode : public InnerStatementNode {
 };
 
 struct VarDeclNode : public InnerStatementNode {
-    std::string ntype;
-    std::string name;
+    sym::Variable* var;
     ExprNode* expr;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;

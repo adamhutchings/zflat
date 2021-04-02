@@ -5,6 +5,9 @@
 #include <util/error.hpp>
 
 void FunctionNode::read(std::ifstream& file) {
+
+    // argument scope
+    sym::enter_scope();
     
     Token name = lex::lex(file);
 
@@ -12,7 +15,8 @@ void FunctionNode::read(std::ifstream& file) {
         ZF_TOK_ERR(name, "identifier");
     }
 
-    this->name = name.str;
+    this->symbol = new sym::Function(name.str);
+    this->symbol->lineno = name.line;
 
     Token opn = lex::lex(file);
 
@@ -41,7 +45,7 @@ void FunctionNode::read(std::ifstream& file) {
             ZF_TOK_ERR(peek, "',' or ')'");
         VarDeclNode* node = new VarDeclNode();
         node->read(file);
-        this->args.push_back(node);
+        this->symbol->args.push_back(*node->var);
     }
 
     // Now we've passed the function argument list, get return type
@@ -55,10 +59,15 @@ void FunctionNode::read(std::ifstream& file) {
         ZF_TOK_ERR(ret, "type name");
     }
 
-    this->ret_type = ret.str;
+    this->symbol->ret = sym::Type(ret.str);
+
+    sym::add_symbol(this->symbol);
 
     // Now, parse the rest as a block statement
     this->body = new BlockStatementNode();
     this->body->read(file);
+
+    // exit argument scope
+    sym::exit_scope();
 
 }

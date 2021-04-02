@@ -9,7 +9,7 @@ void VarDeclNode::read(std::ifstream& file) {
     if (init.type != TreeComp::IDENTIFIER) {
         ZF_TOK_ERR(init, "identifier");
     } else {
-        this->name = init.str;
+        this->var = new sym::Variable(init.str);
     }
     Token next = lex::lex(file);
     if (next.type != TreeComp::COLON) {
@@ -19,7 +19,7 @@ void VarDeclNode::read(std::ifstream& file) {
     if (next.type != TreeComp::TYPENAME) {
         ZF_TOK_ERR(next, "type name");
     } else {
-        this->ntype = next.str;
+        this->var->type = sym::Type(next.str);
     }
     next = lex::lex(file);
     // followed by anything valid (end of statement)              (end of function arg list) (next argument) opening loop block
@@ -31,4 +31,10 @@ void VarDeclNode::read(std::ifstream& file) {
         this->expr = new ExprNode();
         this->expr->read(file);
     }
+    auto* s = sym::resolve(this->var->name);
+    if (s != nullptr) {
+        fprintf(stderr, "zfc: warning: redefining variable \"%s\" on line %d (previous def %d)\n",
+        this->var->name.c_str(), this->var->lineno, s->lineno);
+    }
+    sym::add_symbol(this->var);
 }
