@@ -5,6 +5,9 @@
 #include <util/error.hpp>
 
 void FunctionNode::read(std::ifstream& file) {
+
+    // argument scope
+    sym::enter_scope();
     
     Token name = lex::lex(file);
 
@@ -63,5 +66,8 @@ void FunctionNode::read(std::ifstream& file) {
     // Now, parse the rest as a block statement
     this->body = new BlockStatementNode();
     this->body->read(file);
+
+    // exit argument scope
+    sym::exit_scope();
 
 }

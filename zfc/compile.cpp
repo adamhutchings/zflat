@@ -10,6 +10,7 @@ void compile(std::string in, std::string out) {
     if (!ofile)
         ZF_ERROR("Could not open %s for writing", out.c_str());
     ProgramNode pnode;
+    sym::enter_scope(); // global scope
     pnode.read(ifile);
     reorder(&pnode);
     pnode.write(ofile);
