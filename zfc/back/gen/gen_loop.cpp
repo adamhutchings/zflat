@@ -1,4 +1,5 @@
 #include <ast/ast.hpp>
+#include <back/dtype.hpp>
 #include <back/gen/gen_main.hpp>
 
 // So we don't use the same counter variable multiple times.
@@ -10,8 +11,8 @@ void LoopNode::write(std::ofstream& file) {
 
     ++loopdepth;
 
-    // CURSED - figuring out if the expression is a boolean or a number. Someone help!
-    if (this->expr->get_type() == "int") {
+    Type type = get_type(this->expr);
+    if (type == INT) {
         // It's a number. We need to figure out a loop variable.
         std::string begin = "for (int ";
         std::string counterv;
@@ -23,12 +24,14 @@ void LoopNode::write(std::ofstream& file) {
         }
         gen::write(file, begin + counterv + " = 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
         this->stmt->write(file);
-    } else {
+    }  else if (type == BOOL) {
         // Anything else is a boolean. For now.
         gen::write(file, "while (");
         this->expr->write(file);
         gen::write(file, ")");
         this->stmt->write(file);
+    } else {
+        ZF_ERROR("loop expr must be int or bool: line %d", this->line);
     }
 
     --loopdepth;

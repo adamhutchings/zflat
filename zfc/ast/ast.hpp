@@ -10,6 +10,7 @@
 
 #include <front/symbol.hpp>
 #include <front/trfrags.hpp>
+#include <back/operator.hpp>
 
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
 
@@ -105,12 +106,11 @@ struct ExprNode : public InnerStatementNode {
     std::string literal; // number, perhaps
     sym::Symbol* ref;    // variable reference
     ExprNode* left;
-    std::string op;
+    op::Operator op;
     ExprNode* right;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
-    std::string get_type();
     void reorder();
     bool locked; // whether the expr should not be reordered (although its children may be)
     virtual ~ExprNode() {}

@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <ast/ast.hpp>
+#include <back/operator.hpp>
 #include <front/lex.hpp>
 #include <util/error.hpp>
 
@@ -38,9 +39,9 @@ void ExprNode::read(std::ifstream& file) {
                 }
             }
             left_expr->left = left_expr->right = nullptr;
-            left_expr->op = "";
+            left_expr->op = op::Operator::INVALID;
             this->left = left_expr;
-            this->op = next.str;
+            this->op = op::strToOp(next.str);
             this->literal = "";
             this->ref = nullptr;
             this->right = new ExprNode();
@@ -51,13 +52,14 @@ void ExprNode::read(std::ifstream& file) {
             lex::unlex(start);
             this->left = new FuncCallNode();
             this->left->read(file);
-            this->literal = this->op = "";
+            this->literal = "";
+            this->op = op::Operator::INVALID;
             this->right = nullptr;
             this->locked = true;
         } else if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
             this->literal = start.str;
             this->left = this->right = nullptr;
-            this->op = "";
+            this->op = op::Operator::INVALID;
             // Put back the next token, which is not part of the expr.
             lex::unlex(next);
         } else {

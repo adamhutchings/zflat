@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ast/ast.hpp>
+#include <string>
 
 namespace op {
 
@@ -58,9 +58,6 @@ enum Operator {
 int binding_order(Operator a, Operator b);
 
 Operator strToOp(std::string in);
+std::string opToStr(Operator in);
 
 } // namespace op
-
-void reorder(ProgramNode* pn);
-
-#undef OP_GROUP_SIZE

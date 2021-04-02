@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <ast/ast.hpp>
+#include <back/operator.hpp>
 #include <front/lex.hpp>
 #include <util/error.hpp>
 
@@ -20,7 +21,7 @@ void VarDeclNode::read(std::ifstream& file) {
     if (next.type != TreeComp::TYPENAME) {
         ZF_TOK_ERR(next, "type name");
     } else {
-        this->var->type = sym::Type(next.str);
+        this->var->type = strToType(next.str);
     }
     next = lex::lex(file);
     // followed by anything valid (end of statement)              (end of function arg list) (next argument) opening loop block
