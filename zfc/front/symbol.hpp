@@ -32,6 +32,7 @@ void enter_scope();
 void exit_scope();
 
 void add_symbol(Symbol* s);
+void add_global_symbol(Symbol* s);
 
 Symbol* resolve(std::string name);
 

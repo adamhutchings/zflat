@@ -63,7 +63,7 @@ void FunctionNode::read(std::ifstream& file) {
 
     this->symbol->ret = strToType(ret.str);
 
-    sym::add_symbol(this->symbol);
+    sym::add_global_symbol(this->symbol);
 
     // Now, parse the rest as a block statement
     this->body = new BlockStatementNode();
