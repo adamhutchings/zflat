@@ -31,4 +31,5 @@ void VarDeclNode::read(std::ifstream& file) {
         this->expr = new ExprNode();
         this->expr->read(file);
     }
+    sym::add_symbol(this->var);
 }
