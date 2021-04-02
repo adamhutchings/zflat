@@ -26,7 +26,7 @@ struct Variable : public Symbol {
 };
 
 struct Function : public Symbol {
-    std::vector<Type> args;
+    std::vector<Variable> args;
     Type ret;
     inline Function(std::string n) : Symbol(n) {}
 };
