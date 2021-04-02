@@ -17,6 +17,7 @@ struct Type {
 struct Symbol {
     std::string name;
     int lineno;
+    inline Symbol(std::string n) : name(n) {}
 };
 
 struct Variable : public Symbol {
