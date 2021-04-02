@@ -62,5 +62,3 @@ Operator strToOp(std::string in);
 } // namespace op
 
 void reorder(ProgramNode* pn);
-
-#undef OP_GROUP_SIZE
