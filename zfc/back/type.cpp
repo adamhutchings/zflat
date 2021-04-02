@@ -1,26 +1,33 @@
 #include "type.hpp"
 
-Type get_type(ExprNode* expr) {
-    if (expr->left != nullptr && expr->right == nullptr) {
-        return dynamic_cast<FunctionNode*>(expr->left)->symbol->ret;
-    }
-    if (expr->left != nullptr && expr->right != nullptr) {
+Type strToType(std::string in) {
+    if (in == "bool") return BOOL;
+    if (in == "char") return CHAR;
+    if (in == "uchar") return UCHAR;
+    if (in == "short") return SHORT;
+    if (in == "ushort") return USHORT;
+    if (in == "int") return INT;
+    if (in == "uint") return UINT;
+    if (in == "float") return FLOAT;
+    if (in == "double") return DOUBLE;
+    if (in == "long") return LONG;
+    if (in == "ulong") return ULONG;
+    if (in == "void") return VOID;
+    return MAX_INVALID;
+}
 
-        Type left = get_type(expr->left), right = get_type(expr->right);
-        if (left == VOID || right == VOID) {
-            ZF_ERROR("invalid expression on line %d: operand cannot have void type", expr->line);
-        }
-
-        if (left != right) {
-            ZF_ERROR("line %d: operands don't match types", expr->line);
-        }
-
-        // Equality
-        if (expr->op / OP_GROUP_SIZE == 0) {
-            return BOOL;
-        }
-
-        return left;
-
-    }
+std::string typeToStr(Type in) {
+    if (in == BOOL) return "_Bool";
+    if (in == CHAR) return "signed char";
+    if (in == UCHAR) return "unsigned char";
+    if (in == SHORT) return "short";
+    if (in == USHORT) return "unsigned short";
+    if (in == INT) return "long";
+    if (in == UINT) return "unsigned long";
+    if (in == FLOAT) return "float";
+    if (in == DOUBLE) return "double";
+    if (in == LONG) return "long long";
+    if (in == ULONG) return "unsigned long long";
+    if (in == VOID) return "void";
+    return "!!INVALID_TYPE!!";
 }

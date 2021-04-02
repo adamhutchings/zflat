@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <ast/ast.hpp>
+#include <back/operator.hpp>
 #include <front/lex.hpp>
 #include <util/error.hpp>
 
@@ -60,7 +61,7 @@ void FunctionNode::read(std::ifstream& file) {
         ZF_TOK_ERR(ret, "type name");
     }
 
-    this->symbol->ret = sym::Type(ret.str);
+    this->symbol->ret = strToType(ret.str);
 
     sym::add_symbol(this->symbol);
 

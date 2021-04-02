@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include <ast/ast.hpp>
+#include <string>
+
 #include <back/operator.hpp>
 #include <util/error.hpp>
 
@@ -22,6 +23,8 @@ enum Type {
     LONG,
     ULONG,
     VOID,
+    MAX_INVALID,
 };
 
-Type get_type(ExprNode* expr);
+Type strToType(std::string in);
+std::string typeToStr(Type in);

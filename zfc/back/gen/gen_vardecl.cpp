@@ -1,9 +1,10 @@
 #include <ast/ast.hpp>
 #include <back/gen/gen_main.hpp>
+#include <back/type.hpp>
 
 void VarDeclNode::write(std::ofstream& file) {
 
-    gen::write(file, this->var->type.name);
+    gen::write(file, typeToStr(this->var->type));
     gen::write(file, " ");
     gen::write(file, this->var->name);
     

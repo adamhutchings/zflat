@@ -1,5 +1,6 @@
 #include <ast/ast.hpp>
 #include <back/gen/gen_main.hpp>
+#include <back/operator.hpp>
 
 void ExprNode::write(std::ofstream& file) {
 
@@ -18,9 +19,9 @@ void ExprNode::write(std::ofstream& file) {
         ZF_BACK_ERR("expression did not have any content");
 
     this->left->write(file);
-    if (this->op != "") {
+    if (op::opToStr(this->op) != "") {
         gen::write(file, " ");   
-        gen::write(file, this->op);
+        gen::write(file, op::opToStr(this->op));
     }
     if (this->right != nullptr) {
         gen::write(file, " ");
