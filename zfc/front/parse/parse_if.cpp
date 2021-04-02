@@ -11,6 +11,8 @@ void IfNode::read(std::ifstream& file) {
         ZF_TOK_ERR(ift, "if");
     }
 
+    this->line = ift.line;
+
     auto op = lex::lex(file);
     if (op.type != OPAREN) {
         ZF_TOK_ERR(op, "'('");

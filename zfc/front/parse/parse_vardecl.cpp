@@ -10,6 +10,7 @@ void VarDeclNode::read(std::ifstream& file) {
         ZF_TOK_ERR(init, "identifier");
     } else {
         this->var = new sym::Variable(init.str);
+        this->line = init.line;
     }
     Token next = lex::lex(file);
     if (next.type != TreeComp::COLON) {

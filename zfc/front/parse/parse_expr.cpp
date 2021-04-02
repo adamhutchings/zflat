@@ -21,6 +21,7 @@ void ExprNode::read(std::ifstream& file) {
         // We expect an operator or a function call.
         auto next = lex::lex(file);
         if (next.type == TreeComp::OPERATOR) {
+            this->line = next.line;
             ExprNode* left_expr = new ExprNode();
             if (start.type == TreeComp::LITERAL) {
                 left_expr->literal = start.str;

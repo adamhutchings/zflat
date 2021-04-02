@@ -12,6 +12,8 @@ void BlockStatementNode::read(std::ifstream& file) {
         ZF_TOK_ERR(tok, "'{'");
     }
 
+    this->line = tok.line;
+
     sym::enter_scope();
 
     while (true) {

@@ -9,6 +9,7 @@ void ControlFlowNode::read(std::ifstream& file) {
     if (tok.type != TreeComp::FLOW)
         ZF_TOK_ERR(tok, "break, continue, or return");
     this->statement = tok.str;
+    this->line = tok.line;
     Token next = lex::lex(file);
     if (next.type == TreeComp::SEMICOLON) {
         this->expression = NULL;
