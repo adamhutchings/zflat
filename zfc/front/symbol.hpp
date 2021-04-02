@@ -7,12 +7,9 @@
 #include <string>
 #include <vector>
 
-namespace sym {
+#include <back/type.hpp>
 
-struct Type {
-    std::string name;
-    inline Type(std::string n="") : name(n) {}
-};
+namespace sym {
 
 struct Symbol {
     std::string name;
