@@ -42,7 +42,7 @@ void FunctionNode::read(std::ifstream& file) {
             ZF_TOK_ERR(peek, "',' or ')'");
         VarDeclNode* node = new VarDeclNode();
         node->read(file);
-        this->symbol->args.push_back(sym::Type(node->var->type));
+        this->symbol->args.push_back(node->var->type);
     }
 
     // Now we've passed the function argument list, get return type
