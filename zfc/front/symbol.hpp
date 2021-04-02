@@ -11,7 +11,7 @@ namespace sym {
 
 struct Type {
     std::string name;
-    inline Type(std::string n) : name(n) {}
+    inline Type(std::string n="") : name(n) {}
 };
 
 struct Symbol {
@@ -22,11 +22,13 @@ struct Symbol {
 
 struct Variable : public Symbol {
     Type type;
+    inline Variable(std::string n) : Symbol(n) {}
 };
 
 struct Function : public Symbol {
     std::vector<Type> args;
     Type ret;
+    inline Function(std::string n) : Symbol(n) {}
 };
 
 void enter_scope();
