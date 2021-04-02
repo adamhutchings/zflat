@@ -19,7 +19,7 @@ void LoopNode::write(std::ofstream& file) {
             counterv = "lc_loop_";
             counterv += std::to_string(loopdepth);
         } else {
-            counterv = this->pred->name;
+            counterv = this->pred->var->name;
         }
         gen::write(file, begin + counterv + " = 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
         this->stmt->write(file);

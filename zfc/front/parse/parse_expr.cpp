@@ -22,12 +22,19 @@ void ExprNode::read(std::ifstream& file) {
         auto next = lex::lex(file);
         if (next.type == TreeComp::OPERATOR) {
             ExprNode* left_expr = new ExprNode();
-            left_expr->literal = start.str;
+            if (start.type == TreeComp::LITERAL) {
+                left_expr->literal = start.str;
+                left_expr->ref = nullptr;
+            } else {
+                left_expr->ref = sym::resolve(start.str);
+                left_expr->literal = nullptr;
+            }
             left_expr->left = left_expr->right = nullptr;
             left_expr->op = "";
             this->left = left_expr;
             this->op = next.str;
             this->literal = "";
+            this->ref = nullptr;
             this->right = new ExprNode();
             this->right->read(file);
         } else if (next.type == TreeComp::OPAREN) {

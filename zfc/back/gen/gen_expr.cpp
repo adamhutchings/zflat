@@ -10,6 +10,10 @@ void ExprNode::write(std::ofstream& file) {
         goto out;
     }
 
+    if (this->ref != nullptr) {
+        gen::write(file, this->ref->name);
+    }
+
     if (this->left == nullptr)
         ZF_BACK_ERR("expression did not have any content");
 

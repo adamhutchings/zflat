@@ -3,15 +3,15 @@
 
 void FunctionNode::write(std::ofstream& file) {
 
-    gen::write(file, this->ret_type);
+    gen::write(file, this->symbol->ret.name);
     gen::write(file, " ");
-    gen::write(file, this->name);
+    gen::write(file, this->symbol->name);
 
     gen::write(file, "(");
-    for (auto arg : this->args) {
-        if (arg != this->args[0])
+    for (auto arg : this->symbol->args) {
+        if (arg.name != this->symbol->args[0].name)
             gen::write(file, ",");
-        arg->write(file);
+        gen::write(file, arg.name);
     }
     gen::write(file, ") ");
 
