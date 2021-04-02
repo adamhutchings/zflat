@@ -61,5 +61,7 @@ out:
             ZF_TOK_ERR(sc, "semicolon");
     }
 
+    this->line = this->inner->line;
+
 }
 

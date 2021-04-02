@@ -25,6 +25,8 @@ public:
 
     virtual ~ASTNode() {}
 
+    int line;
+
 };
 
 struct ProgramNode;

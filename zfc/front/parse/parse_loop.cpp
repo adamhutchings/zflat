@@ -9,6 +9,7 @@ void LoopNode::read(std::ifstream& file) {
     if (loop.type != LOOP) {
         ZF_TOK_ERR(loop, "'loop'");
     }
+    this->line = loop.line;
     auto op = lex::lex(file);
     if (op.type != OPAREN) {
         ZF_TOK_ERR(op, "'('");

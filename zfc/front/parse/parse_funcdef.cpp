@@ -10,6 +10,7 @@ void FunctionNode::read(std::ifstream& file) {
     sym::enter_scope();
     
     Token name = lex::lex(file);
+    this->line = name.line;
 
     if (name.type != TreeComp::IDENTIFIER) {
         ZF_TOK_ERR(name, "identifier");
