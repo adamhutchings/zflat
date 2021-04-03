@@ -36,4 +36,6 @@ void add_global_symbol(Symbol* s);
 
 Symbol* resolve(std::string name);
 
+bool in_global_scope();
+
 }

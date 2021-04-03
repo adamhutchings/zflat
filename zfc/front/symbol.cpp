@@ -32,4 +32,8 @@ Symbol* resolve(std::string name) {
     return nullptr;
 }
 
+bool in_global_scope() {
+    return symtab.size() == 1;
+}
+
 } // namespace sym
