@@ -8,9 +8,10 @@
 #include <vector>
 #include <string>
 
+#include <back/flow.hpp>
+#include <back/operator.hpp>
 #include <front/symbol.hpp>
 #include <front/trfrags.hpp>
-#include <back/operator.hpp>
 
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
 
@@ -126,7 +127,7 @@ struct FuncCallNode : public ExprNode {
 };
 
 struct ControlFlowNode : public InnerStatementNode {
-    std::string statement; // TODO
+    ControlFlow statement;
     ExprNode* expression;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;

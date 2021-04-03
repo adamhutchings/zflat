@@ -3,7 +3,7 @@
 
 void ControlFlowNode::write(std::ofstream& file) {
 
-    gen::write(file, this->statement + " ");
+    gen::write(file, flowToStr(this->statement) + " ");
     
     if (this->expression != nullptr)
         this->expression->write(file);
