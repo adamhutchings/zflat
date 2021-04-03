@@ -38,7 +38,7 @@ void FuncCallNode::read(std::ifstream& file) {
         exp->read(file);
         if (get_type(exp) != expected_args[arg_count].type) {
             ZF_ERROR("line %d: expected argument of type %s, found argument of type %s instead"
-            , exp->line, typeToStr(expected_args[arg_count].type), typeToStr(get_type(exp)));
+            , exp->line, typeToStr(expected_args[arg_count].type).c_str(), typeToStr(get_type(exp)).c_str());
         }
         this->args.push_back(exp);
         Token peek = lex::lex(file);
@@ -50,7 +50,7 @@ void FuncCallNode::read(std::ifstream& file) {
 
 out:
     if (arg_count != arg_max) {
-        ZF_ERROR("line %d: expected %d arguments to function %s, found %d\n", this->line, arg_max, this->ref->name, arg_max);
+        ZF_ERROR("line %d: expected %d arguments to function %s, found %d\n", this->line, arg_max, this->ref->name.c_str(), arg_max);
     }
 
 }
