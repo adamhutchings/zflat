@@ -33,7 +33,6 @@ void FuncCallNode::read(std::ifstream& file) {
     int arg_count = 0, arg_max = expected_args.size();
 
     while (1) {
-        ++arg_count;
         ExprNode* exp = new ExprNode();
         exp->read(file);
         if (get_type(exp) != expected_args[arg_count].type) {
@@ -41,6 +40,7 @@ void FuncCallNode::read(std::ifstream& file) {
             , exp->line, typeToStr(expected_args[arg_count].type).c_str(), typeToStr(get_type(exp)).c_str());
         }
         this->args.push_back(exp);
+        ++arg_count;
         Token peek = lex::lex(file);
         if (peek.type == TreeComp::COMMA) continue;
         else if (peek.type == TreeComp::CPAREN) goto out;
