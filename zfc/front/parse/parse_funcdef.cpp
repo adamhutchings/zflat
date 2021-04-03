@@ -47,6 +47,12 @@ void FunctionNode::read(std::ifstream& file) {
             ZF_TOK_ERR(peek, "',' or ')'");
         VarDeclNode* node = new VarDeclNode();
         node->read(file);
+        // Make sure it isn't a duplicate symbol
+        for (auto vd : this->symbol->args) {
+            if (vd.name == node->var->name) {
+                ZF_ERROR("line %d: duplicate argument %s", node->line, node->var->name.c_str());
+            }
+        }
         this->symbol->args.push_back(*node->var);
     }
 
