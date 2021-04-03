@@ -15,6 +15,9 @@ void ControlFlowNode::read(std::ifstream& file) {
         this->expression = NULL;
         lex::unlex(next); // statement expects a trailing ';'
     } else {
+        if (this->statement != RETURN) {
+            ZF_ERROR("line %d: did not expect expression after %s", tok.line, tok.raw_content());
+        }
         lex::unlex(next);
         this->expression = new ExprNode();
         this->expression->read(file);
