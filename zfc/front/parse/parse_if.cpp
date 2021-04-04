@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <ast/ast.hpp>
+#include  <back/dtype.hpp>
 #include <front/lex.hpp>
 #include <util/error.hpp>
 
@@ -20,6 +21,10 @@ void IfNode::read(std::ifstream& file) {
 
     this->expr = new ExprNode();
     this->expr->read(file);
+    if (get_type(this->expr) != Type::BOOL) {
+        ZF_ERROR("line %d: if-condition must be of type bool, was of type %s instead",
+        this->expr->line, typeToStr(get_type(this->expr)));
+    }
 
     auto cp = lex::lex(file);
     if (cp.type != CPAREN) {
