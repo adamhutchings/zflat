@@ -11,6 +11,9 @@ void ControlFlowNode::read(std::ifstream& file) {
     this->statement = strToFlow(tok.str);
     this->line = tok.line;
     Token next = lex::lex(file);
+    if (sym::in_global_scope()) {
+        ZF_ERROR("line %d: control flow in global scope", tok.line);
+    }
     if (next.type == TreeComp::SEMICOLON) {
         this->expression = NULL;
         lex::unlex(next); // statement expects a trailing ';'
