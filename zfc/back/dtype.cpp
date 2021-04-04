@@ -15,8 +15,11 @@ Type get_type(ExprNode* expr) {
             ZF_ERROR("line %d: operands don't match types", expr->line);
         }
 
-        // Equality
-        if (expr->op / OP_GROUP_SIZE == 0) {
+        // Check ==, !=, etc., and <, >, etc.
+        if (
+            ((expr->op / OP_GROUP_SIZE) == 1)
+        ||  ((expr->op / OP_GROUP_SIZE) == 2)
+        ) {
             return BOOL;
         }
 
