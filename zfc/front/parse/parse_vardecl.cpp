@@ -1,6 +1,7 @@
 #include <fstream>
 
 #include <ast/ast.hpp>
+#include <back/dtype.hpp>
 #include <back/operator.hpp>
 #include <front/lex.hpp>
 #include <util/error.hpp>
@@ -32,6 +33,10 @@ void VarDeclNode::read(std::ifstream& file) {
         // parse an expression (after an equals sign, check for this later)
         this->expr = new ExprNode();
         this->expr->read(file);
+        if (get_type(this->expr) != this->var->type) {
+            ZF_ERROR("line %d: assigning value of type %s to var of type %s"
+            , this->line, typeToStr(get_type(this->expr)).c_str(), typeToStr(this->var->type).c_str());
+        }
     }
     auto* s = sym::resolve(this->var->name);
     if (s != nullptr) {

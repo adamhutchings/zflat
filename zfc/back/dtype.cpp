@@ -2,7 +2,7 @@
 
 Type get_type(ExprNode* expr) {
     if (expr->left != nullptr && expr->right == nullptr) {
-        return dynamic_cast<FunctionNode*>(expr->left)->symbol->ret;
+        return static_cast<sym::Function*>(dynamic_cast<FuncCallNode*>(expr->left)->ref)->ret;
     }
     if (expr->left != nullptr && expr->right != nullptr) {
 
@@ -15,8 +15,11 @@ Type get_type(ExprNode* expr) {
             ZF_ERROR("line %d: operands don't match types", expr->line);
         }
 
-        // Equality
-        if (expr->op / OP_GROUP_SIZE == 0) {
+        // Check ==, !=, etc., and <, >, etc.
+        if (
+            ((expr->op / OP_GROUP_SIZE) == 1)
+        ||  ((expr->op / OP_GROUP_SIZE) == 2)
+        ) {
             return BOOL;
         }
 

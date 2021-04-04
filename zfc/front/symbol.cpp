@@ -4,6 +4,8 @@ namespace {
 
 std::vector<std::vector<sym::Symbol*>> symtab;
 
+sym::Function* func = nullptr;
+
 } // namespace
 
 namespace sym {
@@ -30,6 +32,18 @@ Symbol* resolve(std::string name) {
         }
     }
     return nullptr;
+}
+
+bool in_global_scope() {
+    return symtab.size() == 1;
+}
+
+Function* current_function() {
+    return func;
+}
+
+void set_function(Function* fn) {
+    func = fn;
 }
 
 } // namespace sym

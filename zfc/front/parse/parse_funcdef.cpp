@@ -47,6 +47,12 @@ void FunctionNode::read(std::ifstream& file) {
             ZF_TOK_ERR(peek, "',' or ')'");
         VarDeclNode* node = new VarDeclNode();
         node->read(file);
+        // Make sure it isn't a duplicate symbol
+        for (auto vd : this->symbol->args) {
+            if (vd.name == node->var->name) {
+                ZF_ERROR("line %d: duplicate argument %s", node->line, node->var->name.c_str());
+            }
+        }
         this->symbol->args.push_back(*node->var);
     }
 
@@ -65,11 +71,15 @@ void FunctionNode::read(std::ifstream& file) {
 
     sym::add_global_symbol(this->symbol);
 
+    sym::set_function(this->symbol);
+
     // Now, parse the rest as a block statement
     this->body = new BlockStatementNode();
     this->body->read(file);
 
     // exit argument scope
     sym::exit_scope();
+
+    sym::set_function(nullptr);
 
 }
