@@ -71,11 +71,15 @@ void FunctionNode::read(std::ifstream& file) {
 
     sym::add_global_symbol(this->symbol);
 
+    sym::set_function(this->symbol);
+
     // Now, parse the rest as a block statement
     this->body = new BlockStatementNode();
     this->body->read(file);
 
     // exit argument scope
     sym::exit_scope();
+
+    sym::set_function(nullptr);
 
 }
