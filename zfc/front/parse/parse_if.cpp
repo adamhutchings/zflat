@@ -23,7 +23,7 @@ void IfNode::read(std::ifstream& file) {
     this->expr->read(file);
     if (get_type(this->expr) != Type::BOOL) {
         ZF_ERROR("line %d: if-condition must be of type bool, was of type %s instead",
-        this->expr->line, typeToStr(get_type(this->expr)));
+        this->expr->line, typeToStr(get_type(this->expr)).c_str());
     }
 
     auto cp = lex::lex(file);
