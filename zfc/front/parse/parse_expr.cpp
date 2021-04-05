@@ -18,6 +18,24 @@ void ExprNode::read(std::ifstream& file) {
         if (close.type != TreeComp::CPAREN) {
             ZF_TOK_ERR(close, ")");
         }
+        auto next = lex::lex(file);
+        if (next.type == TreeComp::OPERATOR) {
+            // Assign "this" to this->left
+            // Copy the left node
+            ExprNode* left = this->left;
+            // Copy this to this->left
+            this->left = new ExprNode();
+            this->left->right = this->right;
+            this->left->left = left;
+            this->left->op = this->op;
+            this->left->ref = this->ref;
+            // Make a new right node
+            this->op = op::strToOp(next.str);
+            this->right = new ExprNode();
+            this->right->read(file);
+        } else {
+            lex::unlex(next);
+        }
     } else if (start.type == TreeComp::LITERAL || start.type == TreeComp::IDENTIFIER) {
         // We expect an operator or a function call.
         auto next = lex::lex(file);
