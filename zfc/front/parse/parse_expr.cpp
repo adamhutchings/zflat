@@ -12,6 +12,7 @@ void ExprNode::read(std::ifstream& file) {
     this->locked = false;
 
     if (start.type == TreeComp::OPAREN) {
+        this->locked = true;
         this->read(file);
         // An extra closing ) should exist.
         auto close = lex::lex(file);
