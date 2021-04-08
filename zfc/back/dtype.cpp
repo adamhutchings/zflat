@@ -11,13 +11,6 @@ Type get_type(ExprNode* expr) {
             ZF_ERROR("invalid expression on line %d: operand cannot have void type", expr->line);
         }
 
-        // Check to make sure left-hand side is an lvalue
-        if (op::is_assign(expr->op)) {
-            if (expr->left->ref == nullptr) {
-                ZF_ERROR("line %d: invalid lvalue (expected identifier)", expr->left->line);
-            }
-        }
-
         if (left != right) {
             ZF_ERROR("line %d: operands don't match types", expr->line);
         }
