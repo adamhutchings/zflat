@@ -52,6 +52,10 @@ enum Operator {
 
 };
 
+bool is_assign(Operator o);
+
+bool is_bool(Operator o);
+
 // -1 if a binds more tightly than b
 // +1 if b binds more tightly than a
 // =0 if it doesn't matter (parsed right-to-left)
