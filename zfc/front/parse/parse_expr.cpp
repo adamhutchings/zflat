@@ -10,6 +10,7 @@ void ExprNode::read(std::ifstream& file) {
     auto start = lex::lex(file);
     
     this->locked = false;
+    this->ref = nullptr;
 
     if (start.type == TreeComp::OPAREN) {
         this->locked = true;
