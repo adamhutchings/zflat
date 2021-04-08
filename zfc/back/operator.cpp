@@ -67,7 +67,7 @@ bool is_assign(Operator a) {
 
 bool is_bool(Operator a) {
     int group = a / OP_GROUP_SIZE;
-    return (a == 1) || (a == 2);
+    return (group == 1) || (group == 2);
 }
 
 }
