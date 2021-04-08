@@ -95,7 +95,7 @@ void ExprNode::read(std::ifstream& file) {
     // Check to make sure left-hand side is an lvalue
     if (this->op != op::Operator::INVALID && op::is_assign(this->op)) {
         if (this->left->ref == nullptr) {
-            ZF_ERROR("line %d: invalid lvalue (expected identifier)", this->left->line);
+            ZF_ERROR("line %d: invalid lvalue (expected identifier)", this->line);
         }
     }
 
