@@ -55,6 +55,8 @@ void ProgramNode::read(std::ifstream& file) {
         }
 
         sub->read(file);
+        warn_unused_value(sub);
+
         this->components.push_back(sub);
 
     }
