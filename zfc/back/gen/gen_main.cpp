@@ -1,10 +1,6 @@
 #include "gen_main.hpp"
 
-namespace {
-
-int indentation_level = 0;
-
-}
+namespace { int indentation_level = 0; }
 
 void gen::write(std::ofstream& file, std::string str) {
     file << str;
