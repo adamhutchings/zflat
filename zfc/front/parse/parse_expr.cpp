@@ -10,6 +10,7 @@ void ExprNode::read(std::ifstream& file) {
     auto start = lex::lex(file);
     
     this->locked = false;
+    this->ref = nullptr;
 
     if (start.type == TreeComp::OPAREN) {
         this->locked = true;
@@ -47,15 +48,11 @@ void ExprNode::read(std::ifstream& file) {
                 left_expr->literal = start.str;
                 left_expr->ref = nullptr;
             } else {
-                if (start.str[0] >= '0' && start.str[0] >= '9') {
-                    left_expr->literal = start.str;
-                } else {
-                    left_expr->ref = sym::resolve(start.str);
-                    if (left_expr->ref == nullptr) {
-                        ZF_ERROR("could not resolve variable \"%s\" on line %d", start.raw_content(), start.line);
-                    }
-                    left_expr->literal = "";
+                left_expr->ref = sym::resolve(start.str);
+                if (left_expr->ref == nullptr) {
+                    ZF_ERROR("could not resolve variable \"%s\" on line %d", start.raw_content(), start.line);
                 }
+                left_expr->literal = "";
             }
             left_expr->left = left_expr->right = nullptr;
             left_expr->op = op::Operator::INVALID;
@@ -75,18 +72,27 @@ void ExprNode::read(std::ifstream& file) {
             this->op = op::Operator::INVALID;
             this->right = nullptr;
             this->locked = true;
+            this->line = this->left->line;
         } else if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA) {
             this->literal = start.str;
             this->left = this->right = nullptr;
             this->op = op::Operator::INVALID;
             // Put back the next token, which is not part of the expr.
             lex::unlex(next);
+            this->line = start.line;
         } else {
             ZF_TOK_ERR(next, "operator, ';', or '('");
         }
     } else {
         // Unary operators - not supported yet
         ZF_TOK_ERR(start, "value");
+    }
+
+    // Check to make sure left-hand side is an lvalue
+    if (this->op != op::Operator::INVALID && op::is_assign(this->op)) {
+        if (this->left->ref == nullptr) {
+            ZF_ERROR("line %d: invalid lvalue (expected identifier)", this->line);
+        }
     }
 
 }

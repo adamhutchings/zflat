@@ -17,8 +17,7 @@ Type get_type(ExprNode* expr) {
 
         // Check ==, !=, etc., and <, >, etc.
         if (
-            ((expr->op / OP_GROUP_SIZE) == 1)
-        ||  ((expr->op / OP_GROUP_SIZE) == 2)
+            op::is_bool(expr->op)
         ) {
             return BOOL;
         }

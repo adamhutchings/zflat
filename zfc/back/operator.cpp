@@ -61,4 +61,13 @@ std::string opToStr(Operator in) {
     return "!!INVALID_OPERATOR!!";
 }
 
+bool is_assign(Operator a) {
+    return (a / OP_GROUP_SIZE) == 0;
+}
+
+bool is_bool(Operator a) {
+    int group = a / OP_GROUP_SIZE;
+    return (group == 1) || (group == 2);
+}
+
 }
