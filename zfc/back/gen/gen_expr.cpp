@@ -13,6 +13,7 @@ void ExprNode::write(std::ofstream& file) {
 
     if (this->ref != nullptr) {
         gen::write(file, this->ref->name);
+        goto out;
     }
 
     if (this->left == nullptr)
