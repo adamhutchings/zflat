@@ -93,7 +93,7 @@ bool begins_token(char prev, char cur) {
     if (prev == '\0')               return true;
     if (is_op_token(cur))           return true;
     if (is_always_tok(cur))         return true;
-    if (is_always_tok(prev))         return true;
+    if (is_always_tok(prev))        return true;
     return false;
 }
 
@@ -111,9 +111,7 @@ bool ends_token(char cur, char next) {
 
 char lasttok = 0, curtok = 0, nexttok = 0;
 
-bool eofhit = false;
-
-bool lastwascolon = false;
+bool eofhit = false, lastwascolon = false;
 
 int line = 1, linepos = 1;
 
