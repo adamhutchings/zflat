@@ -9,7 +9,7 @@
 
 int main(int argc, char** argv) {
     if (argc < 3) {
-        std::cerr << "Expected files (for input and output)" << "\n";
+        std::cerr << "Expected files (for input and output)" << std::endl;
         exit(-1);
     }
     compile(argv[1], argv[2]);
