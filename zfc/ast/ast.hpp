@@ -143,3 +143,5 @@ struct VarDeclNode : public InnerStatementNode {
     void apply( void (*fn)(ASTNode*) ) override;
     virtual ~VarDeclNode() {}
 };
+
+void warn_unused_value(ProgramSub* ps);

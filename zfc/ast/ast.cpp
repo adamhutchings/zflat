@@ -71,3 +71,17 @@ void VarDeclNode::apply(void(*fn)(ASTNode*)) {
     if (this->expr != nullptr) fn(this->expr);
     fn(this);
 }
+
+void warn_unused_value(ProgramSub* pn) {
+
+    auto sn = dynamic_cast<StatementNode*>(pn);
+    if (sn != nullptr) {
+        auto exp = dynamic_cast<ExprNode*>(sn->inner);
+        if (exp != nullptr) {
+            if (exp->op != op::Operator::INVALID && !op::is_assign(exp->op)) {
+                fprintf(stderr, "zfc: warning: line %d: expression value unused", exp->line);
+            }
+        }
+    }
+
+}
