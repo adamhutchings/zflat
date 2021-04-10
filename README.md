@@ -1,4 +1,4 @@
-# Z-Flat ![cmake test](https://github.com/adamhutchings/zflat/workflows/cmake/badge.svg)
+# Z-Flat ![cmake test](https://github.com/adamhutchings/zflat/workflows/cmake/badge.svg) ![https://img.shields.io/badge/Discord-zflat-blueviolet](https://discord.gg/UPqeyvzPcq)
 
 ![logo](https://github.com/adamhutchings/zflat/blob/main/logo.png)
 
