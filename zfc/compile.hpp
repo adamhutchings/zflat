@@ -9,5 +9,9 @@
 #include <ast/ast.hpp>
 #include <back/reorder.hpp>
 #include <util/error.hpp>
+#include <util/fs.hpp>
 
-void compile(std::string in, std::string out);
+// Only visible for compile individual mode
+void compile_unit(std::string path);
+
+void compile_default();
