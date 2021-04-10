@@ -18,3 +18,7 @@ are intuitive syntax, type-safety, and easy library management.
 ## Running
 - run the compiler at `./cmake/zfc`
 - see instructions at [docs/compiler.md](https://github.com/adamhutchings/zflat/blob/main/docs/compiler.md)
+
+## Compiler Test
+- `./cmake/zfc input/file.zf`
+- compiles to `input/file.o`
