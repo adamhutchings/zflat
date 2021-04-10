@@ -1,4 +1,4 @@
-# Z-Flat ![cmake test](https://github.com/adamhutchings/zflat/workflows/zflat/badge.svg)
+# Z-Flat
 
 ![logo](https://github.com/adamhutchings/zflat/blob/main/logo.png)
 
