@@ -74,7 +74,11 @@ out:
                 ZF_TOK_ERR(sc, "semicolon");
     }
 
-    this->line = this->inner->line;
+    if (this->inner != nullptr) {
+        this->line = this->inner->line;
+    } else {
+        this->line = initial.line;
+    }
 
 }
 
