@@ -10,7 +10,7 @@
 int main(int argc, char** argv) {
     ++argv, --argc;
     bool one_file = false;
-    bool help = true;
+    bool help = false;
     std::string one_file_path = "";
     std::vector<std::string> args;
     while (argc-- > 0) {
@@ -37,7 +37,6 @@ int main(int argc, char** argv) {
                 std::cerr << "zfc: arguments unneeded in batch file mode\n";
                 exit(-1);
             }
-            help = false;
         }
     }
     if (one_file && one_file_path == "") {
