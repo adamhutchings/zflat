@@ -17,7 +17,7 @@ void compile(std::string in, std::string out, bool leave_at_c) {
         ZF_ERROR("Could not open %s for reading", in.c_str());
     std::ofstream tmpfil;
     std::string tmp_path = leave_at_c ? out : random_temp_path();
-    tmp_path += ".c";
+    if (!leave_at_c) tmp_path += ".c";
     tmpfil.open(tmp_path);
     if (!tmpfil)
         ZF_ERROR("Could not open %s for writing", tmp_path.c_str());
