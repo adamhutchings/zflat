@@ -36,7 +36,7 @@ void SwitchNode::read(std::ifstream& file) {
 
     while (1) {
         auto cb = lex::lex(file);
-        if (cb.type == OBRACE) {
+        if (cb.type == CBRACE) {
             break;
         }
         lex::unlex(cb);
