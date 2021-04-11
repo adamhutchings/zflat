@@ -30,18 +30,15 @@ int main(int argc, char** argv) {
                 if (one_file_path == "") {
                     one_file_path = str;
                 } else {
-                    std::cerr << "zfc: file path specified twice\n";
-                    exit(-1);
+                    ZF_ERROR("file path specified twice");
                 }
             } else {
-                std::cerr << "zfc: arguments unneeded in batch file mode\n";
-                exit(-1);
+                ZF_ERROR("arguments unneeded in batch file mode");
             }
         }
     }
     if (one_file && one_file_path == "") {
-        std::cerr << "zfc: expected file after -I flag\n";
-        exit(-1);
+        ZF_ERROR("expected file after -I flag");
     }
     if (help) {
         std::cout << "zfc: Compiler for zflat\n"
