@@ -25,17 +25,19 @@ int main(int argc, char** argv) {
         } else if (str == "--help" || str == "-h") {
             help = true;
             break;
-        }
-        if (one_file) {
-            if (one_file_path == "") {
-                one_file_path = str;
+        } else {
+            if (one_file) {
+                if (one_file_path == "") {
+                    one_file_path = str;
+                } else {
+                    std::cerr << "zfc: file path specified twice\n";
+                    exit(-1);
+                }
             } else {
-                std::cerr << "zfc: file path specified twice\n";
+                std::cerr << "zfc: arguments unneeded in batch file mode\n";
                 exit(-1);
             }
-        } else {
-            std::cerr << "zfc: arguments unneeded in batch file mode\n";
-            exit(-1);
+            help = false;
         }
     }
     if (one_file && one_file_path == "") {
