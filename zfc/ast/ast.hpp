@@ -37,6 +37,9 @@ struct FunctionNode;
 struct StatementNode;
 struct BlockStatementNode;
 struct LoopNode;
+struct IfNode;
+struct SwitchNode;
+struct CaseNode;
 struct ExprNode;
 struct FuncCallNode;
 struct ControlFlowNode;
@@ -101,6 +104,18 @@ struct IfNode : public InnerStatementNode {
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
     virtual ~IfNode() {}
+};
+
+struct SwitchNode : public InnerStatementNode {
+    bool fswitch;
+    ExprNode* expr;
+    BlockStatementNode* block;
+    std::vector<CaseNode*> cases;
+};
+
+struct CaseNode {
+    std::string lit; // literal value (TODO)
+    std::vector<StatementNode*> statements;
 };
 
 struct ExprNode : public InnerStatementNode {
