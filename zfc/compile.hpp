@@ -12,6 +12,6 @@
 #include <util/fs.hpp>
 
 // Only visible for compile individual mode
-void compile_unit(std::string path);
+void compile_unit(std::string path, bool leave_at_c);
 
 void compile_default();

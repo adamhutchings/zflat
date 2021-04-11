@@ -6,7 +6,7 @@ void FunctionNode::write(std::ofstream& file) {
 
     gen::write(file, typeToStr(this->symbol->ret));
     gen::write(file, " ");
-    gen::write(file, this->symbol->name);
+    gen::write(file, this->symbol->get_overloaded_name());
 
     gen::write(file, "(");
     for (auto arg : this->symbol->args) {

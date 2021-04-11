@@ -10,6 +10,7 @@
 int main(int argc, char** argv) {
     ++argv, --argc;
     bool one_file = false;
+    bool leave_at_c = false;
     bool help = false;
     std::string one_file_path = "";
     std::vector<std::string> args;
@@ -25,6 +26,8 @@ int main(int argc, char** argv) {
         } else if (str == "--help" || str == "-h") {
             help = true;
             break;
+        } else if (str == "-c") { 
+            leave_at_c = true;
         } else {
             if (one_file) {
                 if (one_file_path == "") {
@@ -44,13 +47,14 @@ int main(int argc, char** argv) {
         std::cout << "zfc: Compiler for zflat\n"
         "Usage:\n\t"
         "zfc -I [file] (compile one file)\n\t"
+        "zfc -I [file] -c (compile to C file)\n\t"
         "zfc (compile all files in src directory)\n"
         "Flags:\n\t"
         "--help: see this message\n";
         exit(0);
     }
     if (one_file) {
-        compile_unit(one_file_path);
+        compile_unit(one_file_path, leave_at_c);
     } else {
         compile_default();
     }

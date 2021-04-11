@@ -3,7 +3,11 @@
 
 void FuncCallNode::write(std::ofstream& file) {
 
-    gen::write(file, this->ref->name);
+    sym::Function* fnref;
+    if ( (fnref = static_cast<sym::Function*>(this->ref)) == nullptr) {
+        ZF_BACK_ERR("func call symbol was not a function symbol");
+    }
+    gen::write(file, fnref->get_overloaded_name());
     gen::write(file, "(");
 
     for (auto arg : this->args) {

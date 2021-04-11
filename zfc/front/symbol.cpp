@@ -25,10 +25,30 @@ void add_global_symbol(Symbol* s) {
     symtab[0].push_back(s);
 }
 
-Symbol* resolve(std::string name) {
+Variable* resolve_var(std::string name) {
     for (int i = symtab.size(); i > 0; --i) {
         for (Symbol* sym : symtab[i - 1]) {
-            if (sym->name == name) return sym;
+            Variable* var = static_cast<Variable*>(sym);
+            if (sym->name == name && var != nullptr) return var;
+        }
+    }
+    return nullptr;
+}
+
+Function* resolve_fn(std::string name, std::vector<Type> args) {
+    for (int i = symtab.size(); i > 0; --i) {
+        for (Symbol* sym : symtab[i - 1]) {
+            Function* fn = static_cast<Function*>(sym);
+            if (fn != nullptr) {
+                bool match = true;
+                if (args.size() != fn->args.size()) continue;
+                auto size = args.size();
+                for (int i = 0; i < size; i++) {
+                    if (args[i] != fn->args[i].type) match = false;
+                }
+                match &= fn->name == name;
+                if (match) return fn;
+            }
         }
     }
     return nullptr;
@@ -44,6 +64,17 @@ Function* current_function() {
 
 void set_function(Function* fn) {
     func = fn;
+}
+
+std::string Function::get_overloaded_name() {
+    std::string out = this->name;
+    for (sym::Variable str : this->args) {
+        out += "$";
+        out += typeToStr(str.type);
+    }
+    out += "$$";
+    out += typeToStr(this->ret);
+    return out;
 }
 
 } // namespace sym
