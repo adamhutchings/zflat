@@ -109,13 +109,18 @@ struct IfNode : public InnerStatementNode {
 struct SwitchNode : public InnerStatementNode {
     bool fswitch;
     ExprNode* expr;
-    BlockStatementNode* block;
     std::vector<CaseNode*> cases;
+    void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    void apply( void (*fn)(ASTNode*) ) override;
 };
 
 struct CaseNode {
     std::string lit; // literal value (TODO)
     std::vector<StatementNode*> statements;
+    void read(std::ifstream& file);
+    void write(std::ofstream& file);
+    void apply( void (*fn)(ASTNode*) );
 };
 
 struct ExprNode : public InnerStatementNode {
