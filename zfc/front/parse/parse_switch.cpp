@@ -45,4 +45,6 @@ void SwitchNode::read(std::ifstream& file) {
         this->cases.push_back(cn);
     }
 
+    this->line = sw.line;
+
 }
