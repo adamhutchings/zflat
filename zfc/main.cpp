@@ -47,6 +47,7 @@ int main(int argc, char** argv) {
         std::cout << "zfc: Compiler for zflat\n"
         "Usage:\n\t"
         "zfc -I [file] (compile one file)\n\t"
+        "zfc -I [file] -c (compile to C file)\n\t"
         "zfc (compile all files in src directory)\n"
         "Flags:\n\t"
         "--help: see this message\n";
