@@ -18,8 +18,8 @@ void CaseNode::read(std::ifstream& file) {
     }
 
     auto col = lex::lex(file);
-    if (lit.type != COLON) {
-        ZF_TOK_ERR(lit, ":");
+    if (col.type != COLON) {
+        ZF_TOK_ERR(col, ":");
     }
 
     while (1) {
