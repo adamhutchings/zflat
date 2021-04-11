@@ -24,13 +24,11 @@ void FuncCallNode::read(std::ifstream& file) {
         return; // no arguments
 
     lex::unlex(ctok);
-    int arg_count = 0;
 
     while (1) {
         ExprNode* exp = new ExprNode();
         exp->read(file);
         this->args.push_back(exp);
-        ++arg_count;
         Token peek = lex::lex(file);
         if (peek.type == TreeComp::COMMA) continue;
         else if (peek.type == TreeComp::CPAREN) goto out;
@@ -52,15 +50,17 @@ out:
 
     auto expected_args = (static_cast<sym::Function*>(this->ref))->args;
     int arg_max = expected_args.size();
-    if (arg_count != arg_max) {
-        ZF_ERROR("line %d: expected %d arguments to function %s, found %lu\n", this->line, arg_count, this->ref->name.c_str(), this->args.size());
+    if (this->args.size() != arg_max) {
+        ZF_ERROR("line %d: expected %lu arguments to function %s, found %lu\n", this->line, this->args.size(), this->ref->name.c_str(), this->args.size());
     }
 
+    int arg_id = 0;
     for (auto exp : this->args) {
-        if (get_type(exp) != expected_args[arg_count].type) {
+        if (get_type(exp) != expected_args[arg_id].type) {
             ZF_ERROR("line %d: expected argument of type %s, found argument of type %s instead"
-            , exp->line, typeToStr(expected_args[arg_count].type).c_str(), typeToStr(get_type(exp)).c_str());
+            , exp->line, typeToStr(expected_args[arg_id].type).c_str(), typeToStr(get_type(exp)).c_str());
         }
+        ++arg_id;
     }
 
 }
