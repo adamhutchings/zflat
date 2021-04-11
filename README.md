@@ -9,6 +9,13 @@ are intuitive syntax, type-safety, and easy library management.
 
 ![screenshot](https://github.com/adamhutchings/zflat/blob/main/screenshot.png)
 
+## Syntax highlighting
+#### Vim
+- [JakeRoggenbuck/zflat.vim](https://github.com/JakeRoggenbuck/zflat.vim/)
+
+#### Others
+- Please help us grow the zflat community and add support for your favorite tools
+
 ## Building
 - run `./scripts/build.sh` to start the build process
 
