@@ -10,6 +10,7 @@ void StatementNode::write(std::ofstream& file) {
         dynamic_cast<BlockStatementNode*> (this->inner) == nullptr
         && dynamic_cast<IfNode*> (this->inner) == nullptr
         && dynamic_cast<LoopNode*> (this->inner) == nullptr
+        && dynamic_cast<SwitchNode*> (this->inner) == nullptr
     )
         gen::write(file, ";");
 
