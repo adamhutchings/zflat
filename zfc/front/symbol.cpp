@@ -46,4 +46,15 @@ void set_function(Function* fn) {
     func = fn;
 }
 
+std::string Function::get_overloaded_name() {
+    std::string out = this->name;
+    for (sym::Variable str : this->args) {
+        out += "$";
+        out += typeToStr(str.type);
+    }
+    out += "$$";
+    out += typeToStr(this->ret);
+    return out;
+}
+
 } // namespace sym
