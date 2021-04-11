@@ -38,7 +38,7 @@ void VarDeclNode::read(std::ifstream& file) {
             , this->line, typeToStr(get_type(this->expr)).c_str(), typeToStr(this->var->type).c_str());
         }
     }
-    auto* s = sym::resolve(this->var->name);
+    auto* s = sym::resolve_var(this->var->name);
     if (s != nullptr) {
         fprintf(stderr, "zfc: warning: redefining variable \"%s\" on line %d (previous def %d)\n",
         this->var->name.c_str(), this->var->lineno, s->lineno);

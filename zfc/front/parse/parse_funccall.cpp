@@ -11,11 +11,6 @@ void FuncCallNode::read(std::ifstream& file) {
 
     if (name.type != TreeComp::IDENTIFIER) {
         ZF_TOK_ERR(name, "identifier");
-    } else {
-        this->ref = sym::resolve(name.str);
-        if (this->ref == nullptr || static_cast<sym::Function*>(this->ref) == nullptr) {
-            ZF_ERROR("could not resolve function \"%s\" on line %d", name.raw_content(), name.line);
-        }
     }
     Token opn = lex::lex(file);
     if (opn.type != TreeComp::OPAREN) {
@@ -51,6 +46,16 @@ void FuncCallNode::read(std::ifstream& file) {
 out:
     if (arg_count != arg_max) {
         ZF_ERROR("line %d: expected %d arguments to function %s, found %d\n", this->line, arg_max, this->ref->name.c_str(), arg_max);
+    }
+
+    std::vector<Type> args;
+    for (auto var : this->args) {
+        args.push_back(get_type(var));
+    }
+
+    this->ref = sym::resolve_fn(name.str, args);
+    if (this->ref == nullptr) {
+        ZF_ERROR("could not resolve function \"%s\" on line %d", name.raw_content(), name.line);
     }
 
 }

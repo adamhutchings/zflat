@@ -48,7 +48,7 @@ void ExprNode::read(std::ifstream& file) {
                 left_expr->literal = start.str;
                 left_expr->ref = nullptr;
             } else {
-                left_expr->ref = sym::resolve(start.str);
+                left_expr->ref = sym::resolve_var(start.str);
                 if (left_expr->ref == nullptr) {
                     ZF_ERROR("could not resolve variable \"%s\" on line %d", start.raw_content(), start.line);
                 }
