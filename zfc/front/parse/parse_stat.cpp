@@ -68,9 +68,10 @@ out:
         case SWITCH:
         case FSWITCH:
             break;
-        Token sc = lex::lex(file);
-        if (sc.type != TreeComp::SEMICOLON)
-            ZF_TOK_ERR(sc, "semicolon");
+        default:
+            Token sc = lex::lex(file);
+            if (sc.type != TreeComp::SEMICOLON)
+                ZF_TOK_ERR(sc, "semicolon");
     }
 
     this->line = this->inner->line;
