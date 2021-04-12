@@ -16,6 +16,8 @@ void SwitchNode::write(std::ofstream& file) {
         if (this->fswitch) {
             gen::newline(file);
             br.write(file);
+            gen::write(file, ";");
+            gen::newline(file);
         }
     }
     gen::unindent();

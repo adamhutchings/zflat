@@ -2,6 +2,7 @@
 #include <back/gen/gen_main.hpp>
 
 void CaseNode::write(std::ofstream& file) {
+    gen::newline(file);
     gen::write(file, "case ");
     gen::write(file, this->lit);
     gen::write(file, ":");
