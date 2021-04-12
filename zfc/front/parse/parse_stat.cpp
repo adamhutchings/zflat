@@ -66,6 +66,7 @@ out:
         case IF:
         case SWITCH:
         case FSWITCH:
+        case SEMICOLON:
             break;
         default:
             Token sc = lex::lex(file);
