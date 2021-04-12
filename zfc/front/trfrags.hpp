@@ -33,6 +33,9 @@ enum TreeComp {
     LOOP, // loop
     IF,
     ELSE,
+    SWITCH,
+    FSWITCH,
+    CASE,
 
     // Tree fragments
     EXPRESSION,

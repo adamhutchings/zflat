@@ -56,6 +56,20 @@ void LoopNode::apply(void(*fn)(ASTNode*)) {
     fn(this);
 }
 
+void SwitchNode::apply(void(*fn)(ASTNode*)) {
+    fn(this->expr);
+    for (auto case_ : this->cases) {
+        case_->apply(fn);
+    }
+    fn(this);
+}
+
+void CaseNode::apply(void(*fn)(ASTNode*)) {
+    for (auto st : this->statements) {
+        st->apply(fn);
+    }
+}
+
 void ExprNode::apply(void(*fn)(ASTNode*)) {
     if (this->left != nullptr) fn(this->left);
     if (this->right != nullptr) fn(this->right);

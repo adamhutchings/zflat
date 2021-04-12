@@ -45,8 +45,13 @@ void StatementNode::read(std::ifstream& file) {
             this->inner->read(file);
             goto out;
         case TreeComp::SEMICOLON:
-            lex::unlex(initial);
             this->inner = nullptr;
+            goto out;
+        case TreeComp::SWITCH:
+        case TreeComp::FSWITCH:
+            lex::unlex(initial);
+            this->inner = new SwitchNode();
+            this->inner->read(file);
             goto out;
         default:
             ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
@@ -55,13 +60,25 @@ void StatementNode::read(std::ifstream& file) {
 out:
 
     // Make sure to parse a trailing semicolon, except for block statements
-    if (initial.type != TreeComp::OBRACE && initial.type != TreeComp::LOOP && initial.type != TreeComp::IF) {
-        Token sc = lex::lex(file);
-        if (sc.type != TreeComp::SEMICOLON)
-            ZF_TOK_ERR(sc, "semicolon");
+    switch (initial.type) {
+        case OBRACE:
+        case LOOP:
+        case IF:
+        case SWITCH:
+        case FSWITCH:
+        case SEMICOLON:
+            break;
+        default:
+            Token sc = lex::lex(file);
+            if (sc.type != TreeComp::SEMICOLON)
+                ZF_TOK_ERR(sc, "semicolon");
     }
 
-    this->line = this->inner->line;
+    if (this->inner != nullptr) {
+        this->line = this->inner->line;
+    } else {
+        this->line = initial.line;
+    }
 
 }
 
