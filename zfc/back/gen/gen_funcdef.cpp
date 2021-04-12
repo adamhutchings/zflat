@@ -16,6 +16,10 @@ void FunctionNode::write(std::ofstream& file) {
     }
     gen::write(file, ") ");
 
-    this->body->write(file);
+    if (this->symbol->extc) {
+        gen::write(file, ";");
+    } else {
+        this->body->write(file);
+    }
 
 }
