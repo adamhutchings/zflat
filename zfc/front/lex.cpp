@@ -168,6 +168,7 @@ TreeComp get_type(std::string name) {
     if (name == "case") return TreeComp::CASE;
     if (name == "fswitch") return TreeComp::FSWITCH;
     if (name == "extc") return TreeComp::EXTC;
+    if (name == "__c_va_args") return TreeComp::VA_ARGS;
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }

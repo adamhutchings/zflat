@@ -37,6 +37,7 @@ enum TreeComp {
     FSWITCH,
     CASE,
     EXTC,
+    VA_ARGS,
 
     // Tree fragments
     EXPRESSION,
