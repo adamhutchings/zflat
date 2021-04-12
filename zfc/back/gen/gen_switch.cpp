@@ -21,5 +21,6 @@ void SwitchNode::write(std::ofstream& file) {
         }
     }
     gen::unindent();
+    gen::write(file, "}");
 
 }
