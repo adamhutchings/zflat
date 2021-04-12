@@ -2,7 +2,7 @@
 
 Type get_type(ExprNode* expr) {
     if (expr->left != nullptr && expr->right == nullptr) {
-        return static_cast<sym::Function*>(dynamic_cast<FuncCallNode*>(expr->left)->ref)->ret;
+        return static_cast<sym::Function*>(dynamic_cast<FuncCallNode*>(expr->left)->call)->ret;
     }
     if (expr->left != nullptr && expr->right != nullptr) {
 
