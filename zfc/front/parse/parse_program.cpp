@@ -48,7 +48,7 @@ void ProgramNode::read(std::ifstream& file) {
 
         ProgramSub* sub;
 
-        if (check_fn(file)) {
+        if (check_fn(file) || endcheck.type == EXTC) {
             sub = new FunctionNode();
         } else {
             sub = new StatementNode();
