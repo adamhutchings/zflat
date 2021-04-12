@@ -16,6 +16,7 @@ void CaseNode::read(std::ifstream& file) {
     if (lit.type != LITERAL) {
         ZF_TOK_ERR(lit, "literal value");
     }
+    this->lit = lit.str;
 
     auto col = lex::lex(file);
     if (col.type != COLON) {
