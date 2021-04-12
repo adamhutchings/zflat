@@ -29,5 +29,6 @@ std::string typeToStr(Type in) {
     if (in == LONG) return "long long";
     if (in == ULONG) return "unsigned long long";
     if (in == VOID) return "void";
+    if (in == VA_TYPE) return "...";
     return "!!INVALID_TYPE!!";
 }
