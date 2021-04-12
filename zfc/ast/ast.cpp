@@ -99,7 +99,7 @@ void warn_unused_value(ProgramSub* pn) {
     }
 
     auto fn = dynamic_cast<FunctionNode*>(pn);
-    if (fn != nullptr) {
+    if (fn != nullptr && !(fn->symbol->extc)) {
         for (auto st : fn->body->statements) {
             warn_unused_value(st);
         }

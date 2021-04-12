@@ -25,6 +25,7 @@ struct Variable : public Symbol {
 struct Function : public Symbol {
     std::vector<Variable> args;
     Type ret;
+    bool extc;
     inline Function(std::string n) : Symbol(n) {}
     std::string get_overloaded_name();
 };

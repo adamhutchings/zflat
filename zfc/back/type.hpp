@@ -23,6 +23,7 @@ enum Type {
     LONG,
     ULONG,
     VOID,
+    VA_TYPE,
     MAX_INVALID,
 };
 

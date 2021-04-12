@@ -13,12 +13,22 @@ void FunctionNode::read(std::ifstream& file) {
     Token name = lex::lex(file);
     this->line = name.line;
 
+    bool extc;
+
+    if (name.type == TreeComp::EXTC) {
+        extc = true;
+        name = lex::lex(file);
+    } else {
+        extc = false;
+    }
+
     if (name.type != TreeComp::IDENTIFIER) {
         ZF_TOK_ERR(name, "identifier");
     }
 
     this->symbol = new sym::Function(name.str);
     this->symbol->lineno = name.line;
+    this->symbol->extc = extc;
 
     Token opn = lex::lex(file);
 
@@ -45,13 +55,29 @@ void FunctionNode::read(std::ifstream& file) {
         else if (peek.type == TreeComp::COMMA) /* next */;
         else
             ZF_TOK_ERR(peek, "',' or ')'");
-        VarDeclNode* node = new VarDeclNode();
-        node->read(file);
+        // Check for va_args
+        auto va = lex::lex(file);
+            VarDeclNode* node = new VarDeclNode();
+        if (va.type == VA_ARGS) {
+            node->var = new sym::Variable("");
+            node->var->type = VA_TYPE;
+        } else {
+            lex::unlex(va);
+            node->read(file);
+        }
         // Make sure it isn't a duplicate symbol
+        // Also check to make sure the va_args is at the end
+        int pos = 0;
         for (auto vd : this->symbol->args) {
             if (vd.name == node->var->name) {
                 ZF_ERROR("line %d: duplicate argument %s", node->line, node->var->name.c_str());
             }
+            if (vd.type == VA_TYPE) {
+                if (pos == 0 || pos != this->symbol->args.size() - 1 || !this->symbol->extc) {
+                    ZF_ERROR("line %d: invalid use of varargs", vd.lineno);
+                }
+            }
+            ++pos;
         }
         this->symbol->args.push_back(*node->var);
     }
@@ -73,9 +99,17 @@ void FunctionNode::read(std::ifstream& file) {
 
     sym::set_function(this->symbol);
 
-    // Now, parse the rest as a block statement
-    this->body = new BlockStatementNode();
-    this->body->read(file);
+    if (extc) {
+        // Expect a semicolon
+        auto sc = lex::lex(file);
+        if (sc.type != TreeComp::SEMICOLON) {
+            ZF_TOK_ERR(sc, ";");
+        }
+    } else {
+        // Now, parse the rest as a block statement
+        this->body = new BlockStatementNode();
+        this->body->read(file);
+    }
 
     // exit argument scope
     sym::exit_scope();
