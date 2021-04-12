@@ -1,0 +1,9 @@
+foo(): int {
+    switch (3 + 5) {
+        case 4: ;
+    }
+    fswitch (5 - 7) {
+        case 2: foo();
+        case 3: foo(); foo();
+    }
+}
