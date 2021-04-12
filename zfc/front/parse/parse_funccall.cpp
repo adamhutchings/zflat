@@ -21,7 +21,7 @@ void FuncCallNode::read(std::ifstream& file) {
     Token ctok = lex::lex(file);
 
     if (ctok.type == TreeComp::CPAREN)
-        return; // no arguments
+        goto out; // no arguments
 
     lex::unlex(ctok);
 
@@ -43,15 +43,15 @@ out:
         args.push_back(get_type(var));
     }
 
-    this->ref = sym::resolve_fn(name.str, args);
-    if (this->ref == nullptr) {
+    this->call = sym::resolve_fn(name.str, args);
+    if (this->call == nullptr) {
         ZF_ERROR("could not resolve function \"%s\" on line %d", name.raw_content(), name.line);
     }
 
-    auto expected_args = (static_cast<sym::Function*>(this->ref))->args;
+    auto expected_args = this->call->args;
     int arg_max = expected_args.size();
     if (this->args.size() != arg_max) {
-        ZF_ERROR("line %d: expected %lu arguments to function %s, found %lu\n", this->line, this->args.size(), this->ref->name.c_str(), this->args.size());
+        ZF_ERROR("line %d: expected %lu arguments to function %s, found %lu\n", this->line, this->args.size(), this->call->name.c_str(), this->args.size());
     }
 
     int arg_id = 0;
