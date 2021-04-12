@@ -13,12 +13,22 @@ void FunctionNode::read(std::ifstream& file) {
     Token name = lex::lex(file);
     this->line = name.line;
 
+    bool extc;
+
+    if (name.type == TreeComp::EXTC) {
+        extc = true;
+        name = lex::lex(file);
+    } else {
+        extc = false;
+    }
+
     if (name.type != TreeComp::IDENTIFIER) {
         ZF_TOK_ERR(name, "identifier");
     }
 
     this->symbol = new sym::Function(name.str);
     this->symbol->lineno = name.line;
+    this->symbol->extc = extc;
 
     Token opn = lex::lex(file);
 
@@ -73,9 +83,17 @@ void FunctionNode::read(std::ifstream& file) {
 
     sym::set_function(this->symbol);
 
-    // Now, parse the rest as a block statement
-    this->body = new BlockStatementNode();
-    this->body->read(file);
+    if (extc) {
+        // Expect a semicolon
+        auto sc = lex::lex(file);
+        if (sc.type != TreeComp::SEMICOLON) {
+            ZF_TOK_ERR(sc, ";");
+        }
+    } else {
+        // Now, parse the rest as a block statement
+        this->body = new BlockStatementNode();
+        this->body->read(file);
+    }
 
     // exit argument scope
     sym::exit_scope();
