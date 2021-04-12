@@ -55,13 +55,29 @@ void FunctionNode::read(std::ifstream& file) {
         else if (peek.type == TreeComp::COMMA) /* next */;
         else
             ZF_TOK_ERR(peek, "',' or ')'");
-        VarDeclNode* node = new VarDeclNode();
-        node->read(file);
+        // Check for va_args
+        auto va = lex::lex(file);
+            VarDeclNode* node = new VarDeclNode();
+        if (va.type == VA_ARGS) {
+            node->var = new sym::Variable("");
+            node->var->type = VA_TYPE;
+        } else {
+            lex::unlex(va);
+            node->read(file);
+        }
         // Make sure it isn't a duplicate symbol
+        // Also check to make sure the va_args is at the end
+        int pos = 0;
         for (auto vd : this->symbol->args) {
             if (vd.name == node->var->name) {
                 ZF_ERROR("line %d: duplicate argument %s", node->line, node->var->name.c_str());
             }
+            if (vd.type == VA_TYPE) {
+                if (pos == 0 || pos != this->symbol->args.size() - 1 || !this->symbol->extc) {
+                    ZF_ERROR("line %d: invalid use of varargs", vd.lineno);
+                }
+            }
+            ++pos;
         }
         this->symbol->args.push_back(*node->var);
     }
