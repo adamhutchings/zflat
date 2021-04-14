@@ -82,18 +82,27 @@ void FunctionNode::read(std::ifstream& file) {
         this->symbol->args.push_back(*node->var);
     }
 
+    bool ret_type_declared; // Whether a return type is declated
+
     // Now we've passed the function argument list, get return type
     Token cln = lex::lex(file);
-    if (cln.type != TreeComp::COLON) {
-        ZF_TOK_ERR(cln, "':'");
+    if (cln.type == TreeComp::COLON) {
+        ret_type_declared = true;
+    } else if (cln.type == TreeComp::OBRACE) {
+        lex::unlex(cln);
+        ret_type_declared = false;
+    } else {
+        ZF_TOK_ERR(cln, "':' or '{'");
     }
-
-    Token ret = lex::lex(file);
-    if (ret.type != TreeComp::TYPENAME) {
-        ZF_TOK_ERR(ret, "type name");
+    if (ret_type_declared) {
+        Token ret = lex::lex(file);
+        if (ret.type != TreeComp::TYPENAME) {
+            ZF_TOK_ERR(ret, "type name");
+        }
+        this->symbol->ret = strToType(ret.str);
+    } else {
+        this->symbol->ret = VOID;
     }
-
-    this->symbol->ret = strToType(ret.str);
 
     sym::add_global_symbol(this->symbol);
 
