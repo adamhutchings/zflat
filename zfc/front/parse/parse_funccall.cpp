@@ -48,14 +48,24 @@ out:
         ZF_ERROR("could not resolve function \"%s\" on line %d", name.raw_content(), name.line);
     }
 
+    // For argument verification
+    bool varargs = this->call->args[this->call->args.size() - 1].type == VA_TYPE;
+
     auto expected_args = this->call->args;
     int arg_max = expected_args.size();
-    if (this->args.size() != arg_max) {
+    int actual_args = this->args.size();
+
+    bool arg_count_mismatch =
+        (varargs) ? actual_args < arg_max - 1 : actual_args != arg_max;
+
+    if (arg_count_mismatch) {
         ZF_ERROR("line %d: expected %lu arguments to function %s, found %lu\n", this->line, this->args.size(), this->call->name.c_str(), this->args.size());
     }
 
     int arg_id = 0;
     for (auto exp : this->args) {
+        // Only check arguments that aren't varargs
+        if (expected_args[arg_id].type == VA_TYPE) break;
         if (get_type(exp) != expected_args[arg_id].type) {
             ZF_ERROR("line %d: expected argument of type %s, found argument of type %s instead"
             , exp->line, typeToStr(expected_args[arg_id].type).c_str(), typeToStr(get_type(exp)).c_str());

@@ -39,14 +39,18 @@ Function* resolve_fn(std::string name, std::vector<Type> args) {
     for (int i = symtab.size(); i > 0; --i) {
         for (Symbol* sym : symtab[i - 1]) {
             Function* fn = static_cast<Function*>(sym);
-            if (fn != nullptr) {
+            if (fn != nullptr && fn->name == name) {
                 bool match = true;
-                if (args.size() != fn->args.size()) continue;
-                auto size = args.size();
+                auto size = fn->args.size();
+                bool sizes_match = 
+                    (fn->args[size - 1].type == VA_TYPE)
+                    ? args.size() >= size - 1
+                    : args.size() == size;
+                if (!sizes_match) continue;
                 for (int i = 0; i < size; i++) {
+                    if (fn->args[i].type == VA_TYPE) break;
                     if (args[i] != fn->args[i].type) match = false;
                 }
-                match &= fn->name == name;
                 if (match) return fn;
             }
         }
