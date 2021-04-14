@@ -88,7 +88,7 @@ void FunctionNode::read(std::ifstream& file) {
     Token cln = lex::lex(file);
     if (cln.type == TreeComp::COLON) {
         ret_type_declared = true;
-    } else if (cln.type == TreeComp::OBRACE) {
+    } else if (cln.type == TreeComp::OBRACE || cln.type == TreeComp::SEMICOLON) {
         lex::unlex(cln);
         ret_type_declared = false;
     } else {
