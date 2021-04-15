@@ -7,9 +7,10 @@
 #include <string>
 
 #include <back/operator.hpp>
+#include <front/lex.hpp>
 #include <util/error.hpp>
 
-enum Type {
+enum BuiltinType {
     // From smallest to largest
     BOOL,
     CHAR,
@@ -27,5 +28,12 @@ enum Type {
     MAX_INVALID,
 };
 
-Type strToType(std::string in);
-std::string typeToStr(Type in);
+struct Type {
+    std::string to_str();
+    bool operator==(BuiltinType p);
+    BuiltinType primitive; // can be MAX_INVALID
+    inline Type(BuiltinType t=MAX_INVALID) { primitive = t; }
+    bool operator!=(Type t);
+};
+
+Type parse_type(std::ifstream& file);

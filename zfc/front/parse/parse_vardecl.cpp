@@ -18,12 +18,7 @@ void VarDeclNode::read(std::ifstream& file) {
     if (next.type != TreeComp::COLON) {
         ZF_TOK_ERR(next, "':'");
     }
-    next = lex::lex(file);
-    if (next.type != TreeComp::TYPENAME) {
-        ZF_TOK_ERR(next, "type name");
-    } else {
-        this->var->type = strToType(next.str);
-    }
+    this->var->type = parse_type(file);
     next = lex::lex(file);
     // followed by anything valid (end of statement)              (end of function arg list) (next argument) opening loop block
     if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA || next.type == OBRACE) {
@@ -35,7 +30,7 @@ void VarDeclNode::read(std::ifstream& file) {
         this->expr->read(file);
         if (get_type(this->expr) != this->var->type) {
             ZF_ERROR("line %d: assigning value of type %s to var of type %s"
-            , this->line, typeToStr(get_type(this->expr)).c_str(), typeToStr(this->var->type).c_str());
+            , this->line, get_type(this->expr).to_str().c_str(), this->var->type.to_str().c_str());
         }
     }
     auto* s = sym::resolve_var(this->var->name);
