@@ -95,11 +95,7 @@ void FunctionNode::read(std::ifstream& file) {
         ZF_TOK_ERR(cln, "':' or '{'");
     }
     if (ret_type_declared) {
-        Token ret = lex::lex(file);
-        if (ret.type != TreeComp::TYPENAME) {
-            ZF_TOK_ERR(ret, "type name");
-        }
-        this->symbol->ret = strToType(ret.str);
+        this->symbol->ret = parse_type(file);
     } else {
         this->symbol->ret = VOID;
     }

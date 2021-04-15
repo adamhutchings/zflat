@@ -1,6 +1,8 @@
 #include "type.hpp"
 
-Type strToType(std::string in) {
+namespace {
+
+BuiltinType strToType(std::string in) {
     if (in == "bool") return BOOL;
     if (in == "char") return CHAR;
     if (in == "uchar") return UCHAR;
@@ -16,7 +18,7 @@ Type strToType(std::string in) {
     return MAX_INVALID;
 }
 
-std::string typeToStr(Type in) {
+std::string typeToStr(BuiltinType in) {
     if (in == BOOL) return "_Bool";
     if (in == CHAR) return "signed char";
     if (in == UCHAR) return "unsigned char";
@@ -31,4 +33,32 @@ std::string typeToStr(Type in) {
     if (in == VOID) return "void";
     if (in == VA_TYPE) return "...";
     return "!!INVALID_TYPE!!";
+}
+
+}
+
+bool Type::operator==(BuiltinType p) {
+    return this->primitive == p;
+}
+
+bool Type::operator!=(Type p) {
+    return this->primitive != p.primitive;
+}
+
+Type parse_type(std::ifstream& file) {
+    Type ret;
+    // Change this later, if need be.
+    auto type = lex::lex(file);
+    if (type.type != TYPENAME) {
+        ZF_ERROR("line %d: expected type name, found \"%s\"", type.line, type.raw_content());
+    }
+    ret.primitive = strToType(type.str);
+    if (ret.primitive == MAX_INVALID) {
+        ZF_ERROR("line %d: type name \"%s\" not recognized", type.line, type.raw_content());
+    }
+    return ret;
+}
+
+std::string Type::to_str() {
+    return typeToStr(this->primitive);
 }
