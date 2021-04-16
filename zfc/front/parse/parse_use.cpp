@@ -34,7 +34,7 @@ void UseNode::read(std::ifstream& file) {
         }
     }
 
-    path += ".zf";
+    path += ".symbol";
 
     // TODO - read symbol table
 
