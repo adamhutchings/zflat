@@ -44,6 +44,7 @@ struct ExprNode;
 struct FuncCallNode;
 struct ControlFlowNode;
 struct VarDeclNode;
+struct UseNode;
 
 struct ProgramNode : public ASTNode {
     std::vector<ProgramSub*> components;
@@ -162,6 +163,14 @@ struct VarDeclNode : public InnerStatementNode {
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
     virtual ~VarDeclNode() {}
+};
+
+struct UseNode : public ASTNode {
+    std::vector<sym::Symbol*> symtab;
+    void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    void apply( void (*fn)(ASTNode*) ) override;
+    virtual ~UseNode() {}
 };
 
 void warn_unused_value(ProgramSub* ps);

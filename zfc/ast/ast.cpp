@@ -86,6 +86,10 @@ void VarDeclNode::apply(void(*fn)(ASTNode*)) {
     fn(this);
 }
 
+void UseNode::apply(void(*fn)(ASTNode*)) {
+    
+}
+
 void warn_unused_value(ProgramSub* pn) {
 
     auto sn = dynamic_cast<StatementNode*>(pn);
