@@ -47,6 +47,7 @@ struct VarDeclNode;
 struct UseNode;
 
 struct ProgramNode : public ASTNode {
+    std::vector<UseNode*> imports;
     std::vector<ProgramSub*> components;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
