@@ -38,6 +38,7 @@ enum TreeComp {
     CASE,
     EXTC,
     VA_ARGS,
+    USE,
 
     // Tree fragments
     EXPRESSION,
