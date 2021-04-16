@@ -36,6 +36,8 @@ bool check_fn(std::ifstream& file) {
 
 void ProgramNode::read(std::ifstream& file) {
 
+    sym::enter_scope(); // global scope
+
     while (1) {
 
         auto endcheck = lex::lex(file);
@@ -60,5 +62,7 @@ void ProgramNode::read(std::ifstream& file) {
         this->components.push_back(sub);
 
     }
+
+    sym::exit_scope(); // exit global scope
 
 }
