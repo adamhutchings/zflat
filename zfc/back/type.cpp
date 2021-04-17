@@ -1,7 +1,5 @@
 #include "type.hpp"
 
-namespace {
-
 BuiltinType strToType(std::string in) {
     if (in == "bool") return BOOL;
     if (in == "char") return CHAR;
@@ -33,8 +31,6 @@ std::string typeToStr(BuiltinType in) {
     if (in == VOID) return "void";
     if (in == VA_TYPE) return "...";
     return "!!INVALID_TYPE!!";
-}
-
 }
 
 bool Type::operator==(BuiltinType p) {

@@ -28,6 +28,9 @@ enum BuiltinType {
     MAX_INVALID,
 };
 
+BuiltinType strToType(std::string in);
+std::string typeToStr(BuiltinType in);
+
 struct Type {
     std::string to_str();
     bool operator==(BuiltinType p);
