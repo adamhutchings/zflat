@@ -18,7 +18,8 @@
 namespace {
 
 Type get_type(std::string str) {
-
+    // More in the future (with arrays, refs, etc)
+    return strToType(str);
 }
 
 sym::Symbol* parse_sym(std::string str) {
@@ -41,10 +42,7 @@ sym::Symbol* parse_sym(std::string str) {
                 break;
             }
             // Parse next arg.
-            int comma = str.find(','), cparen = str.find(')'), end = MIN(comma, cparen);
-            if (comma < 0) {
-                ZF_SYMBOL_ERR("internal: no ',' or ')' found");
-            }
+            int comma = str.find(',');
             auto next_argtype = str.substr(0, comma);
             auto var = sym::Variable("outside-module-invisible");
             var.type = get_type(next_argtype);
