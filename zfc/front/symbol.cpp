@@ -10,6 +10,8 @@ sym::Function* func = nullptr;
 
 namespace sym {
 
+std::string argsep = "$", retsep = "$$", scopesep = "$$$";
+
 std::vector<std::vector<sym::Symbol*>>* getsymtab() { return &symtab; }
 
 void enter_scope() {

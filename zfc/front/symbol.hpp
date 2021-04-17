@@ -11,6 +11,8 @@
 
 namespace sym {
 
+extern std::string argsep, retsep, scopesep;
+
 struct Symbol {
     std::string name;
     int lineno;
