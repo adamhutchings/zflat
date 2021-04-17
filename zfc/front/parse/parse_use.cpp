@@ -29,7 +29,7 @@ void UseNode::read(std::ifstream& file) {
         }
         if (end_or_dot.type == DOT) {
             // folder break in path
-            path += "/", symbol_prefix += "$$$";
+            path += "/", symbol_prefix += sym::scopesep;
         } else {
             ZF_TOK_ERR(end_or_dot, "';' or '.'");
         }
@@ -52,7 +52,7 @@ void UseNode::read(std::ifstream& file) {
     mod::begin_read(symbol_file);
     while ( (sym = mod::readsym(symbol_file)) != nullptr ) {
         sym::add_symbol(sym);
-        sym->name = symbol_prefix + sym->name;
+        sym->name = symbol_prefix + sym::scopesep + sym->name;
         this->symtab.push_back(sym);
     }
     mod::end_read(symbol_file);
