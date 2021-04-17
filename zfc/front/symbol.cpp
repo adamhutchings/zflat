@@ -22,7 +22,7 @@ void add_symbol(Symbol* s) {
 }
 
 void add_global_symbol(Symbol* s) {
-    symtab[0].push_back(s);
+    symtab[1].push_back(s);
 }
 
 Variable* resolve_var(std::string name) {
@@ -59,7 +59,7 @@ Function* resolve_fn(std::string name, std::vector<Type> args) {
 }
 
 bool in_global_scope() {
-    return symtab.size() == 1;
+    return symtab.size() == 2; // import scope is also a scope
 }
 
 Function* current_function() {
