@@ -10,6 +10,8 @@ sym::Function* func = nullptr;
 
 namespace sym {
 
+std::vector<std::vector<sym::Symbol*>>* getsymtab() { return &symtab; }
+
 void enter_scope() {
     symtab.push_back(std::vector<Symbol*>());
 }

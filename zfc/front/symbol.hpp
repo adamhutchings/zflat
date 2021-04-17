@@ -44,4 +44,6 @@ bool in_global_scope();
 Function* current_function();
 void set_function(Function* fn);
 
+std::vector<std::vector<sym::Symbol*>>* getsymtab();
+
 }
