@@ -53,6 +53,7 @@ void UseNode::read(std::ifstream& file) {
     while ( (sym = mod::readsym(symbol_file)) != nullptr ) {
         sym::add_symbol(sym);
         sym->name = symbol_prefix + sym->name;
+        this->symtab.push_back(sym);
     }
     mod::end_read(symbol_file);
 
