@@ -49,7 +49,7 @@ out:
     }
 
     // For argument verification
-    bool varargs = this->call->args[this->call->args.size() - 1].type == VA_TYPE;
+    bool varargs = this->call->args.size() == 0 ? false : this->call->args[this->call->args.size() - 1].type == VA_TYPE;
 
     auto expected_args = this->call->args;
     int arg_max = expected_args.size();

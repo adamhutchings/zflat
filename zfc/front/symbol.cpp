@@ -46,6 +46,7 @@ Function* resolve_fn(std::string name, std::vector<Type> args) {
             if (fn != nullptr && fn->name == name) {
                 bool match = true;
                 auto size = fn->args.size();
+                if (size == 0) return fn;
                 bool sizes_match = 
                     (fn->args[size - 1].type == VA_TYPE)
                     ? args.size() >= size - 1
