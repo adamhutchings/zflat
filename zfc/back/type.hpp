@@ -35,7 +35,8 @@ BuiltinType cStrToType(std::string in);
 std::string typeToCStr(BuiltinType in);
 
 struct Type {
-    std::string to_str();
+    std::string to_human_str();
+    std::string to_output_str();
     bool operator==(BuiltinType p);
     BuiltinType primitive; // can be MAX_INVALID
     inline Type(BuiltinType t=MAX_INVALID) { primitive = t; }

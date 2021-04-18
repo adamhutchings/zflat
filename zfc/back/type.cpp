@@ -88,6 +88,10 @@ Type parse_type(std::ifstream& file) {
     return ret;
 }
 
-std::string Type::to_str() {
+std::string Type::to_human_str() {
     return typeToZStr(this->primitive);
+}
+
+std::string Type::to_output_str() {
+    return typeToCStr(this->primitive);
 }
