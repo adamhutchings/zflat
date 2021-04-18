@@ -28,8 +28,11 @@ enum BuiltinType {
     MAX_INVALID,
 };
 
-BuiltinType strToType(std::string in);
-std::string typeToStr(BuiltinType in);
+BuiltinType zStrToType(std::string in);
+std::string typeToZStr(BuiltinType in);
+
+BuiltinType cStrToType(std::string in);
+std::string typeToCStr(BuiltinType in);
 
 struct Type {
     std::string to_str();
