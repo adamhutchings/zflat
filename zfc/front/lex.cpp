@@ -160,6 +160,7 @@ TreeComp get_type(std::string name) {
     if (
         name == "int" || name == "double" || name == "float" || name == "char"
     ||  name == "short" || name == "long" || name == "bool" || name == "void"
+    || name == "ushort" || name == "uint" || name == "ulong" || name == "uchar"
     ) return TreeComp::TYPENAME;
     if (name == "loop") return TreeComp::LOOP;
     if (name == "if") return TreeComp::IF;
