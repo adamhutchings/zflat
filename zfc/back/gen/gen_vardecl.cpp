@@ -4,7 +4,7 @@
 
 void VarDeclNode::write(std::ofstream& file) {
 
-    gen::write(file, this->var->type.to_str());
+    gen::write(file, this->var->type.to_output_str());
     gen::write(file, " ");
     gen::write(file, this->var->name);
     

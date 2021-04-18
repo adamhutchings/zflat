@@ -68,7 +68,7 @@ out:
         if (expected_args[arg_id].type == VA_TYPE) break;
         if (get_type(exp) != expected_args[arg_id].type) {
             ZF_ERROR("line %d: expected argument of type %s, found argument of type %s instead"
-            , exp->line, expected_args[arg_id].type.to_str().c_str(), get_type(exp).to_str().c_str());
+            , exp->line, expected_args[arg_id].type.to_human_str().c_str(), get_type(exp).to_human_str().c_str());
         }
         ++arg_id;
     }

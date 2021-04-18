@@ -19,7 +19,7 @@ namespace {
 
 Type get_type(std::string str) {
     // More in the future (with arrays, refs, etc)
-    return strToType(str);
+    return zStrToType(str);
 }
 
 sym::Symbol* parse_sym(std::string str) {
@@ -115,7 +115,7 @@ void writesym(std::ofstream& file, sym::Symbol* sym) {
     sym::Variable* var = static_cast<sym::Variable*>(sym);
     if (var != nullptr) {
         // Write x: int, for example
-        file << var->name << ": " << var->type.to_str() << "\n";
+        file << var->name << ": " << var->type.to_human_str() << "\n";
         return;
     }
     sym::Function* fun = static_cast<sym::Function*>(sym);
@@ -129,11 +129,11 @@ void writesym(std::ofstream& file, sym::Symbol* sym) {
             if (ct != 0) {
                 file << ", ";
             }
-            file << arg.type.to_str();
+            file << arg.type.to_human_str();
             ++ct;
         }
         file << "): ";
-        file << fun->ret.to_str();
+        file << fun->ret.to_human_str();
         file << "\n";
     }
 }
