@@ -30,7 +30,7 @@ void VarDeclNode::read(std::ifstream& file) {
         this->expr->read(file);
         if (get_type(this->expr) != this->var->type) {
             ZF_ERROR("line %d: assigning value of type %s to var of type %s"
-            , this->line, get_type(this->expr).to_str().c_str(), this->var->type.to_str().c_str());
+            , this->line, get_type(this->expr).to_human_str().c_str(), this->var->type.to_human_str().c_str());
         }
     }
     auto* s = sym::resolve_var(this->var->name);

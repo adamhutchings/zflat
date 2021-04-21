@@ -28,10 +28,17 @@ enum BuiltinType {
     MAX_INVALID,
 };
 
+BuiltinType zStrToType(std::string in);
+std::string typeToZStr(BuiltinType in);
+
+BuiltinType cStrToType(std::string in);
+std::string typeToCStr(BuiltinType in);
+
 struct Type {
-    std::string to_str();
+    std::string to_human_str();
+    std::string to_output_str();
     bool operator==(BuiltinType p);
-    BuiltinType primitive; // can be MAX_INVALID
+    BuiltinType primitive = MAX_INVALID; // can be MAX_INVALID
     inline Type(BuiltinType t=MAX_INVALID) { primitive = t; }
     bool operator!=(Type t);
 };

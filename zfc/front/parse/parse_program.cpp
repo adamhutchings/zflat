@@ -36,6 +36,26 @@ bool check_fn(std::ifstream& file) {
 
 void ProgramNode::read(std::ifstream& file) {
 
+    sym::enter_scope(); // import scope
+
+    while (1) {
+        auto use = lex::lex(file);
+        if (use.type != USE) {
+            // Not a use statement - end use statement parsing.
+            lex::unlex(use);
+            break;
+        }
+        lex::unlex(use);
+        auto ustmt = new UseNode();
+        ustmt->read(file);
+        this->imports.push_back(ustmt);
+        for (auto sym : ustmt->symtab) {
+            sym::add_symbol(sym);
+        }
+    }
+
+    sym::enter_scope(); // global scope
+
     while (1) {
 
         auto endcheck = lex::lex(file);
@@ -60,5 +80,9 @@ void ProgramNode::read(std::ifstream& file) {
         this->components.push_back(sub);
 
     }
+
+    sym::exit_scope(); // exit global scope
+
+    sym::exit_scope(); // exit import scope
 
 }

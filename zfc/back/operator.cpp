@@ -31,6 +31,7 @@ Operator strToOp(std::string in) {
     if (in == "&")  return AND;
     if (in == "|")  return OR;
     if (in == "^")  return XOR;
+    if (in == ".")  return ODOT;
     return INVALID;
 }
 
@@ -58,6 +59,7 @@ std::string opToStr(Operator in) {
     if (in == AND)    return "&";
     if (in == OR)     return "|";
     if (in == XOR)    return "^";
+    if (in == ODOT)    return ".";
     return "!!INVALID_OPERATOR!!";
 }
 

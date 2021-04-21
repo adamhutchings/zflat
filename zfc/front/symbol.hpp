@@ -11,6 +11,8 @@
 
 namespace sym {
 
+extern std::string argsep, retsep, scopesep;
+
 struct Symbol {
     std::string name;
     int lineno;
@@ -43,5 +45,7 @@ bool in_global_scope();
 
 Function* current_function();
 void set_function(Function* fn);
+
+std::vector<std::vector<sym::Symbol*>>* getsymtab();
 
 }

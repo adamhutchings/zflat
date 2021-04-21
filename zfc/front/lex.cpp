@@ -160,6 +160,7 @@ TreeComp get_type(std::string name) {
     if (
         name == "int" || name == "double" || name == "float" || name == "char"
     ||  name == "short" || name == "long" || name == "bool" || name == "void"
+    || name == "ushort" || name == "uint" || name == "ulong" || name == "uchar"
     ) return TreeComp::TYPENAME;
     if (name == "loop") return TreeComp::LOOP;
     if (name == "if") return TreeComp::IF;
@@ -169,6 +170,7 @@ TreeComp get_type(std::string name) {
     if (name == "fswitch") return TreeComp::FSWITCH;
     if (name == "extc") return TreeComp::EXTC;
     if (name == "__c_va_args") return TreeComp::VA_ARGS;
+    if (name == "use") return TreeComp::USE;
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }

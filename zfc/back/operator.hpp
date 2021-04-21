@@ -48,6 +48,8 @@ enum Operator {
     OR, // |
     XOR, // ^
 
+    ODOT = 5 * OP_GROUP_SIZE, // .
+
     INVALID,
 
 };

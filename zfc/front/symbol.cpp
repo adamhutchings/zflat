@@ -10,6 +10,10 @@ sym::Function* func = nullptr;
 
 namespace sym {
 
+std::string argsep = "$", retsep = "$$", scopesep = "$$$";
+
+std::vector<std::vector<sym::Symbol*>>* getsymtab() { return &symtab; }
+
 void enter_scope() {
     symtab.push_back(std::vector<Symbol*>());
 }
@@ -22,7 +26,7 @@ void add_symbol(Symbol* s) {
 }
 
 void add_global_symbol(Symbol* s) {
-    symtab[0].push_back(s);
+    symtab[1].push_back(s);
 }
 
 Variable* resolve_var(std::string name) {
@@ -42,6 +46,7 @@ Function* resolve_fn(std::string name, std::vector<Type> args) {
             if (fn != nullptr && fn->name == name) {
                 bool match = true;
                 auto size = fn->args.size();
+                if (size == 0) return fn;
                 bool sizes_match = 
                     (fn->args[size - 1].type == VA_TYPE)
                     ? args.size() >= size - 1
@@ -59,7 +64,7 @@ Function* resolve_fn(std::string name, std::vector<Type> args) {
 }
 
 bool in_global_scope() {
-    return symtab.size() == 1;
+    return symtab.size() == 2; // import scope is also a scope
 }
 
 Function* current_function() {
@@ -74,10 +79,10 @@ std::string Function::get_overloaded_name() {
     std::string out = this->name;
     for (sym::Variable str : this->args) {
         out += "$";
-        out += str.type.to_str();
+        out += str.type.to_output_str();
     }
     out += "$$";
-    out += this->ret.to_str();
+    out += this->ret.to_output_str();
     return out;
 }
 
