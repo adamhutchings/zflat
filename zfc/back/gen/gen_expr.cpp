@@ -2,34 +2,26 @@
 #include <back/gen/gen_main.hpp>
 #include <back/operator.hpp>
 
+void BinaryExprNode::write(std::ofstream& file) {
+    this->left->write(file);
+    gen::write(file, op::opToStr(this->op));
+    this->right->write(file);
+}
+
+void LiteralNode::write(std::ofstream& file) {
+    gen::write(file, this->lit.c_str());
+}
+
+void VariableNode::write(std::ofstream& file) {
+    gen::write(file, this->sym->name);
+}
+
 void ExprNode::write(std::ofstream& file) {
 
     gen::write(file, "(");
 
-    if (this->literal != "") {
-        gen::write(file, literal);
-        goto out;
-    }
+    this->inner->write(file);
 
-    if (this->ref != nullptr) {
-        gen::write(file, this->ref->name);
-        goto out;
-    }
-
-    if (this->left == nullptr)
-        ZF_BACK_ERR("expression did not have any content");
-
-    this->left->write(file);
-    if (op::opToStr(this->op) != "!!INVALID_OPERATOR!!") {
-        gen::write(file, " ");   
-        gen::write(file, op::opToStr(this->op));
-    }
-    if (this->right != nullptr) {
-        gen::write(file, " ");
-        this->right->write(file);
-    }
-
-out:
     gen::write(file, ")");
 
 }
