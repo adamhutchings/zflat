@@ -48,9 +48,6 @@ sym::Symbol* parse_sym(std::string str) {
             var.type = get_type(next_argtype);
             ret->args.push_back(var);
             // Skip forward
-            if (str[0] != ')') {
-                ZF_SYMBOL_ERR("internal: expected space after argument");
-            }
             str = str.substr(1);
         }
         // Parse return type
