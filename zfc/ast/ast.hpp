@@ -159,7 +159,7 @@ struct BinaryExprNode : public InnerExprNode {
 };
 
 struct VariableNode : public InnerExprNode {
-    sym::Symbol* sym;
+    sym::Variable* sym;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
