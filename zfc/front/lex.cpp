@@ -37,6 +37,7 @@ bool is_numeric(char c) {
     return (c >= '0') && (c <= '9');
 }
 
+// This token is an operator
 bool is_op_token(char c) {
     switch (c) {
         case '!':
@@ -57,6 +58,8 @@ bool is_op_token(char c) {
     }
 }
 
+// Whereas operators can be part of another token (as in +=, etc.), these tokens
+// always stand on their own.
 bool is_always_tok(char c) {
     switch (c) {
         case ':':
@@ -77,6 +80,9 @@ bool is_always_tok(char c) {
 
 const int TOK_MAX = 256;
 
+// As characters are read from the file, they get placed into here - when the
+// end of a token is reachedd, all characters are popped into a string and
+// returned.
 char cbuf[TOK_MAX + 1];
 int cend = 0;
 
@@ -109,6 +115,7 @@ bool ends_token(char cur, char next) {
     return false;
 }
 
+// These are misnomers - they refer to the last, present, and next characters.
 char lasttok = 0, curtok = 0, nexttok = 0;
 
 bool eofhit = false, lastwascolon = false;
@@ -162,6 +169,7 @@ TreeComp get_type(std::string name) {
     ||  name == "short" || name == "long" || name == "bool" || name == "void"
     || name == "ushort" || name == "uint" || name == "ulong" || name == "uchar"
     ) return TreeComp::TYPENAME;
+    // A bunch of keywords.
     if (name == "loop") return TreeComp::LOOP;
     if (name == "if") return TreeComp::IF;
     if (name == "else") return TreeComp::ELSE;
@@ -180,6 +188,7 @@ TreeComp get_type(std::string name) {
     return TreeComp::IDENTIFIER;
 }
 
+// A put-back tokens lands in here.
 std::vector<Token> put_back_tokens;
 
 Token process_character(std::ifstream& file) {
