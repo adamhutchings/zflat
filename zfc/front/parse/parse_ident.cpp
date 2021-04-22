@@ -33,6 +33,8 @@ std::string get_ident_name(std::ifstream& file) {
         }
         ret += ide.str;
 
+        ++ct;
+
     }
 
     return ret;
