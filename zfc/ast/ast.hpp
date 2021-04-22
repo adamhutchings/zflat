@@ -156,7 +156,7 @@ struct ExprNode : public InnerStatementNode {
 struct BinaryExprNode : public InnerExprNode {
     ExprNode *left, *right;
     op::Operator op;
-    void read(std::ifstream& file) override;
+    inline void read(std::ifstream& file) override {}
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this->left); fn(this->right); fn(this); }
     virtual ~BinaryExprNode() {}
@@ -164,7 +164,7 @@ struct BinaryExprNode : public InnerExprNode {
 
 struct VariableNode : public InnerExprNode {
     sym::Variable* sym;
-    void read(std::ifstream& file) override;
+    inline void read(std::ifstream& file) override {}
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
     virtual ~VariableNode() {}
@@ -172,10 +172,10 @@ struct VariableNode : public InnerExprNode {
 
 struct LiteralNode : public InnerExprNode {
     std::string lit;
-    void read(std::ifstream& file) override;
+    inline void read(std::ifstream& file) override {}
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
-    virtual ~LiteralNode();
+    virtual ~LiteralNode() {}
 };
 
 struct FuncCallNode : public InnerExprNode {
