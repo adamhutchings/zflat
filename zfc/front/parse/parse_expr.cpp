@@ -103,7 +103,7 @@ void ExprNode::read(std::ifstream& file) {
         int splice_loc = 0;
         int size = ops.size();
         for (int i = 0; i < size; ++i) {
-            if (op::binding_order(ops[splice_loc], ops[i]) == 1) {
+            if (op::binding_order(ops[splice_loc], ops[i]) == -1) {
                 splice_loc = i;
             }
         }
