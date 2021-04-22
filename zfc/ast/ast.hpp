@@ -44,6 +44,7 @@ struct IfNode;
 struct SwitchNode;
 struct CaseNode;
 struct ExprNode;
+struct InnerExprNode;
 struct FuncCallNode;
 struct ControlFlowNode;
 struct VarDeclNode;
@@ -80,7 +81,7 @@ struct FunctionNode : public ProgramSub {
  * TODO - Refactor
  */
 
-struct InnerStatementNode : public ProgramSub {
+struct InnerStatementNode : public ASTNode {
     virtual ~InnerStatementNode() {}
 };
 
@@ -128,6 +129,7 @@ struct SwitchNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
+    virtual ~SwitchNode() {}
 };
 
 struct CaseNode {
@@ -136,35 +138,52 @@ struct CaseNode {
     void read(std::ifstream& file);
     void write(std::ofstream& file);
     void apply( void (*fn)(ASTNode*) );
+    virtual ~CaseNode() {}
 };
 
-/**
- * Another place ripe for a refactor - there are no subclasses of expression
- * nodes, as there should be, and every possible component is jammed into one
- * class. The fact that ExprNode::literal is a string is a relic of March 2021
- * when symbol tables did not exist at all and every variable reference was an
- * std::string .
- */
+struct InnerExprNode : public ASTNode {
+    virtual ~InnerExprNode() {}
+};
+
 struct ExprNode : public InnerStatementNode {
-    std::string literal; // number, perhaps
-    sym::Symbol* ref;    // variable reference
-    ExprNode* left;
-    op::Operator op;
-    ExprNode* right;
+    InnerExprNode* inner;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
-    void apply( void (*fn)(ASTNode*) ) override;
-    void reorder();
-    bool locked; // whether the expr should not be reordered (although its children may be)
+    inline void apply( void (*fn)(ASTNode*) ) override { fn(this->inner); fn(this); }
     virtual ~ExprNode() {}
 };
 
-struct FuncCallNode : public ExprNode {
+struct BinaryExprNode : public InnerExprNode {
+    ExprNode *left, *right;
+    op::Operator op;
+    inline void read(std::ifstream& file) override {}
+    void write(std::ofstream& file) override;
+    inline void apply( void (*fn)(ASTNode*) ) override { fn(this->left); fn(this->right); fn(this); }
+    virtual ~BinaryExprNode() {}
+};
+
+struct VariableNode : public InnerExprNode {
+    sym::Variable* sym;
+    inline void read(std::ifstream& file) override {}
+    void write(std::ofstream& file) override;
+    inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
+    virtual ~VariableNode() {}
+};
+
+struct LiteralNode : public InnerExprNode {
+    std::string lit;
+    inline void read(std::ifstream& file) override {}
+    void write(std::ofstream& file) override;
+    inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
+    virtual ~LiteralNode() {}
+};
+
+struct FuncCallNode : public InnerExprNode {
     std::vector<ExprNode*> args;
     sym::Function* call;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
-    void apply( void (*fn)(ASTNode*) ) override;
+    inline void apply( void (*fn)(ASTNode*) ) override { for (auto a : this->args) fn(a); fn(this); }
     virtual ~FuncCallNode() {}
 };
 

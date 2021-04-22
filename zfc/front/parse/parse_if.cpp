@@ -28,7 +28,7 @@ void IfNode::read(std::ifstream& file) {
 
     auto cp = lex::lex(file);
     if (cp.type != CPAREN) {
-        ZF_TOK_ERR(op, "')'");
+        ZF_TOK_ERR(cp, "')'");
     }
 
     this->stmt = new StatementNode();

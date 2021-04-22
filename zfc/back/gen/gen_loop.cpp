@@ -22,9 +22,11 @@ void LoopNode::write(std::ofstream& file) {
         } else {
             counterv = this->pred->var->name;
         }
-        gen::write(file, begin + counterv + " = 0; " + counterv + " < " + this->expr->literal + "; ++" + counterv + ")");
+        gen::write(file, begin + counterv + " = 0; " + counterv + " < ");
+        this->expr->write(file);
+        gen::write(file, std::string("; ++") + counterv + ")");
         this->stmt->write(file);
-    }  else if (type == BOOL) {
+    } else if (type == BOOL) {
         // Anything else is a boolean. For now.
         gen::write(file, "while (");
         this->expr->write(file);

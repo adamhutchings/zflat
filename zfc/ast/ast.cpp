@@ -15,13 +15,6 @@ void ProgramNode::apply(void(*fn)(ASTNode*)) {
     fn(this);
 }
 
-void FuncCallNode::apply(void(*fn)(ASTNode*)) {
-    for (auto arg : this->args) {
-        fn(arg);
-    }
-    fn(this);
-}
-
 void FunctionNode::apply(void(*fn)(ASTNode*)) {
     // for (auto decl : this->args) {
     //     fn(decl);
@@ -70,12 +63,6 @@ void CaseNode::apply(void(*fn)(ASTNode*)) {
     }
 }
 
-void ExprNode::apply(void(*fn)(ASTNode*)) {
-    if (this->left != nullptr) fn(this->left);
-    if (this->right != nullptr) fn(this->right);
-    fn(this);
-}
-
 void ControlFlowNode::apply(void(*fn)(ASTNode*)) {
     if (this->expression != nullptr) fn(this->expression);
     fn(this);
@@ -96,7 +83,8 @@ void warn_unused_value(ProgramSub* pn) {
     if (sn != nullptr) {
         auto exp = dynamic_cast<ExprNode*>(sn->inner);
         if (exp != nullptr) {
-            if (exp->op != op::Operator::INVALID && !op::is_assign(exp->op)) {
+            auto bexp = dynamic_cast<BinaryExprNode*>(exp->inner);
+            if (bexp->op != op::Operator::INVALID && !op::is_assign(bexp->op)) {
                 fprintf(stderr, "zfc: warning: line %d: expression value unused\n", exp->line);
             }
         }
