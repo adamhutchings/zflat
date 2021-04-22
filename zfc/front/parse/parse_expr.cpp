@@ -42,7 +42,7 @@ InnerExprNode* single_node_read(std::ifstream& file) {
                 lex::unlex(next2);
                 iexpr = new VariableNode();
                 auto sym = sym::resolve_var(next.str);
-                if (sym = nullptr) {
+                if (sym == nullptr) {
                     ZF_ERROR("line %d: could not resolve symbol %s", next.line, next.raw_content());
                 }
                 dynamic_cast<VariableNode*>(iexpr)->sym = sym;
