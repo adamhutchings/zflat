@@ -13,12 +13,14 @@
 #include <front/symbol.hpp>
 #include <front/trfrags.hpp>
 
+// Use this if an unexpected token pops up.
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
 
 class ASTNode {
 
 public:
 
+    // Construct this instance from a file, andd write this to a file
     virtual void read(std::ifstream& file) = 0;
     virtual void write(std::ofstream& file) = 0;
 
@@ -27,6 +29,7 @@ public:
 
     virtual ~ASTNode() {}
 
+    // Possibly - use for debug?
     int line;
 
 };
@@ -47,8 +50,8 @@ struct VarDeclNode;
 struct UseNode;
 
 struct ProgramNode : public ASTNode {
-    std::vector<UseNode*> imports;
-    std::vector<ProgramSub*> components;
+    std::vector<UseNode*> imports; // All import statements - unused
+    std::vector<ProgramSub*> components; // Each top-level component of the program aside from imports
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
@@ -60,13 +63,22 @@ struct ProgramSub : public ASTNode {
 };
 
 struct FunctionNode : public ProgramSub {
-    sym::Function* symbol;
-    BlockStatementNode* body;
+    sym::Function* symbol; // This is constructed by the read function.
+    BlockStatementNode* body; // The body of the function
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
     virtual ~FunctionNode() {}
 };
+
+/**
+ * This mess needs some explaining - when parsing a statement node, you can't
+ * do this:
+ * if (going_to_be_an_expr()) { this = new ExprNode(); }
+ * Instead, each statement "subclass" is actually a subclass of InnerStatementNode
+ * and one can do this->inner = new ExprNode();
+ * TODO - Refactor
+ */
 
 struct InnerStatementNode : public ProgramSub {
     virtual ~InnerStatementNode() {}
@@ -89,9 +101,10 @@ struct BlockStatementNode : public InnerStatementNode {
 };
 
 struct LoopNode : public InnerStatementNode {
-    ExprNode* expr;
-    StatementNode* stmt;
-    VarDeclNode* pred; // the loop counter variable, if any
+    // If we have a loop(x): y z();
+    ExprNode* expr; // this is x
+    StatementNode* stmt; // this is z
+    VarDeclNode* pred; // this is y
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
@@ -99,7 +112,7 @@ struct LoopNode : public InnerStatementNode {
 };
 
 struct IfNode : public InnerStatementNode {
-    ExprNode* expr;
+    ExprNode* expr; // the if condition
     StatementNode* stmt;
     StatementNode* else_block; // may be nullptr
     void read(std::ifstream& file) override;
@@ -109,7 +122,7 @@ struct IfNode : public InnerStatementNode {
 };
 
 struct SwitchNode : public InnerStatementNode {
-    bool fswitch;
+    bool fswitch; // whether this switch statement uses the "fswitch" construct
     ExprNode* expr;
     std::vector<CaseNode*> cases;
     void read(std::ifstream& file) override;
@@ -125,6 +138,13 @@ struct CaseNode {
     void apply( void (*fn)(ASTNode*) );
 };
 
+/**
+ * Another place ripe for a refactor - there are no subclasses of expression
+ * nodes, as there should be, and every possible component is jammed into one
+ * class. The fact that ExprNode::literal is a string is a relic of March 2021
+ * when symbol tables did not exist at all and every variable reference was an
+ * std::string .
+ */
 struct ExprNode : public InnerStatementNode {
     std::string literal; // number, perhaps
     sym::Symbol* ref;    // variable reference
@@ -150,7 +170,7 @@ struct FuncCallNode : public ExprNode {
 
 struct ControlFlowNode : public InnerStatementNode {
     ControlFlow statement;
-    ExprNode* expression;
+    ExprNode* expression; // Used only in return (as in return x + y;)
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
@@ -158,8 +178,8 @@ struct ControlFlowNode : public InnerStatementNode {
 };
 
 struct VarDeclNode : public InnerStatementNode {
-    sym::Variable* var;
-    ExprNode* expr;
+    sym::Variable* var; // Constructed in the read method
+    ExprNode* expr; // the "x + y" in "a: int = x + y;"
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
@@ -167,11 +187,16 @@ struct VarDeclNode : public InnerStatementNode {
 };
 
 struct UseNode : public ASTNode {
-    std::vector<sym::Symbol*> symtab;
+    std::vector<sym::Symbol*> symtab; // All of the symbols that have been imported
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
     virtual ~UseNode() {}
 };
 
+/**
+ * Until further refactoring takes place, this is necessary because there's no
+ * way for an expression to "know" if it's a top level declaration, e.g. if
+ * "2" is "2;" or "x = 2;".
+ */
 void warn_unused_value(ProgramSub* ps);
