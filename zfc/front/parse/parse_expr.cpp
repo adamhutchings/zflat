@@ -53,6 +53,7 @@ InnerExprNode* single_node_read(std::ifstream& file) {
             dynamic_cast<LiteralNode*>(iexpr)->lit = next.str;
             return iexpr;
         default:
+            lex::unlex(next);
             return nullptr;
     }
 }
