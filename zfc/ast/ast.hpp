@@ -16,6 +16,8 @@
 // Use this if an unexpected token pops up.
 #define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
 
+std::string get_ident_name(std::ifstream& file);
+
 class ASTNode {
 
 public:
@@ -179,6 +181,7 @@ struct LiteralNode : public InnerExprNode {
 };
 
 struct FuncCallNode : public InnerExprNode {
+    std::string canonicalname; // the name assigned and then looked up later
     std::vector<ExprNode*> args;
     sym::Function* call;
     void read(std::ifstream& file) override;

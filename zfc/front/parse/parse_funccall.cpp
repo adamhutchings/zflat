@@ -7,10 +7,7 @@
 
 void FuncCallNode::read(std::ifstream& file) {
 
-    Token name = lex::lex(file);
-    if (name.type != TreeComp::IDENTIFIER) {
-        ZF_TOK_ERR(name, "identifier");
-    }
+    // Name is given by canonicalname
 
     Token opn = lex::lex(file);
     if (opn.type != TreeComp::OPAREN) {
@@ -43,9 +40,9 @@ out:
         args.push_back(get_type(var));
     }
 
-    this->call = sym::resolve_fn(name.str, args);
+    this->call = sym::resolve_fn(this->canonicalname, args);
     if (this->call == nullptr) {
-        ZF_ERROR("could not resolve function \"%s\" on line %d", name.raw_content(), name.line);
+        ZF_ERROR("could not resolve function \"%s\" on line %d", canonicalname.c_str(), this->line);
     }
 
     // For argument verification

@@ -14,8 +14,10 @@ namespace {
 InnerExprNode* single_node_read(std::ifstream& file) {
     Token next = lex::lex(file);
     Token next2;
+    std::string name;
     ExprNode* expr;
     InnerExprNode* iexpr;
+    sym::Variable* vsym;
     switch (next.type) {
         case OPAREN:
             expr = new ExprNode();
@@ -29,23 +31,23 @@ InnerExprNode* single_node_read(std::ifstream& file) {
             delete expr;
             return iexpr;
         case IDENTIFIER:
-            // Either a variable or a function call.
+            lex::unlex(next);
+            name = get_ident_name(file);
             next2 = lex::lex(file);
             if (next2.type == OPAREN) {
-                // Function call.
-                lex::unlex(next2);
-                lex::unlex(next);
                 iexpr = new FuncCallNode();
+                dynamic_cast<FuncCallNode*>(iexpr)->canonicalname = name;
+                lex::unlex(next2);
                 iexpr->read(file);
                 return iexpr;
             } else {
                 lex::unlex(next2);
                 iexpr = new VariableNode();
-                auto sym = sym::resolve_var(next.str);
-                if (sym == nullptr) {
-                    ZF_ERROR("line %d: could not resolve symbol %s", next.line, next.raw_content());
+                vsym = sym::resolve_var(next.str);
+                if (vsym == nullptr) {
+                    ZF_ERROR("line %d: could not resolve variable %s", next.line, next.raw_content());
                 }
-                dynamic_cast<VariableNode*>(iexpr)->sym = sym;
+                dynamic_cast<VariableNode*>(iexpr)->sym = vsym;
                 return iexpr;
             }
         case LITERAL:
