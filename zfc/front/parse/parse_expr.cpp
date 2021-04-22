@@ -79,7 +79,7 @@ void ExprNode::read(std::ifstream& file) {
         if (nc != 0) {
             auto opt = lex::lex(file);
             if (opt.type != OPERATOR) {
-                ZF_TOK_ERR(opt, "operator");
+                break;
             }
             auto op = op::strToOp(opt.str);
             if (op == op::Operator::INVALID) {
