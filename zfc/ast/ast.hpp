@@ -129,6 +129,7 @@ struct SwitchNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
+    virtual ~SwitchNode() {}
 };
 
 struct CaseNode {
@@ -137,6 +138,7 @@ struct CaseNode {
     void read(std::ifstream& file);
     void write(std::ofstream& file);
     void apply( void (*fn)(ASTNode*) );
+    virtual ~CaseNode() {}
 };
 
 struct InnerExprNode : public ASTNode {
@@ -148,6 +150,7 @@ struct ExprNode : public InnerStatementNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this->inner); fn(this); }
+    virtual ~ExprNode() {}
 };
 
 struct BinaryExprNode : public InnerExprNode {
@@ -156,6 +159,7 @@ struct BinaryExprNode : public InnerExprNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this->left); fn(this->right); fn(this); }
+    virtual ~BinaryExprNode() {}
 };
 
 struct VariableNode : public InnerExprNode {
@@ -163,6 +167,7 @@ struct VariableNode : public InnerExprNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
+    virtual ~VariableNode() {}
 };
 
 struct LiteralNode : public InnerExprNode {
@@ -170,6 +175,7 @@ struct LiteralNode : public InnerExprNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
+    virtual ~LiteralNode();
 };
 
 struct FuncCallNode : public InnerExprNode {
@@ -178,7 +184,7 @@ struct FuncCallNode : public InnerExprNode {
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { for (auto a : this->args) fn(a); fn(this); }
-    virtual ~FuncCallNode();
+    virtual ~FuncCallNode() {}
 };
 
 struct ControlFlowNode : public InnerStatementNode {
