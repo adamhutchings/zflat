@@ -80,6 +80,7 @@ void ExprNode::read(std::ifstream& file) {
         if (nc != 0) {
             auto opt = lex::lex(file);
             if (opt.type != OPERATOR) {
+                lex::unlex(opt);
                 break;
             }
             auto op = op::strToOp(opt.str);
