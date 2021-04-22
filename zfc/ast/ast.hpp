@@ -44,6 +44,7 @@ struct IfNode;
 struct SwitchNode;
 struct CaseNode;
 struct ExprNode;
+struct InnerExprNode;
 struct FuncCallNode;
 struct ControlFlowNode;
 struct VarDeclNode;
@@ -80,7 +81,7 @@ struct FunctionNode : public ProgramSub {
  * TODO - Refactor
  */
 
-struct InnerStatementNode : public ProgramSub {
+struct InnerStatementNode : public ASTNode {
     virtual ~InnerStatementNode() {}
 };
 
@@ -138,17 +139,10 @@ struct CaseNode {
     void apply( void (*fn)(ASTNode*) );
 };
 
-struct InnerExprNode : public ExprNode {
-
+struct InnerExprNode : public ASTNode {
+    virtual ~InnerExprNode() {}
 };
 
-/**
- * Another place ripe for a refactor - there are no subclasses of expression
- * nodes, as there should be, and every possible component is jammed into one
- * class. The fact that ExprNode::literal is a string is a relic of March 2021
- * when symbol tables did not exist at all and every variable reference was an
- * std::string .
- */
 struct ExprNode : public InnerStatementNode {
     InnerExprNode* inner;
     void read(std::ifstream& file) override;
@@ -161,21 +155,21 @@ struct BinaryExprNode : public InnerExprNode {
     op::Operator op;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
-    void apply( void (*fn)(ASTNode*) ) override { fn(this->left); fn(this->right); fn(this); }
+    inline void apply( void (*fn)(ASTNode*) ) override { fn(this->left); fn(this->right); fn(this); }
 };
 
 struct VariableNode : public InnerExprNode {
     sym::Symbol* sym;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
-    void apply( void (*fn)(ASTNode*) ) override { fn(this); }
+    inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
 };
 
 struct LiteralNode : public InnerExprNode {
     std::string lit;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
-    void apply( void (*fn)(ASTNode*) ) override { fn(this); }
+    inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
 };
 
 struct FuncCallNode : public InnerExprNode {
@@ -183,7 +177,7 @@ struct FuncCallNode : public InnerExprNode {
     sym::Function* call;
     void read(std::ifstream& file) override;
     void write(std::ofstream& file) override;
-    void apply( void (*fn)(ASTNode*) ) override  { for (auto a : this->args) fn(a); fn(this); }
+    inline void apply( void (*fn)(ASTNode*) ) override { for (auto a : this->args) fn(a); fn(this); }
     virtual ~FuncCallNode();
 };
 

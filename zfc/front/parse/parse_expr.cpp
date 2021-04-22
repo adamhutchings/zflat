@@ -109,8 +109,10 @@ void ExprNode::read(std::ifstream& file) {
         // Now we combine the two nodes adjacent to splice_loc.
         InnerExprNode* treefrag = new BinaryExprNode();
         BinaryExprNode* tree = dynamic_cast<BinaryExprNode*>(treefrag);
-        tree->left = nodes[splice_loc];
-        tree->right = nodes[splice_loc + 1];
+        tree->left = new ExprNode();
+        tree->right = new ExprNode();
+        tree->left->inner = nodes[splice_loc];
+        tree->right->inner = nodes[splice_loc + 1];
         tree->op = ops[splice_loc];
 
         // Remove the two old nodes from the list.
