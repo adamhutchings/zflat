@@ -3,7 +3,7 @@
 namespace op {
 
 int binding_order(Operator a, Operator b) {
-    int diff = (a / 8) - (b - 8);
+    int diff = (a / 8) - (b / 8);
     return (diff == 0) ? 0 : (diff < 0) ? -1 : 1;
 }
 
