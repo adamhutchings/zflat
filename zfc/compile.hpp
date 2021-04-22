@@ -7,7 +7,6 @@
 #include <fstream>
 
 #include <ast/ast.hpp>
-#include <back/reorder.hpp>
 #include <front/module.hpp>
 #include <util/error.hpp>
 #include <util/fs.hpp>

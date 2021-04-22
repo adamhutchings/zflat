@@ -23,7 +23,6 @@ void compile(std::string in, std::string out, std::string sym_out, bool leave_at
         ZF_ERROR("Could not open %s for writing", tmp_path.c_str());
     ProgramNode pnode;
     pnode.read(ifile);
-    reorder(&pnode);
     pnode.write(tmpfil);
     ifile.close();
     tmpfil.close();
