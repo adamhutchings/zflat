@@ -1,6 +1,8 @@
 #include "dtype.hpp"
 
-Type get_type(ExprNode* expr) {
+namespace {
+
+Type get_btype(BinaryExprNode* expr) {
     if (expr->left != nullptr && expr->right == nullptr) {
         return static_cast<sym::Function*>(dynamic_cast<FuncCallNode*>(expr->left)->call)->ret;
     }
@@ -27,4 +29,33 @@ Type get_type(ExprNode* expr) {
     }
     // TODO
     return INT; // the only literal type
+}
+
+}
+
+Type get_type(ExprNode* expr) {
+    
+    auto* bexpr = dynamic_cast<BinaryExprNode*>(expr->inner);
+    auto* lexpr = dynamic_cast<LiteralNode*>(expr->inner);
+    auto* vexpr = dynamic_cast<VariableNode*>(expr->inner);
+    auto* fexpr = dynamic_cast<FuncCallNode*>(expr->inner);
+
+    if (bexpr != nullptr) {
+        return get_btype(bexpr);
+    }
+
+    if (lexpr != nullptr) {
+        return INT; // the only literal type
+    }
+
+    if (vexpr != nullptr) {
+        return vexpr->sym->type;
+    }
+
+    if (fexpr != nullptr) {
+        return fexpr->call->ret;
+    }
+
+    return MAX_INVALID;
+
 }
