@@ -29,4 +29,5 @@ struct Token {
 namespace lex {
     Token lex(std::ifstream& file);
     void unlex(Token token);
+    void reset_lexer();
 }
