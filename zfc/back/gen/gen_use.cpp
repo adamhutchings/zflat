@@ -6,9 +6,10 @@ void UseNode::write(std::ofstream& file) {
     for (auto decl : this->symtab) {
 
         auto* var = static_cast<sym::Variable*>(decl);
-        if (var != nullptr) {
+        if (decl->var) {
             gen::write(file, "extern ");
             gen::write(file, var->type.to_output_str() + " " + var->name + ";");
+            return;
         }
 
         auto* fun = static_cast<sym::Function*>(decl);
