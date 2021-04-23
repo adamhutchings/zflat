@@ -16,19 +16,20 @@ extern std::string argsep, retsep, scopesep;
 struct Symbol {
     std::string name;
     int lineno;
+    bool var;
     inline Symbol(std::string n) : name(n) {}
 };
 
 struct Variable : public Symbol {
     Type type;
-    inline Variable(std::string n) : Symbol(n) {}
+    inline Variable(std::string n) : Symbol(n) { var = true; }
 };
 
 struct Function : public Symbol {
     std::vector<Variable> args;
     Type ret;
     bool extc;
-    inline Function(std::string n) : Symbol(n) {}
+    inline Function(std::string n) : Symbol(n) { var = false; }
     std::string get_overloaded_name();
 };
 
