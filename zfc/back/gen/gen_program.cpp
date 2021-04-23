@@ -10,6 +10,10 @@ void ProgramNode::write(std::ofstream& file) {
     " */\n\n"
     );
 
+    for (auto decl : this->imports) {
+        decl->write(file);
+    }
+
     for (auto sub : this->components) {
         sub->write(file);
         gen::write(file, "\n");
