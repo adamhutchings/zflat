@@ -84,8 +84,10 @@ void warn_unused_value(ProgramSub* pn) {
         auto exp = dynamic_cast<ExprNode*>(sn->inner);
         if (exp != nullptr) {
             auto bexp = dynamic_cast<BinaryExprNode*>(exp->inner);
-            if (bexp->op != op::Operator::INVALID && !op::is_assign(bexp->op)) {
-                fprintf(stderr, "zfc: warning: line %d: expression value unused\n", exp->line);
+            if (bexp != nullptr) {
+                if (bexp->op != op::Operator::INVALID && !op::is_assign(bexp->op)) {
+                    fprintf(stderr, "zfc: warning: line %d: expression value unused\n", exp->line);
+                }
             }
         }
     }

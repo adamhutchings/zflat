@@ -1,114 +1,99 @@
 #include "module.hpp"
 
 /**
+ * Note (Adam)
+ * TODO: call into proper parse/gen code from elsewhere instead of crudely
+ * duplicating them here.
+ */
+
+/**
  * SYMBOL FILE FORMAT
  */
 
 /**
- * version x.y.z
- * factorial_i(int ): int
- * 
- * end
+ * factorial_i(int): int
+ * printf(fmt: char[], __c_va_args): int;
  */
 
 #define ZF_SYMBOL_ERR(...) ZF_ERROR("symbol: " __VA_ARGS__)
 
 #define MIN(x, y) ( (x) < (y) ? (x) : (y) )
-
-namespace {
-
-Type get_type(std::string str) {
-    // More in the future (with arrays, refs, etc)
-    return zStrToType(str);
-}
-
-sym::Symbol* parse_sym(std::string str) {
-    // Find initial symbol (up to paren or colon)
-    int sp = str.find(' ');
-    int op = str.find('(');
-    int symend = MIN(sp, op);
-    if (symend < 0) {
-        ZF_SYMBOL_ERR("internal: no space in line");
-    }
-    auto symname = str.substr(0, symend);
-    if (symend == op) {
-        // This is a function def
-        auto ret = new sym::Function(symname);
-        str = str.substr(op + 1);
-        while (1) {
-            if (str[0] == ')') {
-                // End of fndef.
-                str = str.substr(1);
-                break;
-            }
-            // Parse next arg.
-            int comma = str.find(',');
-            auto next_argtype = str.substr(0, comma);
-            auto var = sym::Variable("outside-module-invisible");
-            var.type = get_type(next_argtype);
-            ret->args.push_back(var);
-            // Skip forward
-            if (str[0] != ')') {
-                ZF_SYMBOL_ERR("internal: expected space after argument");
-            }
-            str = str.substr(1);
-        }
-        // Parse return type
-        if (str[0] == ';') {
-            ret->ret = VOID;
-        } else {
-            // Expect colon
-            if (str[0] != ':') {
-                ZF_SYMBOL_ERR("internal: expected colon - return type");
-            }
-            str = str.substr(1);
-            // The rest should be a string of the type name
-            ret->ret = get_type(str);
-        }
-        return ret;
-    } else {
-        // Parse variable type - this should be a bit easier than the function
-        // This is suspiciously similar to code above. Combine?
-        auto ret = new sym::Variable(symname);
-        if (str[0] != ':') {
-            ZF_SYMBOL_ERR("internal: expected colon - return type");
-        }
-        str = str.substr(1);
-        // The rest should be a string of the type name
-        ret->type = get_type(str);
-        return ret;
-    }
-}
-
-}
-
 namespace mod {
 
 void begin_read(std::ifstream& file) {
-    std::string version_header;
-    getline(file, version_header);
-    if (version_header.find("version") != 0) {
-        // ERROR??
-    }
+    // TODO - read version number, perhaps?
+    lex::reset_lexer();
 }
 
 sym::Symbol* readsym(std::ifstream& file) {
-    std::string symstr;
-    getline(file, symstr);
-    if (symstr == "") return nullptr;
-    return parse_sym(symstr);
+    sym::Symbol* ret;
+    // Use the lexer!
+    auto ident = lex::lex(file);
+    if (ident.type == TEOF) return nullptr;
+    if (ident.type != IDENTIFIER) {
+        ZF_SYMBOL_ERR("line %d: no identifier found", ident.line);
+    }
+    auto det = lex::lex(file);
+    // Decide on func call or var
+    if (det.type == OPAREN) {
+        ret = new sym::Function(ident.str);
+        auto fret = static_cast<sym::Function*>(ret);
+        fret->name = ident.str;
+        // Look for func call args
+        int num = 0;
+        while (1) {
+            // Check for end
+            auto endtest = lex::lex(file);
+            if (endtest.type == CPAREN) {
+                break;
+            }
+            lex::unlex(endtest);
+            if (num != 0) {
+                auto cotok = lex::lex(file);
+                if (cotok.type != COMMA) {
+                    ZF_SYMBOL_ERR("line %d: expected comma", cotok.line);
+                }
+            }
+            auto arg = lex::lex(file);
+            if (arg.type != IDENTIFIER && arg.type != TYPENAME) {
+                // The lexer might detect it as either.
+                ZF_SYMBOL_ERR("line %d: expected identifier", arg.line);
+            }
+            // Hack - the type parser expects an type, so put back the token
+            // AFTER changing its type to TYPENAME.
+            arg.type = TYPENAME;
+            lex::unlex(arg);
+            sym::Variable var(std::string("symbol_read_var_") + std::to_string(num));
+            var.type = parse_type(file);
+            fret->args.push_back(var);
+            ++num; // always after first arg
+        }
+        // Parse return type, if any
+        auto rettest = lex::lex(file);
+        if (rettest.type != COLON) {
+            lex::unlex(rettest);
+            fret->ret = VOID;
+        } else {
+            fret->ret = parse_type(file);
+        }
+    } else if (det.type == COLON) {
+        // Get type name
+        ret = new sym::Variable(ident.str);
+        auto vret = static_cast<sym::Variable*>(ret);
+        vret->type = parse_type(file);
+    } else {
+        ZF_SYMBOL_ERR("expected valid line %d", ident.line);
+    }
+    return ret;
 }
 
 void end_read(std::ifstream& file) {
-    std::string endmark;
-    getline(file, endmark);
-    if (endmark != "end") {
-        // ERROR??
-    }
+    lex::reset_lexer();
 }
 
 void begin_write(std::ofstream& file) {
-    file << "version 0.0.1\n";
+    // file << "version 0.0.1\n";
+    // no version parsing YET
 }
 
 void writesym(std::ofstream& file, sym::Symbol* sym) {
@@ -139,7 +124,7 @@ void writesym(std::ofstream& file, sym::Symbol* sym) {
 }
 
 void end_write(std::ofstream& file) {
-    file << "end\n";
+    // End marker?
 }
 
 }

@@ -257,3 +257,11 @@ Token lex::lex(std::ifstream& file) {
 void lex::unlex(Token token) {
     put_back_tokens.push_back(token);
 }
+
+void lex::reset_lexer() {
+    line = 1;
+    linepos = 1;
+    put_back_tokens.clear();
+    memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);
+    eofhit = false;
+}
