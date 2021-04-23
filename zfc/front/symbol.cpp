@@ -79,10 +79,10 @@ std::string Function::get_overloaded_name() {
     std::string out = this->name;
     for (sym::Variable str : this->args) {
         out += "$";
-        out += str.type.to_output_str();
+        out += str.type.to_human_str();
     }
     out += "$$";
-    out += this->ret.to_output_str();
+    out += this->ret.to_human_str();
     return out;
 }
 
