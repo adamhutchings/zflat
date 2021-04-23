@@ -95,3 +95,13 @@ std::string Type::to_human_str() {
 std::string Type::to_output_str() {
     return typeToCStr(this->primitive);
 }
+
+Type Type::deref() {
+    Type ret = *this;
+    if (ret.indirection == 0) {
+        ret.primitive = MAX_INVALID;
+    } else {
+        --ret.indirection;
+    }
+    return ret;
+}
