@@ -261,4 +261,6 @@ void lex::unlex(Token token) {
 void lex::reset_lexer() {
     line = 1;
     linepos = 1;
+    put_back_tokens.clear();
+    memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);
 }
