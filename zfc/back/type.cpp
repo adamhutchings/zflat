@@ -85,15 +85,36 @@ Type parse_type(std::ifstream& file) {
     if (ret.primitive == MAX_INVALID) {
         ZF_ERROR("line %d: type name \"%s\" not recognized", type.line, type.raw_content());
     }
+    while (1) {
+        // Parse array brackets
+        auto ob = lex::lex(file);
+        if (ob.type != OBRACKET) {
+            lex::unlex(ob);
+            break;
+        }
+        auto cb = lex::lex(file);
+        if (cb.type != CBRACKET) {
+            ZF_ERROR("line %d: expected ] to match [", cb.line);
+        }
+        ++ret.indirection;
+    }
     return ret;
 }
 
 std::string Type::to_human_str() {
-    return typeToZStr(this->primitive);
+    std::string ret = typeToZStr(this->primitive);
+    for (int i = 0; i < this->indirection; i++) {
+        ret += " [ ]";
+    }
+    return ret;
 }
 
 std::string Type::to_output_str() {
-    return typeToCStr(this->primitive);
+    std::string ret = typeToCStr(this->primitive);
+    for (int i = 0; i < this->indirection; i++) {
+        ret += " *";
+    }
+    return ret;
 }
 
 Type Type::deref() {
