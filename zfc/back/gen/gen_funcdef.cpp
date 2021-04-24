@@ -4,9 +4,9 @@
 
 void FunctionNode::write(std::ofstream& file) {
 
-    gen::write(file, this->symbol->ret.to_output_str());
+    gen::write(file, this->symbol->name == "main" ? "int" : this->symbol->ret.to_output_str());
     gen::write(file, " ");
-    gen::write(file, this->symbol->extc ? this->symbol->name : this->symbol->get_overloaded_name());
+    gen::write(file, (this->symbol->extc || this->symbol->name == "main") ? this->symbol->name : this->symbol->get_overloaded_name());
 
     gen::write(file, "(");
     for (auto arg : this->symbol->args) {
