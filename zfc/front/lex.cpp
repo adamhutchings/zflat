@@ -182,7 +182,7 @@ TreeComp get_type(std::string name) {
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }
-    if (is_numeric(name[0]))
+    if (is_numeric(name[0]) || name[0] == '\'' || name[0] == '\"')
         return TreeComp::LITERAL;
     // when in doubt ...
     return TreeComp::IDENTIFIER;
