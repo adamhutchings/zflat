@@ -50,6 +50,10 @@ enum Operator {
 
     ODOT = 5 * OP_GROUP_SIZE, // .
 
+    // The '[]' operator. Cannot be converted to and from strings - must be
+    // specially handled in all cases.
+    INDEX,
+
     INVALID,
 
 };
