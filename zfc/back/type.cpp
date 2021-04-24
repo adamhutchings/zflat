@@ -51,7 +51,7 @@ BuiltinType cStrToType(std::string in) {
 
 std::string typeToCStr(BuiltinType in) {
     if (in == BOOL) return "_Bool";
-    if (in == CHAR) return "signed char";
+    if (in == CHAR) return "char";
     if (in == UCHAR) return "unsigned char";
     if (in == SHORT) return "short";
     if (in == USHORT) return "unsigned short";
