@@ -58,6 +58,14 @@ Type get_type(ExprNode* expr) {
     }
 
     if (lexpr != nullptr) {
+        if (lexpr->lit[0] == '\'') {
+            return CHAR; // TODO: signeed or unsigned? Assumes signed now.
+        } else if (lexpr->lit[0] == '"') {
+            // String literal
+            Type ret = CHAR;
+            ++ret.indirection;
+            return ret;
+        }
         return INT; // the only literal type
     }
 
