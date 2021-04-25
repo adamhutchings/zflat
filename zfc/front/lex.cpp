@@ -232,6 +232,7 @@ Token process_character(std::ifstream& file) {
         } else if (curtok == '~') {
             in_comment = false;
         }
+        in_quote = false;
         return tok;
     } else {
         if (begins_token(lasttok, curtok)) {
@@ -240,7 +241,7 @@ Token process_character(std::ifstream& file) {
         if (curtok == '~') {
             in_comment = !in_comment;
         }
-        if (!is_whitespace(curtok) && !in_comment) {
+        if ((!is_whitespace(curtok) && !in_comment) || in_quote) {
             add_char(curtok);
         }
     }
