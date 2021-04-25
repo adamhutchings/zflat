@@ -39,8 +39,10 @@ struct Type {
     std::string to_output_str();
     bool operator==(BuiltinType p);
     BuiltinType primitive = MAX_INVALID; // can be MAX_INVALID
+    unsigned int indirection = 0; // how many levels of array this is
     inline Type(BuiltinType t=MAX_INVALID) { primitive = t; }
     bool operator!=(Type t);
+    Type deref(); // dereference one type
 };
 
 Type parse_type(std::ifstream& file);

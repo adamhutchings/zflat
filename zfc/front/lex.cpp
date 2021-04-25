@@ -90,8 +90,23 @@ void add_char(char c) {
     cbuf[cend++] = c;
 }
 
+// These are misnomers - they refer to the last, present, and next characters.
+char lasttok = 0, curtok = 0, nexttok = 0;
+
+bool eofhit = false, lastwascolon = false, in_quote = false;
+
+int line = 1, linepos = 1;
+
+// How many backslashes in a row have been encountered.
+// Right now, parsing string literals is very unstable - it takes in all the
+// characters and does not attempt to check, only assuming that C string literal
+// notation is the same as its own. Which it is. For now.
+int bsct = 0;
+
 bool begins_token(char prev, char cur) {
     if (cur == '~')                 return (!in_comment);
+    if (cur == '\"')                return !in_quote;
+    if (in_quote)                   return false;
     if (in_comment)                 return false;
     if (is_whitespace(cur))         return false;
     if (is_whitespace(prev))        return true;
@@ -105,6 +120,8 @@ bool begins_token(char prev, char cur) {
 
 bool ends_token(char cur, char next) {
     if (cur == '~')                 return in_comment;
+    if (cur == '\"')                return (bsct / 2) == 0 && cend > 1;
+    if (in_quote)                   return false;
     if (in_comment)                 return false;
     if (is_whitespace(cur))         return false;
     if (is_whitespace(next))        return true;
@@ -114,13 +131,6 @@ bool ends_token(char cur, char next) {
     if (is_always_tok(next))        return true;
     return false;
 }
-
-// These are misnomers - they refer to the last, present, and next characters.
-char lasttok = 0, curtok = 0, nexttok = 0;
-
-bool eofhit = false, lastwascolon = false;
-
-int line = 1, linepos = 1;
 
 TreeComp get_type(std::string name) {
     if (curtok == EOF) return TreeComp::TEOF;
@@ -182,7 +192,7 @@ TreeComp get_type(std::string name) {
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }
-    if (is_numeric(name[0]))
+    if (is_numeric(name[0]) || name[0] == '\'' || name[0] == '\"')
         return TreeComp::LITERAL;
     // when in doubt ...
     return TreeComp::IDENTIFIER;
@@ -205,6 +215,9 @@ Token process_character(std::ifstream& file) {
     } else {
         ++linepos;
     }
+    if (curtok == '\"' && !in_quote) {
+        in_quote = true;
+    }
     if (cend >= TOK_MAX)
         ZF_ERROR("token on line %u exceeded limit", line);
     if (ends_token(curtok, nexttok)) {
@@ -212,6 +225,7 @@ Token process_character(std::ifstream& file) {
         add_char(curtok);
         Token tok(get_type(cbuf), cbuf);
         cend = 0;
+        if (cbuf[0] == '\"') in_quote = false;
         memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);
         if (curtok == EOF) {
             eofhit = true;
@@ -229,6 +243,11 @@ Token process_character(std::ifstream& file) {
         if (!is_whitespace(curtok) && !in_comment) {
             add_char(curtok);
         }
+    }
+    if (curtok == '\\') {
+        ++bsct;
+    } else {
+        bsct = 0;
     }
     return Token(TreeComp::EGENERALERROR, "");
 }

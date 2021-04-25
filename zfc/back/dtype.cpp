@@ -24,6 +24,19 @@ Type get_btype(BinaryExprNode* expr) {
             return BOOL;
         }
 
+        // Array index
+        if (expr->op == op::Operator::INDEX) {
+            // Check left and right
+            if (left.indirection == 0) {
+                ZF_ERROR("line %d: expr is not of array type (is type %s instead)", expr->left->line, left.to_human_str().c_str());
+            }
+            if (right.indirection != 0) {
+                // TODO: detect other non-numerical types
+                ZF_ERROR("line %d: array index is not numerical", expr->left->line);
+            }
+            return left.deref();
+        }
+
         return left;
 
     }
@@ -45,6 +58,14 @@ Type get_type(ExprNode* expr) {
     }
 
     if (lexpr != nullptr) {
+        if (lexpr->lit[0] == '\'') {
+            return CHAR; // TODO: signeed or unsigned? Assumes signed now.
+        } else if (lexpr->lit[0] == '"') {
+            // String literal
+            Type ret = CHAR;
+            ++ret.indirection;
+            return ret;
+        }
         return INT; // the only literal type
     }
 

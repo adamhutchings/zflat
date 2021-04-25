@@ -3,9 +3,17 @@
 #include <back/operator.hpp>
 
 void BinaryExprNode::write(std::ofstream& file) {
+    bool index_expr = this->op == op::Operator::INDEX;
     this->left->write(file);
-    gen::write(file, op::opToStr(this->op));
+    if (index_expr) {
+        gen::write(file, " [ ");
+    } else {
+        gen::write(file, op::opToStr(this->op));
+    }
     this->right->write(file);
+    if (index_expr) {
+        gen::write(file, " ] ");
+    }
 }
 
 void LiteralNode::write(std::ofstream& file) {

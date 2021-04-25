@@ -23,7 +23,7 @@ bool check_fn(std::ifstream& file) {
     bool pless = first.type == TreeComp::IDENTIFIER
     && opn.type == TreeComp::OPAREN
     && un.type == TreeComp::CPAREN
-    && cl.type == TreeComp::COLON;
+    && (cl.type == TreeComp::COLON || cl.type == TreeComp::OBRACE);
 
     lex::unlex(cl);
     lex::unlex(un);

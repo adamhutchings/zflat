@@ -40,10 +40,34 @@ InnerExprNode* single_node_read(std::ifstream& file) {
                 lex::unlex(next2);
                 iexpr->read(file);
                 return iexpr;
+            } else if (next2.type == OBRACKET) {
+                // The expression is an array index.
+                expr = new ExprNode();
+                expr->read(file);
+                // Expect closing bracket
+                auto cb = lex::lex(file);
+                if (cb.type != CBRACKET) {
+                    ZF_TOK_ERR(cb, "']'");
+                }
+                iexpr = new BinaryExprNode();
+                auto bexpr = dynamic_cast<BinaryExprNode*>(iexpr);
+                bexpr->left = new ExprNode();
+                bexpr->left->inner = new VariableNode();
+                // This is slightly copy-pasted from below.
+                // OK, 100% copy-pasted.
+                vsym = sym::resolve_var(name);
+                if (vsym == nullptr) {
+                    ZF_ERROR("line %d: could not resolve variable %s", next.line, next.raw_content());
+                }
+                dynamic_cast<VariableNode*>(bexpr->left->inner)->sym = vsym;
+                bexpr->op = op::Operator::INDEX;
+                bexpr->right = expr;
+                bexpr->line = next2.line;
+                return iexpr;
             } else {
                 lex::unlex(next2);
                 iexpr = new VariableNode();
-                vsym = sym::resolve_var(next.str);
+                vsym = sym::resolve_var(name);
                 if (vsym == nullptr) {
                     ZF_ERROR("line %d: could not resolve variable %s", next.line, next.raw_content());
                 }
