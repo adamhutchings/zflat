@@ -66,12 +66,16 @@ std::string typeToCStr(BuiltinType in) {
     return "!!INVALID_TYPE!!";
 }
 
-bool Type::operator==(BuiltinType p) {
-    return this->primitive == p;
+bool Type::operator==(Type p) {
+    return 
+    this->primitive == p.primitive
+    && this->indirection == p.indirection
+    && this->ref == p.ref
+    ;
 }
 
 bool Type::operator!=(Type p) {
-    return this->primitive != p.primitive;
+    return !(*this == p);
 }
 
 Type parse_type(std::ifstream& file) {
