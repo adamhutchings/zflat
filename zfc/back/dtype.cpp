@@ -71,7 +71,7 @@ Type get_type(ExprNode* expr) {
 
     if (vexpr != nullptr) {
         auto type = vexpr->sym->type;
-        type.ref = vexpr->ref;
+        type.ref = vexpr->ref; // NOT vexpr->sym->ref; remember implicit conversion
         return type;
     }
 
