@@ -81,6 +81,7 @@ InnerExprNode* single_node_read(std::ifstream& file) {
                     ZF_ERROR("line %d: could not resolve variable %s", next.line, next.raw_content());
                 }
                 dynamic_cast<VariableNode*>(iexpr)->sym = vsym;
+                dynamic_cast<VariableNode*>(iexpr)->ref = refflag;
                 return iexpr;
             }
         case LITERAL:
