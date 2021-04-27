@@ -70,7 +70,9 @@ Type get_type(ExprNode* expr) {
     }
 
     if (vexpr != nullptr) {
-        return vexpr->sym->type;
+        auto type = vexpr->sym->type;
+        type.ref = vexpr->ref;
+        return type;
     }
 
     if (fexpr != nullptr) {
