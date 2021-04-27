@@ -26,6 +26,9 @@ void VarDeclNode::read(std::ifstream& file) {
         lex::unlex(next);
     } else if (next.type == TreeComp::OPERATOR) {
         // parse an expression (after an equals sign, check for this later)
+        if (op::strToOp(next.str) != op::Operator::EQUALS) {
+            ZF_TOK_ERR(next, "'='");
+        }
         this->expr = new ExprNode();
         this->expr->read(file);
         if (get_type(this->expr) != this->var->type) {
