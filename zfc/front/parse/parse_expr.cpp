@@ -18,6 +18,7 @@ InnerExprNode* single_node_read(std::ifstream& file) {
     ExprNode* expr;
     InnerExprNode* iexpr;
     sym::Variable* vsym;
+    bool refflag = false; // whether a potential variable is ref-qualified
     switch (next.type) {
         case OPAREN:
             expr = new ExprNode();
@@ -30,6 +31,14 @@ InnerExprNode* single_node_read(std::ifstream& file) {
             iexpr = expr->inner;
             delete expr;
             return iexpr;
+        case REF:
+            refflag = true;
+            // Lex the next token
+            // It sshould be an identifier, so just go on to the next case
+            next = lex::lex(file);
+            if (next.type != IDENTIFIER) {
+                ZF_TOK_ERR(next, "identifier");
+            }
         case IDENTIFIER:
             lex::unlex(next);
             name = get_ident_name(file);

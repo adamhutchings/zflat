@@ -166,6 +166,7 @@ struct BinaryExprNode : public InnerExprNode {
 
 struct VariableNode : public InnerExprNode {
     sym::Variable* sym;
+    bool ref = false; // whether "ref x" or simply "x"
     inline void read(std::ifstream& file) override {}
     void write(std::ofstream& file) override;
     inline void apply( void (*fn)(ASTNode*) ) override { fn(this); }
