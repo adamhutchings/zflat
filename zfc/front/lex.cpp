@@ -189,6 +189,7 @@ TreeComp get_type(std::string name) {
     if (name == "extc") return TreeComp::EXTC;
     if (name == "__c_va_args") return TreeComp::VA_ARGS;
     if (name == "use") return TreeComp::USE;
+    if (name == "ref") return TreeComp::REF;
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }

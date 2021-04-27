@@ -66,22 +66,34 @@ std::string typeToCStr(BuiltinType in) {
     return "!!INVALID_TYPE!!";
 }
 
-bool Type::operator==(BuiltinType p) {
-    return this->primitive == p;
+bool Type::operator==(Type p) {
+    return 
+    this->primitive == p.primitive
+    && this->indirection == p.indirection
+    && this->ref == p.ref
+    ;
 }
 
 bool Type::operator!=(Type p) {
-    return this->primitive != p.primitive;
+    return !(*this == p);
 }
 
 Type parse_type(std::ifstream& file) {
     Type ret;
     // Change this later, if need be.
     auto type = lex::lex(file);
-    if (type.type != TYPENAME) {
-        ZF_ERROR("line %d: expected type name, found \"%s\"", type.line, type.raw_content());
+    if (type.type == REF) {
+        ret.ref = true;
+        // Go to next token
+        type = lex::lex(file);
+    } else {
+        ret.ref = false;
     }
-    ret.primitive = zStrToType(type.str);
+    if (type.type == TYPENAME) {
+        ret.primitive = zStrToType(type.str);
+    } else {
+        ZF_ERROR("line %d: expected type name or 'ref', found \"%s\"", type.line, type.raw_content());
+    }
     if (ret.primitive == MAX_INVALID) {
         ZF_ERROR("line %d: type name \"%s\" not recognized", type.line, type.raw_content());
     }
@@ -102,7 +114,9 @@ Type parse_type(std::ifstream& file) {
 }
 
 std::string Type::to_human_str() {
-    std::string ret = typeToZStr(this->primitive);
+    // std::string ret = this->ref ? "ref " : "";
+    std::string ret = ""; // TODO - encode ref
+    ret += typeToZStr(this->primitive);
     for (int i = 0; i < this->indirection; i++) {
         ret += " [ ]";
     }
@@ -114,6 +128,7 @@ std::string Type::to_output_str() {
     for (int i = 0; i < this->indirection; i++) {
         ret += " *";
     }
+    if (this->ref) ret += " *";
     return ret;
 }
 
@@ -124,5 +139,6 @@ Type Type::deref() {
     } else {
         --ret.indirection;
     }
+    ret.ref = false;
     return ret;
 }

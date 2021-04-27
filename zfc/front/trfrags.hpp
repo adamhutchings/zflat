@@ -39,6 +39,7 @@ enum TreeComp {
     EXTC,
     VA_ARGS,
     USE,
+    REF,
 
     // Tree fragments
     EXPRESSION,
