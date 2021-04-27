@@ -110,7 +110,8 @@ Type parse_type(std::ifstream& file) {
 }
 
 std::string Type::to_human_str() {
-    std::string ret = this->ref ? "ref " : "";
+    // std::string ret = this->ref ? "ref " : "";
+    std::string ret = ""; // TODO - encode ref
     ret += typeToZStr(this->primitive);
     for (int i = 0; i < this->indirection; i++) {
         ret += " [ ]";
