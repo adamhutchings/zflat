@@ -1,5 +1,0 @@
-extc printf(fmt: char[], __c_va_args): short;
-
-main() {
-    printf("Hello, World!\n");
-}

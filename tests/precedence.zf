@@ -1,3 +1,0 @@
-~/ precedence test/~
-
-x: int = 2 + 4 * 3 - 5;
