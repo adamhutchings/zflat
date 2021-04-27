@@ -40,7 +40,7 @@ struct Type {
     bool operator==(Type p);
     BuiltinType primitive = MAX_INVALID; // can be MAX_INVALID
     unsigned int indirection = 0; // how many levels of array this is
-    bool ref;
+    bool ref = false;
     inline Type(BuiltinType t=MAX_INVALID) { primitive = t; }
     bool operator!=(Type t);
     Type deref(); // dereference one type
