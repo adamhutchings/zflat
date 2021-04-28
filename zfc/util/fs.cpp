@@ -22,7 +22,7 @@ std::vector<std::string> get_compile_list(std::string dir) {
                 }
             }
         } else {
-            ret.push_back(dir + entry->d_name);
+            ret.push_back(dir + "/" + entry->d_name);
         }
     }
     closedir(direc);
