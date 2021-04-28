@@ -60,7 +60,7 @@ int main() {
     }
 
     for (auto name : testfail_files) {
-        int result = system( (std::string("./cmake/zfc -I ") + name + " -c").c_str() );
+        int result = system( (std::string("./cmake/zfc -I ") + name + " -c 2>/dev/null").c_str() );
         if (result != 0) {
             // TODO - distinguish fail from compiler breaking
             ++passed;
