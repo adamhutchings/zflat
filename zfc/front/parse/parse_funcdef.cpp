@@ -72,14 +72,19 @@ void FunctionNode::read(std::ifstream& file) {
             if (vd.name == node->var->name) {
                 ZF_ERROR("line %d: duplicate argument %s", node->line, node->var->name.c_str());
             }
-            if (vd.type == VA_TYPE) {
-                if (pos == 0 || pos != this->symbol->args.size() - 1 || !this->symbol->extc) {
-                    ZF_ERROR("line %d: invalid use of varargs", vd.lineno);
-                }
-            }
             ++pos;
         }
         this->symbol->args.push_back(*node->var);
+    }
+
+    int pos = 0;
+    for (auto vd : this->symbol->args) {
+        if (vd.type == VA_TYPE) {
+            if (pos == 0 || pos != this->symbol->args.size() - 1 || !this->symbol->extc) {
+                ZF_ERROR("line %d: invalid use of varargs", vd.lineno);
+            }
+        }
+        ++pos;
     }
 
     bool ret_type_declared; // Whether a return type is declated
