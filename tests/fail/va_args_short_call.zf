@@ -1,0 +1,5 @@
+extc foo(a: int, __c_va_args): int;
+
+bar() {
+    foo();
+}
