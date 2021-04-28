@@ -54,7 +54,7 @@ int main() {
             ++passed;
         } else {
             // TODO - distinguish fail from compiler breaking
-            std::cerr << "Test file " << name << " likely broke the compiler with return code " << result << "." << "\n";
+            std::cerr << "Test file " << name << " failed with return code " << result << "." << "\n";
             ++failed;
         }
     }
