@@ -1,8 +1,0 @@
-foo(a: ref int) {
-    a = 3;
-}
-
-bar() {
-    a: int;
-    foo(ref a);
-}

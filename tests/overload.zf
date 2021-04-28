@@ -1,7 +1,0 @@
-foo(x: int, y: int): int {
-    return x + y;
-}
-
-foo(x: int): int {
-    return foo(x, 3);
-}

@@ -1,0 +1,1 @@
+extc foo(__c_va_args): int;
