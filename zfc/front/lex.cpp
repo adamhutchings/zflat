@@ -221,6 +221,7 @@ Token process_character(std::ifstream& file) {
     }
     if (cend >= TOK_MAX)
         ZF_ERROR("token on line %u exceeded limit", line);
+    if (file.peek() == EOF) eofhit = true;
     if (ends_token(curtok, nexttok)) {
         lastwascolon = curtok == ':';
         add_char(curtok);
@@ -228,9 +229,7 @@ Token process_character(std::ifstream& file) {
         cend = 0;
         if (cbuf[0] == '\"') in_quote = false;
         memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);
-        if (curtok == EOF) {
-            eofhit = true;
-        } else if (curtok == '~') {
+        if (curtok == '~') {
             in_comment = false;
         }
         in_quote = false;
