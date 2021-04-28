@@ -72,7 +72,7 @@ int main() {
 
     std::cerr << "Test results:" << "\n";
 
-    std::cerr << passed << " passed, " << failed << " failed." << "\n";
+    std::cerr << passed << " passed, " << failed << " failed (" << ((double) passed * 100) / (passed + failed) << "%)" << "\n";
 
     // Delete all of the output files.
     system("find tests/ -name '*.c' | xargs rm");
