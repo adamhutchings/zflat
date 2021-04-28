@@ -1,0 +1,14 @@
+foo(a: int): int {
+    switch(a) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            ;
+    }
+    fswitch (a) {
+        case 1:
+        case 2:
+        ;
+    }
+}
