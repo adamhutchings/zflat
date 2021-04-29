@@ -92,7 +92,12 @@ Type parse_type(std::ifstream& file) {
     if (type.type == TYPENAME) {
         ret.primitive = zStrToType(type.str);
     } else {
-        ZF_ERROR("line %d: expected type name or 'ref', found \"%s\"", type.line, type.raw_content());
+        if (ret.ref) {
+            lex::unlex(type);
+            ret.primitive = VOID; // ref == void *
+        } else {
+            ZF_ERROR("line %d: expected type name or 'ref', found \"%s\"", type.line, type.raw_content());
+        }
     }
     if (ret.primitive == MAX_INVALID) {
         ZF_ERROR("line %d: type name \"%s\" not recognized", type.line, type.raw_content());

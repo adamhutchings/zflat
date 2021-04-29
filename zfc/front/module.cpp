@@ -98,13 +98,13 @@ void begin_write(std::ofstream& file) {
 
 void writesym(std::ofstream& file, sym::Symbol* sym) {
     sym::Variable* var = static_cast<sym::Variable*>(sym);
-    if (var != nullptr) {
+    if (sym->var) {
         // Write x: int, for example
         file << var->name << ": " << var->type.to_human_str() << "\n";
         return;
     }
     sym::Function* fun = static_cast<sym::Function*>(sym);
-    if (fun != nullptr) {
+    if (!sym->var) {
         if (fun->extc) {
             file << "extc ";
         }
