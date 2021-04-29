@@ -17,8 +17,10 @@ bool check_fn(std::ifstream& file) {
 
     bool fn = first.type == TreeComp::IDENTIFIER
     && opn.type == TreeComp::OPAREN
-    && un.type == TreeComp::IDENTIFIER
-    && cl.type == TreeComp::COLON;
+    && ( ( un.type == TreeComp::IDENTIFIER
+    && cl.type == TreeComp::COLON )
+        || un.type == TreeComp::TYPENAME
+    );
 
     bool pless = first.type == TreeComp::IDENTIFIER
     && opn.type == TreeComp::OPAREN
