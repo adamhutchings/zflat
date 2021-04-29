@@ -61,7 +61,11 @@ void FunctionNode::read(std::ifstream& file) {
         if (va.type == VA_ARGS) {
             node->var = new sym::Variable("");
             node->var->type = VA_TYPE;
-        } else {
+        } else if (va.type == TYPENAME) {
+            node->var = new sym::Variable("$unnamed");
+            lex::unlex(va);
+            node->var->type = parse_type(file);
+        } {
             lex::unlex(va);
             node->read(file);
         }
@@ -69,7 +73,7 @@ void FunctionNode::read(std::ifstream& file) {
         // Also check to make sure the va_args is at the end
         int pos = 0;
         for (auto vd : this->symbol->args) {
-            if (vd.name == node->var->name) {
+            if (vd.name == node->var->name && node->var->name != "$unnamed") {
                 ZF_ERROR("line %d: duplicate argument %s", node->line, node->var->name.c_str());
             }
             ++pos;
