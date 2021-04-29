@@ -120,6 +120,12 @@ void FunctionNode::read(std::ifstream& file) {
             ZF_TOK_ERR(sc, ";");
         }
     } else {
+        // Check to make suree no nameless arguments
+        for (auto vd : this->symbol->args) {
+            if (vd.name == "$unnamed") {
+                ZF_ERROR("line %d: unnamed argument illegal", vd.lineno);
+            }
+        }
         // Now, parse the rest as a block statement
         this->body = new BlockStatementNode();
         this->body->read(file);
