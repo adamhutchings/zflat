@@ -55,7 +55,7 @@ void FunctionNode::read(std::ifstream& file) {
         else if (peek.type == TreeComp::COMMA) /* next */;
         else
             ZF_TOK_ERR(peek, "',' or ')'");
-        // Check for va_args
+        // Check for va_args (and bare types)
         auto va = lex::lex(file);
             VarDeclNode* node = new VarDeclNode();
         if (va.type == VA_ARGS) {
@@ -65,7 +65,7 @@ void FunctionNode::read(std::ifstream& file) {
             node->var = new sym::Variable("$unnamed");
             lex::unlex(va);
             node->var->type = parse_type(file);
-        } {
+        } else {
             lex::unlex(va);
             node->read(file);
         }
