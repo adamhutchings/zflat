@@ -9,6 +9,11 @@ are intuitive syntax, type-safety, and easy library management.
 
 ![screenshot](https://github.com/adamhutchings/zflat/blob/main/screenshot.png)
 
+## Repository Overview
+`std` - standard library folder
+`zfc` - the Z-flat compiler
+`docs` - all documentation
+
 ## Syntax highlighting
 #### Vim
 - [JakeRoggenbuck/zflat.vim](https://github.com/JakeRoggenbuck/zflat.vim/)
