@@ -87,7 +87,7 @@ void FunctionNode::read(std::ifstream& file) {
         ++pos;
     }
 
-    bool ret_type_declared; // Whether a return type is declated
+    bool ret_type_declared; // Whether a return type is declared
 
     // Now we've passed the function argument list, get return type
     Token cln = lex::lex(file);
