@@ -46,7 +46,7 @@ std::string get_default_output(std::string path) {
     if (path.find(".zf") != path.size() - 3) {
         fprintf(stderr, "zfc: warning: file extension is not .zf\n");
     }
-    return std::string("bin/") + path.substr(4, path.size() - 3) + ".o";
+    return std::string("bin/obj/") + path.substr(4, path.size() - 3) + ".o";
 }
 
 std::string get_symbol_output(std::string path) {
@@ -54,7 +54,7 @@ std::string get_symbol_output(std::string path) {
     if (path.find(".zf") != path.size() - 3) {
         fprintf(stderr, "zfc: warning: file extension is not .zf\n");
     }
-    return std::string("bin/symbol/") + path.substr(4, path.size() - 3) + ".o";
+    return std::string("bin/symbol/") + path.substr(4, path.size() - 3) + ".symbol";
 }
 
 }
@@ -71,6 +71,7 @@ void compile_unit(std::string path, bool leave_at_c) {
 
 void compile_default() {
     auto files = fs::get_compile_list("src");
+    system("mkdir -p bin && mkdir -p bin/symbol && mkdir -p bin/obj");
     for (auto file : files) {
         compile(file, get_default_output(file), get_symbol_output(file), false);
     }
