@@ -1,0 +1,12 @@
+~/
+ / _stdio - Z-flat wrapper for C I/O
+ /~
+
+extc fopen(name: char[], mode: char[]): ref;
+extc fclose(file: ref);
+
+extc getc(file: ref): int;
+extc putc(c: char, file: ref): int;
+
+extc fprintf(file: ref, fmt: char[], __c_va_args): int;
+extc printf(fmt: char[], __c_va_args): int;
