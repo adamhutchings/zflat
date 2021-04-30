@@ -15,14 +15,14 @@ void compile(std::string in, std::string out, std::string sym_out, bool leave_at
     ifile.open(in);
     if (!ifile)
         ZF_ERROR("Could not open %s for reading", in.c_str());
+    ProgramNode pnode;
+    pnode.read(ifile);
     std::ofstream tmpfil;
     std::string tmp_path = leave_at_c ? out : random_temp_path();
     if (!leave_at_c) tmp_path += ".c";
     tmpfil.open(tmp_path);
     if (!tmpfil)
         ZF_ERROR("Could not open %s for writing", tmp_path.c_str());
-    ProgramNode pnode;
-    pnode.read(ifile);
     pnode.write(tmpfil);
     ifile.close();
     tmpfil.close();
