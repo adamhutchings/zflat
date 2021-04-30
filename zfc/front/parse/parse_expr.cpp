@@ -109,14 +109,14 @@ void ExprNode::read(std::ifstream& file) {
     std::vector<InnerExprNode*> nodes;
     std::vector<op::Operator> ops;
 
-    Token opt;
+    int line;
 
     // BEGIN - read operators and expressions
     int nc = 0;
     while (1) {
         // Read an operator
         if (nc != 0) {
-            opt = lex::lex(file);
+            auto opt = lex::lex(file);
             if (opt.type != OPERATOR) {
                 lex::unlex(opt);
                 break;
@@ -126,6 +126,7 @@ void ExprNode::read(std::ifstream& file) {
                 ZF_TOK_ERR(opt, "valid operator token");
             }
             ops.push_back(op);
+            line = opt.line;
         }
         // Read one atomic expression.
         auto temp = single_node_read(file);
@@ -135,7 +136,7 @@ void ExprNode::read(std::ifstream& file) {
     }
 
     if (nodes.size() == 0) {
-        ZF_ERROR("line %d: expression incomplete", opt.line);
+        ZF_ERROR("line %d: expression incomplete", line);
     }
 
     // Now, we combine over and over.

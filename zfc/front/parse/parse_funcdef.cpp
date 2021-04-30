@@ -55,12 +55,16 @@ void FunctionNode::read(std::ifstream& file) {
         else if (peek.type == TreeComp::COMMA) /* next */;
         else
             ZF_TOK_ERR(peek, "',' or ')'");
-        // Check for va_args
+        // Check for va_args (and bare types)
         auto va = lex::lex(file);
             VarDeclNode* node = new VarDeclNode();
         if (va.type == VA_ARGS) {
             node->var = new sym::Variable("");
             node->var->type = VA_TYPE;
+        } else if (va.type == TYPENAME || va.type == REF) {
+            node->var = new sym::Variable("$unnamed");
+            lex::unlex(va);
+            node->var->type = parse_type(file);
         } else {
             lex::unlex(va);
             node->read(file);
@@ -69,7 +73,7 @@ void FunctionNode::read(std::ifstream& file) {
         // Also check to make sure the va_args is at the end
         int pos = 0;
         for (auto vd : this->symbol->args) {
-            if (vd.name == node->var->name) {
+            if (vd.name == node->var->name && node->var->name != "$unnamed") {
                 ZF_ERROR("line %d: duplicate argument %s", node->line, node->var->name.c_str());
             }
             ++pos;
@@ -87,7 +91,7 @@ void FunctionNode::read(std::ifstream& file) {
         ++pos;
     }
 
-    bool ret_type_declared; // Whether a return type is declated
+    bool ret_type_declared; // Whether a return type is declared
 
     // Now we've passed the function argument list, get return type
     Token cln = lex::lex(file);
@@ -116,6 +120,12 @@ void FunctionNode::read(std::ifstream& file) {
             ZF_TOK_ERR(sc, ";");
         }
     } else {
+        // Check to make suree no nameless arguments
+        for (auto vd : this->symbol->args) {
+            if (vd.name == "$unnamed") {
+                ZF_ERROR("line %d: unnamed argument illegal", vd.lineno);
+            }
+        }
         // Now, parse the rest as a block statement
         this->body = new BlockStatementNode();
         this->body->read(file);
