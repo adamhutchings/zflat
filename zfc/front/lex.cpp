@@ -198,7 +198,7 @@ TreeComp get_type(std::string name) {
     if (is_numeric(name[0]) || name[0] == '\'' || name[0] == '\"')
         return TreeComp::LITERAL;
     // when in doubt ...
-    return TreeComp::IDENTIFIER;
+    ZF_ERROR("invalid material for token: on line %d, found %s", line, name.c_str());
 }
 
 // A put-back tokens lands in here.
