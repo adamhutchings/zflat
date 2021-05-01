@@ -180,16 +180,18 @@ TreeComp get_type(std::string name) {
     || name == "ushort" || name == "uint" || name == "ulong" || name == "uchar"
     ) return TreeComp::TYPENAME;
     // A bunch of keywords.
-    if (name == "loop") return TreeComp::LOOP;
-    if (name == "if") return TreeComp::IF;
-    if (name == "else") return TreeComp::ELSE;
-    if (name == "switch") return TreeComp::SWITCH;
-    if (name == "case") return TreeComp::CASE;
-    if (name == "fswitch") return TreeComp::FSWITCH;
-    if (name == "extc") return TreeComp::EXTC;
-    if (name == "__c_va_args") return TreeComp::VA_ARGS;
-    if (name == "use") return TreeComp::USE;
-    if (name == "ref") return TreeComp::REF;
+    if (name == "loop")          return TreeComp::LOOP;
+    if (name == "if")            return TreeComp::IF;
+    if (name == "else")          return TreeComp::ELSE;
+    if (name == "switch")        return TreeComp::SWITCH;
+    if (name == "case")          return TreeComp::CASE;
+    if (name == "fswitch")       return TreeComp::FSWITCH;
+    if (name == "extc")          return TreeComp::EXTC;
+    if (name == "__c_va_args")   return TreeComp::VA_ARGS;
+    if (name == "use")           return TreeComp::USE;
+    if (name == "ref")           return TreeComp::REF;
+    if (name == "enum")          return TreeComp::ENUM;
+    if (name == "bitfield")      return TreeComp::BITFIELD;
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }

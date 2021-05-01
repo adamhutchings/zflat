@@ -40,6 +40,8 @@ enum TreeComp {
     VA_ARGS,
     USE,
     REF,
+    ENUM,
+    BITFIELD,
 
     // Tree fragments
     EXPRESSION,
