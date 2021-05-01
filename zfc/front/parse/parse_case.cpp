@@ -2,21 +2,11 @@
 
 void CaseNode::read(std::ifstream& file) {
 
-    auto cas = lex::lex(file);
-    if (cas.type != CASE) {
-        ZF_TOK_ERR(cas, "case");
-    }
+    expect(file, CASE);
 
-    auto lit = lex::lex(file);
-    if (lit.type != LITERAL) {
-        ZF_TOK_ERR(lit, "literal value");
-    }
-    this->lit = lit.str;
+    this->lit = expect(file, LITERAL).str;
 
-    auto col = lex::lex(file);
-    if (col.type != COLON) {
-        ZF_TOK_ERR(col, ":");
-    }
+    expect(file, COLON);
 
     while (1) {
         auto end = lex::lex(file);

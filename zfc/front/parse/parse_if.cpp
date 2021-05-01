@@ -2,17 +2,9 @@
 
 void IfNode::read(std::ifstream& file) {
 
-    auto ift = lex::lex(file);
-    if (ift.type != IF) {
-        ZF_TOK_ERR(ift, "if");
-    }
+    this->line = expect(file, IF).line;
 
-    this->line = ift.line;
-
-    auto op = lex::lex(file);
-    if (op.type != OPAREN) {
-        ZF_TOK_ERR(op, "'('");
-    }
+    expect(file, OPAREN);
 
     this->expr = new ExprNode();
     this->expr->read(file);
@@ -21,10 +13,7 @@ void IfNode::read(std::ifstream& file) {
         this->expr->line, get_type(this->expr).to_human_str().c_str());
     }
 
-    auto cp = lex::lex(file);
-    if (cp.type != CPAREN) {
-        ZF_TOK_ERR(cp, "')'");
-    }
+    expect(file, CPAREN);
 
     this->stmt = new StatementNode();
     this->stmt->read(file);

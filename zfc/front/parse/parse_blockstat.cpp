@@ -2,13 +2,7 @@
 
 void BlockStatementNode::read(std::ifstream& file) {
 
-    Token tok = lex::lex(file);
-
-    if (tok.type != OBRACE) {
-        ZF_TOK_ERR(tok, "'{'");
-    }
-
-    this->line = tok.line;
+    this->line = expect(file, OBRACE).line;
 
     sym::enter_scope();
 

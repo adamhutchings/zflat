@@ -4,11 +4,7 @@ void FuncCallNode::read(std::ifstream& file) {
 
     // Name is given by canonicalname
 
-    Token opn = lex::lex(file);
-    if (opn.type != TreeComp::OPAREN) {
-        ZF_TOK_ERR(opn, "'('");
-    }
-    this->line = opn.line;
+    this->line = expect(file, OPAREN).line;
 
     Token ctok = lex::lex(file);
 

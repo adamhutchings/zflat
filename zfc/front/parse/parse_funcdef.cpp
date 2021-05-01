@@ -25,14 +25,8 @@ void FunctionNode::read(std::ifstream& file) {
     this->symbol->lineno = name.line;
     this->symbol->extc = extc;
 
-    Token opn = lex::lex(file);
-
-    if (opn.type != TreeComp::OPAREN) {
-        ZF_TOK_ERR(opn, "'('");
-    }
-
     // for while loop, start reading at 1st arg
-    lex::unlex(opn);
+    lex::unlex(expect(file, OPAREN));
 
     while (true) {
         // Loop through to get function arguments

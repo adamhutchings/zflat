@@ -22,11 +22,7 @@ std::string get_ident_name(std::ifstream& file) {
             ret += sym::scopesep;
         }
 
-        auto ide = lex::lex(file);
-        if (ide.type != IDENTIFIER) {
-            ZF_TOK_ERR(ide, "identifier");
-        }
-        ret += ide.str;
+        ret += expect(file, IDENTIFIER).str;
 
         ++ct;
 

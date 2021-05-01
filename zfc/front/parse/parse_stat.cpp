@@ -65,9 +65,7 @@ out:
         case SEMICOLON:
             break;
         default:
-            Token sc = lex::lex(file);
-            if (sc.type != TreeComp::SEMICOLON)
-                ZF_TOK_ERR(sc, "semicolon");
+            expect(file, SEMICOLON);
     }
 
     if (this->inner != nullptr) {
