@@ -40,14 +40,17 @@ struct Function : public Symbol {
     std::string get_overloaded_name();
 };
 
-struct EnumVal : public Variable {
-    int val;
-    inline EnumVal(std::string n, int v) : Variable(n) { val = v; }
-};
-
 struct Enum : public Symbol {
     std::vector<EnumVal*> values;
+    bool bitfield = false;
     inline Enum(std::string n) : Symbol(n, T_ENUM) {}
+    inline Type underlying_type() { return bitfield ? UINT : UCHAR; }
+};
+
+struct EnumVal : public Variable {
+    int val;
+    Enum* parent;
+    inline EnumVal(std::string n, int v, Enum* p) : Variable(n), parent(p) { val = v; }
 };
 
 void enter_scope();
