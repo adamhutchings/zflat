@@ -1,9 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <front/lex.hpp>
-#include <front/symbol.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 /**
  * This file is to get the name of an identifier as a string.

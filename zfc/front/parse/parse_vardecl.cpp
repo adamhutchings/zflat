@@ -1,10 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <back/dtype.hpp>
-#include <back/operator.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void VarDeclNode::read(std::ifstream& file) {
     Token init = lex::lex(file);

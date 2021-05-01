@@ -1,8 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void LoopNode::read(std::ifstream& file) {
     auto loop = lex::lex(file);

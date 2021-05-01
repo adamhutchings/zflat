@@ -1,9 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <front/lex.hpp>
-#include <front/module.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void UseNode::read(std::ifstream& file) {
 
