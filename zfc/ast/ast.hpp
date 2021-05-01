@@ -14,7 +14,7 @@
 #include <front/trfrags.hpp>
 
 // Use this if an unexpected token pops up.
-#define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected " exp_name " on line %d, found \"%s\" instead", tok.line, tok.raw_content())
+#define ZF_TOK_ERR(tok, exp_name) ZF_ERROR("expected %s on line %d, found '%s' instead", exp_name, tok.line, tok.raw_content())
 
 std::string get_ident_name(std::ifstream& file);
 
