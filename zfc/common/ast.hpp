@@ -8,8 +8,8 @@
 #include <vector>
 #include <string>
 
-#include <back/flow.hpp>
-#include <back/operator.hpp>
+#include <common/flow.hpp>
+#include <common/operator.hpp>
 #include <front/symbol.hpp>
 #include <front/trfrags.hpp>
 

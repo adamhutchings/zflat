@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include <back/type.hpp>
+#include <common/type.hpp>
 
 namespace sym {
 

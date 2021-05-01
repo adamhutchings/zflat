@@ -6,9 +6,9 @@
 
 #include <fstream>
 
-#include <ast/ast.hpp>
-#include <back/dtype.hpp>
-#include <back/operator.hpp>
+#include <common/ast.hpp>
+#include <common/dtype.hpp>
+#include <common/operator.hpp>
 #include <front/lex.hpp>
 #include <front/module.hpp>
 #include <front/trfrags.hpp>

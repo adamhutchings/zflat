@@ -1,5 +1,5 @@
 #include <back/gen/gen_main.hpp>
-#include <back/type.hpp>
+#include <common/type.hpp>
 
 void VarDeclNode::write(std::ofstream& file) {
 

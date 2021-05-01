@@ -1,5 +1,5 @@
 #include <back/gen/gen_main.hpp>
-#include <back/operator.hpp>
+#include <common/operator.hpp>
 
 void BinaryExprNode::write(std::ofstream& file) {
     bool index_expr = this->op == op::Operator::INDEX;

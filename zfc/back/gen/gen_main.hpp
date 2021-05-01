@@ -6,7 +6,7 @@
 
 #include <fstream>
 #include <string>
-#include <ast/ast.hpp>
+#include <common/ast.hpp>
 
 #include <util/error.hpp>
 

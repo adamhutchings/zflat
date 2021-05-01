@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <ast/ast.hpp>
-#include <back/type.hpp>
+#include <common/ast.hpp>
+#include <common/type.hpp>
 
 Type get_type(ExprNode* expr);
