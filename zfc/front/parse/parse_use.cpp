@@ -1,9 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <front/lex.hpp>
-#include <front/module.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void UseNode::read(std::ifstream& file) {
 
@@ -17,10 +12,7 @@ void UseNode::read(std::ifstream& file) {
     // TODO - use expr.ident syntax rather than the manual version right now
     std::string path = "bin/symbol/", symbol_prefix = "";
     while (1) {
-        auto part = lex::lex(file);
-        if (part.type != IDENTIFIER) {
-            ZF_TOK_ERR(part, "identifier");
-        }
+        auto part = expect(file, IDENTIFIER);
         // Add to path
         path += part.str, symbol_prefix += part.str;
         auto end_or_dot = lex::lex(file);

@@ -1,8 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void StatementNode::read(std::ifstream& file) {
 
@@ -69,9 +65,7 @@ out:
         case SEMICOLON:
             break;
         default:
-            Token sc = lex::lex(file);
-            if (sc.type != TreeComp::SEMICOLON)
-                ZF_TOK_ERR(sc, "semicolon");
+            expect(file, SEMICOLON);
     }
 
     if (this->inner != nullptr) {

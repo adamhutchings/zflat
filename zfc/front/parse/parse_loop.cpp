@@ -1,19 +1,8 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void LoopNode::read(std::ifstream& file) {
-    auto loop = lex::lex(file);
-    if (loop.type != LOOP) {
-        ZF_TOK_ERR(loop, "'loop'");
-    }
-    this->line = loop.line;
-    auto op = lex::lex(file);
-    if (op.type != OPAREN) {
-        ZF_TOK_ERR(op, "'('");
-    }
+    this->line = expect(file, LOOP).line;
+    expect(file, OPAREN);
     this->expr = new ExprNode();
     this->expr->read(file);
     auto cp = lex::lex(file);

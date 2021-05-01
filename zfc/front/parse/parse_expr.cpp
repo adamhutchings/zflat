@@ -1,9 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <back/operator.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 namespace {
 
@@ -34,11 +29,8 @@ InnerExprNode* single_node_read(std::ifstream& file) {
         case REF:
             refflag = true;
             // Lex the next token
-            // It sshould be an identifier, so just go on to the next case
-            next = lex::lex(file);
-            if (next.type != IDENTIFIER) {
-                ZF_TOK_ERR(next, "identifier");
-            }
+            // It should be an identifier, so just go on to the next case
+            next = expect(file, IDENTIFIER);
         case IDENTIFIER:
             lex::unlex(next);
             name = get_ident_name(file);
@@ -54,10 +46,7 @@ InnerExprNode* single_node_read(std::ifstream& file) {
                 expr = new ExprNode();
                 expr->read(file);
                 // Expect closing bracket
-                auto cb = lex::lex(file);
-                if (cb.type != CBRACKET) {
-                    ZF_TOK_ERR(cb, "']'");
-                }
+                expect(file, CBRACKET);
                 iexpr = new BinaryExprNode();
                 auto bexpr = dynamic_cast<BinaryExprNode*>(iexpr);
                 bexpr->left = new ExprNode();

@@ -1,8 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 bool check_fn(std::ifstream& file) {
 

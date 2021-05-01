@@ -1,14 +1,7 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <back/dtype.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void ControlFlowNode::read(std::ifstream& file) {
-    Token tok = lex::lex(file);
-    if (tok.type != TreeComp::FLOW)
-        ZF_TOK_ERR(tok, "break, continue, or return");
+    Token tok = expect(file,FLOW);
     this->statement = strToFlow(tok.str);
     this->line = tok.line;
     Token next = lex::lex(file);

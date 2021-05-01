@@ -1,9 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <back/dtype.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void SwitchNode::read(std::ifstream& file) {
 
@@ -16,23 +11,14 @@ void SwitchNode::read(std::ifstream& file) {
         ZF_TOK_ERR(sw, "switch or fswitch");
     }
 
-    auto op = lex::lex(file);
-    if (op.type != OPAREN) {
-        ZF_TOK_ERR(op, "'('");
-    }
+    expect(file, OPAREN);
 
     this->expr = new ExprNode();
     this->expr->read(file);
 
-    auto cp = lex::lex(file);
-    if (cp.type != CPAREN) {
-        ZF_TOK_ERR(cp, "')'");
-    }
+    expect(file, CPAREN);
 
-    auto ob = lex::lex(file);
-    if (ob.type != OBRACE) {
-        ZF_TOK_ERR(ob, "'{'");
-    }
+    expect(file, OBRACE);
 
     while (1) {
         auto cb = lex::lex(file);

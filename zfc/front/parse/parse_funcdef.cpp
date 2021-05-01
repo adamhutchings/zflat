@@ -1,9 +1,4 @@
-#include <fstream>
-
-#include <ast/ast.hpp>
-#include <back/operator.hpp>
-#include <front/lex.hpp>
-#include <util/error.hpp>
+#include <front/parse/parse_header.hpp>
 
 void FunctionNode::read(std::ifstream& file) {
 
@@ -30,14 +25,8 @@ void FunctionNode::read(std::ifstream& file) {
     this->symbol->lineno = name.line;
     this->symbol->extc = extc;
 
-    Token opn = lex::lex(file);
-
-    if (opn.type != TreeComp::OPAREN) {
-        ZF_TOK_ERR(opn, "'('");
-    }
-
     // for while loop, start reading at 1st arg
-    lex::unlex(opn);
+    lex::unlex(expect(file, OPAREN));
 
     while (true) {
         // Loop through to get function arguments
