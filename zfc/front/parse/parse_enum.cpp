@@ -30,7 +30,7 @@ void EnumDeclNode::read(std::ifstream& file) {
     while (1) {
 
         auto id = expect(file, IDENTIFIER);
-        auto id_val = new sym::EnumVal(id.str, val);
+        auto id_val = new sym::EnumVal(id.str, val, this->sym);
         this->sym->values.push_back(id_val);
 
         auto closetest = lex::lex(file);
@@ -55,5 +55,7 @@ void EnumDeclNode::read(std::ifstream& file) {
         ++decls;
 
     }
+
+    this->sym->bitfield = is_bitfield;
 
 }
