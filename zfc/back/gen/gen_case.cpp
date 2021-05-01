@@ -1,4 +1,3 @@
-#include <ast/ast.hpp>
 #include <back/gen/gen_main.hpp>
 
 void CaseNode::write(std::ofstream& file) {
