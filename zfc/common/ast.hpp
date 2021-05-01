@@ -50,6 +50,7 @@ struct InnerExprNode;
 struct FuncCallNode;
 struct ControlFlowNode;
 struct VarDeclNode;
+struct EnumDeclNode;
 struct UseNode;
 
 struct ProgramNode : public ASTNode {
@@ -207,6 +208,14 @@ struct VarDeclNode : public InnerStatementNode {
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
     virtual ~VarDeclNode() {}
+};
+
+struct EnumDeclNode : public ProgramSub {
+    sym::Enum* sym;
+    void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    void apply( void (*fn)(ASTNode*) ) override;
+    virtual ~EnumDeclNode() {}
 };
 
 struct UseNode : public ASTNode {

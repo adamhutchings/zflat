@@ -73,6 +73,10 @@ void VarDeclNode::apply(void(*fn)(ASTNode*)) {
     fn(this);
 }
 
+void EnumDeclNode::apply(void(*fn)(ASTNode*)) {
+    fn(this);
+}
+
 void UseNode::apply(void(*fn)(ASTNode*)) {
     
 }
