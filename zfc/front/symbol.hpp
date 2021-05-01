@@ -13,24 +13,41 @@ namespace sym {
 
 extern std::string argsep, retsep, scopesep;
 
+enum SymType {
+    VAR,
+    FN,
+    T_ENUM,
+};
+
 struct Symbol {
     std::string name;
     int lineno;
-    bool var;
-    inline Symbol(std::string n) : name(n) {}
+    SymType s_type;
+    inline Symbol(std::string n, SymType s) : name(n), s_type(s) {}
+    inline bool is_type() { return s_type == T_ENUM /* || other types (T_CLASS, etc.) */ ; }
 };
 
 struct Variable : public Symbol {
     Type type;
-    inline Variable(std::string n) : Symbol(n) { var = true; }
+    inline Variable(std::string n) : Symbol(n, VAR) {}
 };
 
 struct Function : public Symbol {
     std::vector<Variable> args;
     Type ret;
     bool extc;
-    inline Function(std::string n) : Symbol(n) { var = false; }
+    inline Function(std::string n) : Symbol(n, FN) {}
     std::string get_overloaded_name();
+};
+
+struct EnumVal : public Variable {
+    int val;
+    inline EnumVal(std::string n, int v) : Variable(n) { val = v; }
+};
+
+struct Enum : public Symbol {
+    std::vector<EnumVal*> values;
+    inline Enum(std::string n) : Symbol(n, T_ENUM) {}
 };
 
 void enter_scope();
