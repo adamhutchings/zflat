@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-#include <ast/ast.hpp>
+#include <common/ast.hpp>
 #include <front/module.hpp>
 #include <util/error.hpp>
 #include <util/fs.hpp>

@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include <back/operator.hpp>
+#include <common/operator.hpp>
 #include <front/lex.hpp>
 #include <util/error.hpp>
 
