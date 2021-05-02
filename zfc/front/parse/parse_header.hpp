@@ -22,7 +22,7 @@ inline std::string get_type_name(TreeComp type) {
         case OPERATOR: return "operator";
         case SEMICOLON: return "';''";
         case OBRACE: return "'{'";
-        case CBRACE: return "'}";
+        case CBRACE: return "'}'";
         case OPAREN: return "'('";
         case CPAREN: return "')";
         case OBRACKET: return "'[";
