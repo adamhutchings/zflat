@@ -6,6 +6,7 @@ void UseNode::write(std::ofstream& file) {
 
         auto* var = static_cast<sym::Variable*>(decl);
         auto* fun = static_cast<sym::Function*>(decl);
+        int ind;
 
         switch (decl->s_type) {
         case sym::SymType::VAR:
@@ -14,16 +15,20 @@ void UseNode::write(std::ofstream& file) {
             return;
         case sym::SymType::FN:
             gen::write(file, fun->ret.to_output_str() + " " + fun->name + "(");
-            int ind = 0;
+            ind = 0;
             for (auto arg : fun->args) {
                 if (ind != 0) {
                     gen::write(file, ", ");
                 }
                 gen::write(file, arg.type.to_output_str());
+                ++ind;
             }
             gen::write(file, ");");
         case sym::SymType::T_ENUM:
             // TODO - after refactor to use actual parse/gen
+            ;
+        case sym::SymType::T_ENUMSYM:
+            ;
         }
 
         gen::write(file, "\n");
