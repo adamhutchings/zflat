@@ -22,6 +22,8 @@ void UseNode::write(std::ofstream& file) {
                 gen::write(file, arg.type.to_output_str());
             }
             gen::write(file, ");");
+        case sym::SymType::T_ENUM:
+            // TODO - after refactor to use actual parse/gen
         }
 
         gen::write(file, "\n");

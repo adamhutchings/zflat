@@ -120,6 +120,10 @@ void writesym(std::ofstream& file, sym::Symbol* sym) {
         file << "): ";
         file << fun->ret.to_human_str();
         file << "\n";
+    case sym::SymType::T_ENUM:
+        // TODO: do after refactor
+    case sym::SymType::T_ENUMSYM:
+        ; // better not happen
     }
 }
 
