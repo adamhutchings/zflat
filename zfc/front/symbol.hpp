@@ -40,6 +40,8 @@ struct Function : public Symbol {
     std::string get_overloaded_name();
 };
 
+struct EnumVal;
+
 struct Enum : public Symbol {
     std::vector<EnumVal*> values;
     bool bitfield = false;
