@@ -57,5 +57,7 @@ void EnumDeclNode::read(std::ifstream& file) {
     }
 
     this->sym->bitfield = is_bitfield;
+    
+    sym::add_symbol(this->sym);
 
 }
