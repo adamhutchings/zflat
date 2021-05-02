@@ -34,6 +34,12 @@ Variable* resolve_var(std::string name) {
         for (Symbol* sym : symtab[i - 1]) {
             Variable* var = static_cast<Variable*>(sym);
             if (sym->name == name && var != nullptr) return var;
+            Enum* s_enum = static_cast<Enum*>(sym);
+            if (s_enum != nullptr) {
+                for (auto val : s_enum->values) {
+                    if (val->name == name) return val;
+                }
+            }
         }
     }
     return nullptr;
