@@ -34,7 +34,7 @@ void EnumDeclNode::read(std::ifstream& file) {
         this->sym->values.push_back(id_val);
 
         auto closetest = lex::lex(file);
-        if (closetest.type == OBRACE) {
+        if (closetest.type == CBRACE) {
             break;
         } else {
             lex::unlex(closetest);
