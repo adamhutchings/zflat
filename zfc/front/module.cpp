@@ -99,6 +99,7 @@ void begin_write(std::ofstream& file) {
 void writesym(std::ofstream& file, sym::Symbol* sym) {
     sym::Variable* var = static_cast<sym::Variable*>(sym);
     sym::Function* fun = static_cast<sym::Function*>(sym);
+    int ct;
     switch (sym->s_type) {
     case sym::SymType::VAR:
         // Write x: int, for example
@@ -109,7 +110,7 @@ void writesym(std::ofstream& file, sym::Symbol* sym) {
             file << "extc ";
         }
         file << fun->name << " (";
-        int ct = 0;
+        ct = 0;
         for (auto arg : fun->args) {
             if (ct != 0) {
                 file << ", ";
