@@ -17,6 +17,7 @@ enum SymType {
     VAR,
     FN,
     T_ENUM,
+    T_ENUMSYM,
 };
 
 struct Symbol {
@@ -52,7 +53,7 @@ struct Enum : public Symbol {
 struct EnumVal : public Variable {
     int val;
     Enum* parent;
-    inline EnumVal(std::string n, int v, Enum* p) : Variable(n), parent(p) { val = v; }
+    inline EnumVal(std::string n, int v, Enum* p) : Variable(n), parent(p) { val = v; s_type = T_ENUMSYM; }
 };
 
 void enter_scope();
