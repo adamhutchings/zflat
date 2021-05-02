@@ -35,7 +35,7 @@ TopLevelDecl check_fn(std::ifstream& file) {
     lex::unlex(first);
 
     if (fn || pless) return TL_FN;
-    if (first.type == ENUM) return TL_ENUM;
+    if (first.type == ENUM || first.type == BITFIELD) return TL_ENUM;
     return TL_VAR;
 
 }
