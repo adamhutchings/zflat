@@ -35,7 +35,7 @@ Variable* resolve_var(std::string name) {
             Variable* var = static_cast<Variable*>(sym);
             if (sym->name == name && var != nullptr) return var;
             Enum* s_enum = static_cast<Enum*>(sym);
-            if (s_enum != nullptr) {
+            if (var->s_type == T_ENUM) {
                 for (auto val : s_enum->values) {
                     if (val->name == name) return val;
                 }
