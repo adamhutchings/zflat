@@ -1,6 +1,12 @@
 #include <front/parse/parse_header.hpp>
 
-bool check_fn(std::ifstream& file) {
+enum TopLevelDecl {
+    TL_VAR,
+    TL_FN,
+    TL_ENUM,
+};
+
+TopLevelDecl check_fn(std::ifstream& file) {
 
     // check if next is a function definition
 
@@ -28,7 +34,9 @@ bool check_fn(std::ifstream& file) {
     lex::unlex(opn);
     lex::unlex(first);
 
-    return fn || pless;
+    if (fn || pless) return TL_FN;
+    if (first.type == ENUM) return TL_ENUM;
+    return TL_VAR;
 
 }
 
@@ -66,10 +74,12 @@ void ProgramNode::read(std::ifstream& file) {
 
         ProgramSub* sub;
 
-        if (check_fn(file) || endcheck.type == EXTC) {
+        if (check_fn(file) == TL_FN || endcheck.type == EXTC) {
             sub = new FunctionNode();
-        } else {
+        } else if (check_fn(file) == TL_VAR) {
             sub = new StatementNode();
+        } else {
+            sub = new EnumDeclNode();
         }
 
         sub->read(file);
