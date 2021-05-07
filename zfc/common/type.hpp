@@ -61,6 +61,6 @@ struct Enum : public Type {
     inline Type underlying_type() { return bitfield ? UINT : UCHAR; }
 };
 
-Type parse_type(std::ifstream& file);
+void parse_type(std::ifstream& file, Type* itype);
 
 extern std::vector<Type*> user_types; // All user-defined types

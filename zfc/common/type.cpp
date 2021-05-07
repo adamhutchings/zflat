@@ -80,28 +80,40 @@ bool Type::operator!=(Type p) {
     return !(*this == p);
 }
 
-Type parse_type(std::ifstream& file) {
-    Type ret;
+void parse_type(std::ifstream& file, Type* itype) {
+    itype = new Type();
     // Change this later, if need be.
     auto type = lex::lex(file);
     if (type.type == REF) {
-        ret.ref = true;
+        itype->ref = true;
         // Go to next token
         type = lex::lex(file);
     } else {
-        ret.ref = false;
+        itype->ref = false;
     }
     if (type.type == TYPENAME) {
-        ret.primitive = zStrToType(type.str);
+        itype->primitive = zStrToType(type.str);
+        if (itype->primitive == MAX_INVALID) {
+            // Try searching for a user-defined type.
+            for (auto utype : user_types) {
+                if (utype->type_flavor == TT_ENUM) {
+                    if (static_cast<Enum*>(utype)->name == type.str) {
+                        delete itype;
+                        itype = utype;
+                        return;
+                    }
+                }
+            }
+        }
     } else {
-        if (ret.ref) {
+        if (itype->ref) {
             lex::unlex(type);
-            ret.primitive = VOID; // ref == void *
+            itype->primitive = VOID; // ref == void *
         } else {
             ZF_ERROR("line %d: expected type name or 'ref', found \"%s\"", type.line, type.raw_content());
         }
     }
-    if (ret.primitive == MAX_INVALID) {
+    if (itype->primitive == MAX_INVALID) {
         ZF_ERROR("line %d: type name \"%s\" not recognized", type.line, type.raw_content());
     }
     while (1) {
@@ -115,9 +127,8 @@ Type parse_type(std::ifstream& file) {
         if (cb.type != CBRACKET) {
             ZF_ERROR("line %d: expected ] to match [", cb.line);
         }
-        ++ret.indirection;
+        ++itype->indirection;
     }
-    return ret;
 }
 
 std::string Type::to_human_str() {
