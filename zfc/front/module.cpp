@@ -64,7 +64,7 @@ sym::Symbol* readsym(std::ifstream& file) {
             arg.type = TYPENAME;
             lex::unlex(arg);
             sym::Variable var(std::string("symbol_read_var_") + std::to_string(num));
-            parse_type(file, &var.type);
+            var.type = *parse_type(file);
             fret->args.push_back(var);
             ++num; // always after first arg
         }
@@ -74,13 +74,13 @@ sym::Symbol* readsym(std::ifstream& file) {
             lex::unlex(rettest);
             fret->ret = VOID;
         } else {
-            parse_type(file, &fret->ret);
+            fret->ret = *parse_type(file);
         }
     } else if (det.type == COLON) {
         // Get type name
         ret = new sym::Variable(ident.str);
         auto vret = static_cast<sym::Variable*>(ret);
-        parse_type(file, &(vret->type));
+        vret->type = *parse_type(file);
     } else {
         ZF_SYMBOL_ERR("expected valid line %d", ident.line);
     }

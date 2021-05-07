@@ -53,7 +53,7 @@ void FunctionNode::read(std::ifstream& file) {
         } else if (va.type == TYPENAME || va.type == REF) {
             node->var = new sym::Variable("$unnamed");
             lex::unlex(va);
-            parse_type(file, &node->var->type);
+            node->var->type = *parse_type(file);
         } else {
             lex::unlex(va);
             node->read(file);
@@ -93,7 +93,7 @@ void FunctionNode::read(std::ifstream& file) {
         ZF_TOK_ERR(cln, "':' or '{'");
     }
     if (ret_type_declared) {
-        parse_type(file, &this->symbol->ret);
+        this->symbol->ret = *parse_type(file);
     } else {
         this->symbol->ret = VOID;
     }

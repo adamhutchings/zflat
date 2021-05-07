@@ -5,7 +5,7 @@ void VarDeclNode::read(std::ifstream& file) {
     this->var = new sym::Variable(init.str);
     this->line = init.line;
     expect(file, COLON);
-    parse_type(file, &this->var->type);
+    this->var->type = *parse_type(file);
     auto next = lex::lex(file);
     // followed by anything valid (end of statement)              (end of function arg list) (next argument) opening loop block
     if (next.type == TreeComp::SEMICOLON || next.type == TreeComp::CPAREN || next.type == TreeComp::COMMA || next.type == OBRACE) {

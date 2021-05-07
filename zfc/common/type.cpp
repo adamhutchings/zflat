@@ -80,8 +80,8 @@ bool Type::operator!=(Type p) {
     return !(*this == p);
 }
 
-void parse_type(std::ifstream& file, Type* itype) {
-    itype = new Type();
+Type* parse_type(std::ifstream& file) {
+    Type* itype = new Type();
     // Change this later, if need be.
     auto type = lex::lex(file);
     if (type.type == REF) {
@@ -99,8 +99,7 @@ void parse_type(std::ifstream& file, Type* itype) {
                 if (utype->type_flavor == TT_ENUM) {
                     if (static_cast<Enum*>(utype)->name == type.str) {
                         delete itype;
-                        itype = utype;
-                        return;
+                        return utype;
                     }
                 }
             }
@@ -113,7 +112,7 @@ void parse_type(std::ifstream& file, Type* itype) {
             ZF_ERROR("line %d: expected type name or 'ref', found \"%s\"", type.line, type.raw_content());
         }
     }
-    if (itype->primitive == MAX_INVALID) {
+    if (itype->primitive == MAX_INVALID && itype->type_flavor == TT_BUILTIN) {
         ZF_ERROR("line %d: type name \"%s\" not recognized", type.line, type.raw_content());
     }
     while (1) {
@@ -129,6 +128,7 @@ void parse_type(std::ifstream& file, Type* itype) {
         }
         ++itype->indirection;
     }
+    return itype;
 }
 
 std::string Type::to_human_str() {
