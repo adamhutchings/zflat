@@ -41,15 +41,6 @@ struct Function : public Symbol {
     std::string get_overloaded_name();
 };
 
-struct EnumVal;
-
-struct Enum : public Symbol {
-    std::vector<EnumVal*> values;
-    bool bitfield = false;
-    inline Enum(std::string n) : Symbol(n, T_ENUM) {}
-    inline Type underlying_type() { return bitfield ? UINT : UCHAR; }
-};
-
 struct EnumVal : public Variable {
     int val;
     Enum* parent;

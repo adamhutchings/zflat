@@ -1,5 +1,7 @@
 #include "type.hpp"
 
+std::vector<Type*> user_types;
+
 BuiltinType zStrToType(std::string in) {
     if (in == "bool") return BOOL;
     if (in == "char") return CHAR;
