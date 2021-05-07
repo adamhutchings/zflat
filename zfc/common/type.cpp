@@ -133,8 +133,14 @@ void parse_type(std::ifstream& file, Type* itype) {
 
 std::string Type::to_human_str() {
     // std::string ret = this->ref ? "ref " : "";
-    std::string ret = ""; // TODO - encode ref
-    ret += typeToZStr(this->primitive);
+    std::string ret; // TODO - encode ref
+    if (this->primitive != MAX_INVALID) {
+        ret = typeToZStr(this->primitive);
+    } else {
+        if (this->type_flavor == TT_ENUM) {
+            ret = reinterpret_cast<Enum*>(this)->name;
+        }
+    }
     for (int i = 0; i < this->indirection; i++) {
         ret += " [ ]";
     }
