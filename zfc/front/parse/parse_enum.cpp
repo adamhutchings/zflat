@@ -13,9 +13,11 @@ void EnumDeclNode::read(std::ifstream& file) {
         is_bitfield = false;
     }
 
-    this->line = expect(file, ENUM).line;
+    enumtok = expect(file, ENUM);
+    this->line = enumtok.line;
 
     this->sym = new Enum(expect(file, IDENTIFIER).str);
+    this->sym->name = enumtok.str;
 
     // this->sym->lineno = this->line; TODO???
 
