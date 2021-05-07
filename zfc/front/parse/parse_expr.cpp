@@ -65,6 +65,9 @@ InnerExprNode* single_node_read(std::ifstream& file) {
             } else {
                 lex::unlex(next2);
                 vsym = sym::resolve_var(name);
+                if (vsym == nullptr) {
+                    ZF_ERROR("line %d: could not resolve variable %s", next.line, next.raw_content());
+                }
                 switch (vsym->s_type) {
                 case sym::SymType::VAR:
                     iexpr = new VariableNode();
