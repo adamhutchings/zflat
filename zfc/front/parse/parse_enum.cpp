@@ -2,7 +2,7 @@
 
 void EnumDeclNode::read(std::ifstream& file) {
 
-    Token enumtok;
+    Token nametok;
     bool is_bitfield;
 
     auto bitftok = lex::lex(file);
@@ -13,11 +13,10 @@ void EnumDeclNode::read(std::ifstream& file) {
         is_bitfield = false;
     }
 
-    enumtok = expect(file, ENUM);
-    this->line = enumtok.line;
+    this->line = expect(file, ENUM).line;
 
-    this->sym = new Enum(expect(file, IDENTIFIER).str);
-    this->sym->name = enumtok.str;
+    nametok = expect(file, IDENTIFIER);
+    this->sym = new Enum(nametok.str);
 
     // this->sym->lineno = this->line; TODO???
 
