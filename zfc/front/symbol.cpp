@@ -34,12 +34,12 @@ Variable* resolve_var(std::string name) {
         for (Symbol* sym : symtab[i - 1]) {
             Variable* var = static_cast<Variable*>(sym);
             if (sym->name == name && var != nullptr) return var;
-            for (auto type : user_types) {
-                Enum* s_enum = static_cast<Enum*>(type);
-                if (var->s_type == T_ENUM) {
-                    for (auto val : s_enum->values) {
-                        if (reinterpret_cast<EnumVal*>(val)->name == name) return (EnumVal*)(val);
-                    }
+        }
+        for (auto type : user_types) {
+            Enum* s_enum = static_cast<Enum*>(type);
+            if (type->type_flavor == TT_ENUM) {
+                for (auto val : s_enum->values) {
+                    if (reinterpret_cast<EnumVal*>(val)->name == name) return (EnumVal*)(val);
                 }
             }
         }
