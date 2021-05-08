@@ -54,7 +54,7 @@ void EnumDeclNode::read(std::ifstream& file) {
             );
         }
 
-        is_bitfield ? val << 1 : ++val;
+        is_bitfield ? val <<= 1 : ++val;
         ++decls;
 
     }
