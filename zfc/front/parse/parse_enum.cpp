@@ -18,6 +18,8 @@ void EnumDeclNode::read(std::ifstream& file) {
     nametok = expect(file, IDENTIFIER);
     this->sym = new Enum(nametok.str);
 
+    this->sym->bitfield = is_bitfield;
+
     // this->sym->lineno = this->line; TODO???
 
     expect(file, OBRACE);
@@ -56,8 +58,6 @@ void EnumDeclNode::read(std::ifstream& file) {
         ++decls;
 
     }
-
-    this->sym->bitfield = is_bitfield;
     
     user_types.push_back(this->sym);
 
