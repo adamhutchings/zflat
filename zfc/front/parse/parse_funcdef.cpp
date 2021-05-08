@@ -49,6 +49,7 @@ void FunctionNode::read(std::ifstream& file) {
             VarDeclNode* node = new VarDeclNode();
         if (va.type == VA_ARGS) {
             node->var = new sym::Variable("");
+            node->var->type = new Type();
             *node->var->type = VA_TYPE;
         } else if (va.type == TYPENAME || va.type == REF) {
             node->var = new sym::Variable("$unnamed");
