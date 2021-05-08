@@ -75,10 +75,8 @@ InnerExprNode* single_node_read(std::ifstream& file) {
                     dynamic_cast<VariableNode*>(iexpr)->ref = refflag;
                     return iexpr;
                 case sym::SymType::T_ENUMSYM:
-                    iexpr = new LiteralNode();
-                    dynamic_cast<LiteralNode*>(iexpr)->lit = std::to_string(
-                        static_cast<sym::EnumVal*>(vsym)->val
-                    );
+                    iexpr = new VariableNode();
+                    dynamic_cast<VariableNode*>(iexpr)->sym = vsym;
                     return iexpr;
                 // No "default" - I need to remember to come back here later
                 // when I add more type types.
