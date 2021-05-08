@@ -13,7 +13,7 @@ Type* get_btype(BinaryExprNode* expr) {
             ZF_ERROR("invalid expression on line %d: operand cannot have void type", expr->line);
         }
 
-        if (*left != *right) {
+        if (!are_types_compatible(left, right)) {
             ZF_ERROR("line %d: operands don't match types (found %s and %s)", expr->line, left->to_human_str().c_str(), right->to_human_str().c_str());
         }
 
@@ -81,4 +81,12 @@ Type* get_type(ExprNode* expr) {
 
     return new Type(MAX_INVALID);
 
+}
+
+bool are_types_compatible(Type* a, Type* b) {
+    if (a == b) return true;
+    if (a->type_flavor == TT_ENUM) {
+        if (static_cast<Enum*>(a)->underlying_type() == *b) return true;
+    }
+    return *a == *b;
 }
