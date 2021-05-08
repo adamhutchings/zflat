@@ -22,16 +22,9 @@ void LiteralNode::write(std::ofstream& file) {
 void VariableNode::write(std::ofstream& file) {
     if (this->ref) gen::write(file, "& ");
     if (this->sym->type->ref) gen::write (file, "* ");
-    if (this->sym->type->type_flavor == TT_ENUM) {
+    if (this->sym->s_type == sym::SymType::T_ENUMSYM) {
         // Generate literal values as literals rather than constants
-        auto esym = static_cast<Enum*>(this->sym->type);
-        for (auto v : esym->values) {
-            auto evsym = reinterpret_cast<sym::EnumVal*>(v);
-            if (evsym->name == this->sym->name) {
-                gen::write(file, std::to_string(evsym->val));
-                break;
-            }
-        }
+        gen::write(file, std::to_string(static_cast<sym::EnumVal*>(this->sym)->val));
     } else {
         gen::write(file, this->sym->name);
     }
