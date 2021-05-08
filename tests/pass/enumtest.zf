@@ -1,0 +1,15 @@
+enum Foo {
+    F_1,
+    F_2,
+    F_3
+}
+
+bitfield enum Bar {
+    B_1,
+    B_2,
+    B_3
+}
+
+bar() {
+    x: Bar = B_1;
+}

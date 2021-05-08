@@ -1,5 +1,22 @@
 #include "type.hpp"
 
+std::vector<Type*> user_types;
+
+namespace {
+
+std::string get_type_base(Type* t) {
+    if (t->primitive != MAX_INVALID) {
+        return typeToZStr(t->primitive);
+    } else {
+        if (t->type_flavor == TT_ENUM) {
+            return reinterpret_cast<Enum*>(t)->name;
+        }
+    }
+    return "INVALID!!";
+}
+
+}
+
 BuiltinType zStrToType(std::string in) {
     if (in == "bool") return BOOL;
     if (in == "char") return CHAR;
@@ -78,28 +95,39 @@ bool Type::operator!=(Type p) {
     return !(*this == p);
 }
 
-Type parse_type(std::ifstream& file) {
-    Type ret;
+Type* parse_type(std::ifstream& file) {
+    Type* itype = new Type();
     // Change this later, if need be.
     auto type = lex::lex(file);
     if (type.type == REF) {
-        ret.ref = true;
+        itype->ref = true;
         // Go to next token
         type = lex::lex(file);
     } else {
-        ret.ref = false;
+        itype->ref = false;
     }
     if (type.type == TYPENAME) {
-        ret.primitive = zStrToType(type.str);
+        itype->primitive = zStrToType(type.str);
+        if (itype->primitive == MAX_INVALID) {
+            // Try searching for a user-defined type.
+            for (auto utype : user_types) {
+                if (utype->type_flavor == TT_ENUM) {
+                    if (static_cast<Enum*>(utype)->name == type.str) {
+                        delete itype;
+                        return utype;
+                    }
+                }
+            }
+        }
     } else {
-        if (ret.ref) {
+        if (itype->ref) {
             lex::unlex(type);
-            ret.primitive = VOID; // ref == void *
+            itype->primitive = VOID; // ref == void *
         } else {
             ZF_ERROR("line %d: expected type name or 'ref', found \"%s\"", type.line, type.raw_content());
         }
     }
-    if (ret.primitive == MAX_INVALID) {
+    if (itype->primitive == MAX_INVALID && itype->type_flavor == TT_BUILTIN) {
         ZF_ERROR("line %d: type name \"%s\" not recognized", type.line, type.raw_content());
     }
     while (1) {
@@ -113,15 +141,14 @@ Type parse_type(std::ifstream& file) {
         if (cb.type != CBRACKET) {
             ZF_ERROR("line %d: expected ] to match [", cb.line);
         }
-        ++ret.indirection;
+        ++itype->indirection;
     }
-    return ret;
+    return itype;
 }
 
 std::string Type::to_human_str() {
     // std::string ret = this->ref ? "ref " : "";
-    std::string ret = ""; // TODO - encode ref
-    ret += typeToZStr(this->primitive);
+    std::string ret = get_type_base(this);
     for (int i = 0; i < this->indirection; i++) {
         ret += " [ ]";
     }
@@ -129,7 +156,7 @@ std::string Type::to_human_str() {
 }
 
 std::string Type::to_output_str() {
-    std::string ret = typeToCStr(this->primitive);
+    std::string ret = get_type_base(this);
     for (int i = 0; i < this->indirection; i++) {
         ret += " *";
     }

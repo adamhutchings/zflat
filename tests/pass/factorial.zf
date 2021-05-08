@@ -12,8 +12,10 @@ factorial_r(x: int): int {
 ~ iterative implementation ~
 factorial_i(x: int): int {
     ret: int = 1;
+    ~ TODO: change loop syntax
     loop(x): i: int {
         ret *= (i + 1);
     }
+    ~
     return ret;
 }

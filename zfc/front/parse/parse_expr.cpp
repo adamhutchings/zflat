@@ -64,14 +64,27 @@ InnerExprNode* single_node_read(std::ifstream& file) {
                 return iexpr;
             } else {
                 lex::unlex(next2);
-                iexpr = new VariableNode();
                 vsym = sym::resolve_var(name);
                 if (vsym == nullptr) {
                     ZF_ERROR("line %d: could not resolve variable %s", next.line, next.raw_content());
                 }
-                dynamic_cast<VariableNode*>(iexpr)->sym = vsym;
-                dynamic_cast<VariableNode*>(iexpr)->ref = refflag;
-                return iexpr;
+                switch (vsym->s_type) {
+                case sym::SymType::VAR:
+                    iexpr = new VariableNode();
+                    dynamic_cast<VariableNode*>(iexpr)->sym = vsym;
+                    dynamic_cast<VariableNode*>(iexpr)->ref = refflag;
+                    return iexpr;
+                case sym::SymType::T_ENUMSYM:
+                    iexpr = new VariableNode();
+                    dynamic_cast<VariableNode*>(iexpr)->sym = vsym;
+                    return iexpr;
+                // No "default" - I need to remember to come back here later
+                // when I add more type types.
+                case sym::SymType::FN:
+                case sym::SymType::T_ENUM:
+                    ; // this better not happen
+                }
+                ZF_ERROR("line %d: could not resolve variable %s", next.line, next.raw_content());
             }
         case LITERAL:
             iexpr = new LiteralNode();

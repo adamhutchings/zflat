@@ -49,7 +49,8 @@ void FunctionNode::read(std::ifstream& file) {
             VarDeclNode* node = new VarDeclNode();
         if (va.type == VA_ARGS) {
             node->var = new sym::Variable("");
-            node->var->type = VA_TYPE;
+            node->var->type = new Type();
+            *node->var->type = VA_TYPE;
         } else if (va.type == TYPENAME || va.type == REF) {
             node->var = new sym::Variable("$unnamed");
             lex::unlex(va);
@@ -72,7 +73,7 @@ void FunctionNode::read(std::ifstream& file) {
 
     int pos = 0;
     for (auto vd : this->symbol->args) {
-        if (vd.type == VA_TYPE) {
+        if (*vd.type == VA_TYPE) {
             if (pos == 0 || pos != this->symbol->args.size() - 1 || !this->symbol->extc) {
                 ZF_ERROR("line %d: invalid use of varargs", vd.lineno);
             }
@@ -93,7 +94,7 @@ void FunctionNode::read(std::ifstream& file) {
         ZF_TOK_ERR(cln, "':' or '{'");
     }
     if (ret_type_declared) {
-        this->symbol->ret = parse_type(file);
+        this->symbol->ret = *parse_type(file);
     } else {
         this->symbol->ret = VOID;
     }

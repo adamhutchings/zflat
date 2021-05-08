@@ -74,7 +74,7 @@ sym::Symbol* readsym(std::ifstream& file) {
             lex::unlex(rettest);
             fret->ret = VOID;
         } else {
-            fret->ret = parse_type(file);
+            fret->ret = *parse_type(file);
         }
     } else if (det.type == COLON) {
         // Get type name
@@ -98,28 +98,33 @@ void begin_write(std::ofstream& file) {
 
 void writesym(std::ofstream& file, sym::Symbol* sym) {
     sym::Variable* var = static_cast<sym::Variable*>(sym);
-    if (sym->var) {
-        // Write x: int, for example
-        file << var->name << ": " << var->type.to_human_str() << "\n";
-        return;
-    }
     sym::Function* fun = static_cast<sym::Function*>(sym);
-    if (!sym->var) {
+    int ct;
+    switch (sym->s_type) {
+    case sym::SymType::VAR:
+        // Write x: int, for example
+        file << var->name << ": " << var->type->to_human_str() << "\n";
+        return;
+    case sym::SymType::FN:
         if (fun->extc) {
             file << "extc ";
         }
         file << fun->name << " (";
-        int ct = 0;
+        ct = 0;
         for (auto arg : fun->args) {
             if (ct != 0) {
                 file << ", ";
             }
-            file << arg.type.to_human_str();
+            file << arg.type->to_human_str();
             ++ct;
         }
         file << "): ";
         file << fun->ret.to_human_str();
         file << "\n";
+    case sym::SymType::T_ENUM:
+        // TODO: do after refactor
+    case sym::SymType::T_ENUMSYM:
+        ; // better not happen
     }
 }
 

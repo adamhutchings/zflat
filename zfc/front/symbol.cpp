@@ -36,10 +36,18 @@ Variable* resolve_var(std::string name) {
             if (sym->name == name && var != nullptr) return var;
         }
     }
+    for (auto type : user_types) {
+        Enum* s_enum = static_cast<Enum*>(type);
+        if (type->type_flavor == TT_ENUM) {
+            for (auto val : s_enum->values) {
+                if (reinterpret_cast<EnumVal*>(val)->name == name) return (EnumVal*)(val);
+            }
+        }
+    }
     return nullptr;
 }
 
-Function* resolve_fn(std::string name, std::vector<Type> args) {
+Function* resolve_fn(std::string name, std::vector<Type*> args) {
     for (int i = symtab.size(); i > 0; --i) {
         for (Symbol* sym : symtab[i - 1]) {
             Function* fn = static_cast<Function*>(sym);
@@ -48,13 +56,13 @@ Function* resolve_fn(std::string name, std::vector<Type> args) {
                 auto size = fn->args.size();
                 if (size == 0) return fn;
                 bool sizes_match = 
-                    (fn->args[size - 1].type == VA_TYPE)
+                    (*fn->args[size - 1].type == VA_TYPE)
                     ? args.size() >= size - 1
                     : args.size() == size;
                 if (!sizes_match) continue;
                 for (int i = 0; i < size; i++) {
-                    if (fn->args[i].type == VA_TYPE) break;
-                    if (args[i] != fn->args[i].type) match = false;
+                    if (*fn->args[i].type == VA_TYPE) break;
+                    if (*args[i] != *fn->args[i].type) match = false;
                 }
                 if (match) return fn;
             }
@@ -79,7 +87,7 @@ std::string Function::get_overloaded_name() {
     std::string out = this->name;
     for (sym::Variable str : this->args) {
         out += "$";
-        out += str.type.to_human_str();
+        out += str.type->to_human_str();
     }
     out += "$$";
     out += this->ret.to_human_str();

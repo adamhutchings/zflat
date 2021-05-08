@@ -77,4 +77,6 @@ int main() {
     // Delete all of the output files.
     system("find tests/ -name '*.c' | xargs rm");
 
+    return failed;
+
 }

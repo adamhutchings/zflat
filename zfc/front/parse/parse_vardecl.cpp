@@ -18,9 +18,10 @@ void VarDeclNode::read(std::ifstream& file) {
         }
         this->expr = new ExprNode();
         this->expr->read(file);
-        if (get_type(this->expr) != this->var->type) {
+        auto left = this->var->type, right = get_type(this->expr);
+        if (!are_types_compatible(left, right)) {
             ZF_ERROR("line %d: assigning value of type %s to var of type %s"
-            , this->line, get_type(this->expr).to_human_str().c_str(), this->var->type.to_human_str().c_str());
+            , this->line, left->to_human_str().c_str(), right->to_human_str().c_str());
         }
     }
     auto* s = sym::resolve_var(this->var->name);

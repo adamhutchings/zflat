@@ -26,7 +26,7 @@ void FuncCallNode::read(std::ifstream& file) {
 
 out:
 
-    std::vector<Type> args;
+    std::vector<Type*> args;
     for (auto var : this->args) {
         args.push_back(get_type(var));
     }
@@ -37,7 +37,7 @@ out:
     }
 
     // For argument verification
-    bool varargs = this->call->args.size() == 0 ? false : this->call->args[this->call->args.size() - 1].type == VA_TYPE;
+    bool varargs = this->call->args.size() == 0 ? false : *(this->call->args[this->call->args.size() - 1].type) == VA_TYPE;
 
     auto expected_args = this->call->args;
     int arg_max = expected_args.size();
@@ -53,10 +53,10 @@ out:
     int arg_id = 0;
     for (auto exp : this->args) {
         // Only check arguments that aren't varargs
-        if (expected_args[arg_id].type == VA_TYPE) break;
+        if (*expected_args[arg_id].type == VA_TYPE) break;
         if (get_type(exp) != expected_args[arg_id].type) {
             ZF_ERROR("line %d: expected argument of type %s, found argument of type %s instead"
-            , exp->line, expected_args[arg_id].type.to_human_str().c_str(), get_type(exp).to_human_str().c_str());
+            , exp->line, expected_args[arg_id].type->to_human_str().c_str(), get_type(exp)->to_human_str().c_str());
         }
         ++arg_id;
     }

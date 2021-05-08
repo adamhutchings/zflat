@@ -180,23 +180,25 @@ TreeComp get_type(std::string name) {
     || name == "ushort" || name == "uint" || name == "ulong" || name == "uchar"
     ) return TreeComp::TYPENAME;
     // A bunch of keywords.
-    if (name == "loop") return TreeComp::LOOP;
-    if (name == "if") return TreeComp::IF;
-    if (name == "else") return TreeComp::ELSE;
-    if (name == "switch") return TreeComp::SWITCH;
-    if (name == "case") return TreeComp::CASE;
-    if (name == "fswitch") return TreeComp::FSWITCH;
-    if (name == "extc") return TreeComp::EXTC;
-    if (name == "__c_va_args") return TreeComp::VA_ARGS;
-    if (name == "use") return TreeComp::USE;
-    if (name == "ref") return TreeComp::REF;
+    if (name == "loop")          return TreeComp::LOOP;
+    if (name == "if")            return TreeComp::IF;
+    if (name == "else")          return TreeComp::ELSE;
+    if (name == "switch")        return TreeComp::SWITCH;
+    if (name == "case")          return TreeComp::CASE;
+    if (name == "fswitch")       return TreeComp::FSWITCH;
+    if (name == "extc")          return TreeComp::EXTC;
+    if (name == "__c_va_args")   return TreeComp::VA_ARGS;
+    if (name == "use")           return TreeComp::USE;
+    if (name == "ref")           return TreeComp::REF;
+    if (name == "enum")          return TreeComp::ENUM;
+    if (name == "bitfield")      return TreeComp::BITFIELD;
     if (is_alpha(name[0])) {
         return (lastwascolon) ? TreeComp::TYPENAME : TreeComp::IDENTIFIER;
     }
     if (is_numeric(name[0]) || name[0] == '\'' || name[0] == '\"')
         return TreeComp::LITERAL;
     // when in doubt ...
-    return TreeComp::IDENTIFIER;
+    ZF_ERROR("invalid material for token: on line %d, found %s", line, name.c_str());
 }
 
 // A put-back tokens lands in here.
@@ -223,9 +225,9 @@ Token process_character(std::ifstream& file) {
         ZF_ERROR("token on line %u exceeded limit", line);
     if (file.peek() == EOF) eofhit = true;
     if (ends_token(curtok, nexttok)) {
-        lastwascolon = curtok == ':';
         add_char(curtok);
         Token tok(get_type(cbuf), cbuf);
+        lastwascolon = curtok == ':';
         cend = 0;
         if (cbuf[0] == '\"') in_quote = false;
         memset(cbuf, 0, sizeof(char) * TOK_MAX + 1);

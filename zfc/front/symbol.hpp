@@ -13,24 +13,45 @@ namespace sym {
 
 extern std::string argsep, retsep, scopesep;
 
+enum SymType {
+    VAR,
+    FN,
+    T_ENUM,
+    T_ENUMSYM,
+};
+
 struct Symbol {
     std::string name;
     int lineno;
-    bool var;
-    inline Symbol(std::string n) : name(n) {}
+    SymType s_type;
+    inline Symbol(std::string n, SymType s) : name(n), s_type(s) {}
+    inline bool is_type() { return s_type == T_ENUM /* || other types (T_CLASS, etc.) */ ; }
 };
 
 struct Variable : public Symbol {
-    Type type;
-    inline Variable(std::string n) : Symbol(n) { var = true; }
+    Type* type;
+    inline Variable(std::string n) : Symbol(n, VAR) {}
 };
 
 struct Function : public Symbol {
     std::vector<Variable> args;
     Type ret;
     bool extc;
-    inline Function(std::string n) : Symbol(n) { var = false; }
+    inline Function(std::string n) : Symbol(n, FN) {}
     std::string get_overloaded_name();
+};
+
+struct EnumVal : public Variable {
+    int val;
+    bool bitfield = false;
+    Enum* parent;
+    inline EnumVal(std::string n, int v, Enum* p, bool b) : Variable(n), parent(p) {
+        val = v;
+        s_type = T_ENUMSYM;
+        bitfield = b;
+        type = new Type();
+        *type = parent->underlying_type();
+    }
 };
 
 void enter_scope();
@@ -40,7 +61,7 @@ void add_symbol(Symbol* s);
 void add_global_symbol(Symbol* s);
 
 Variable* resolve_var(std::string name);
-Function* resolve_fn(std::string name, std::vector<Type> args);
+Function* resolve_fn(std::string name, std::vector<Type*> args);
 
 bool in_global_scope();
 

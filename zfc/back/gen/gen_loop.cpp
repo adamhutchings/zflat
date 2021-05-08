@@ -10,8 +10,8 @@ void LoopNode::write(std::ofstream& file) {
 
     ++loopdepth;
 
-    Type type = get_type(this->expr);
-    if (type == INT) {
+    Type* type = get_type(this->expr);
+    if (*type == INT) {
         // It's a number. We need to figure out a loop variable.
         std::string begin = "for (int ";
         std::string counterv;
@@ -25,7 +25,7 @@ void LoopNode::write(std::ofstream& file) {
         this->expr->write(file);
         gen::write(file, std::string("; ++") + counterv + ")");
         this->stmt->write(file);
-    } else if (type == BOOL) {
+    } else if (*type == BOOL) {
         // Anything else is a boolean. For now.
         gen::write(file, "while (");
         this->expr->write(file);
