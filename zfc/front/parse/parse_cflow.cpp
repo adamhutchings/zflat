@@ -21,9 +21,9 @@ void ControlFlowNode::read(std::ifstream& file) {
     }
     // Check that return type is valid
     if (
-        ( (this->expression == nullptr) ? VOID : get_type(this->expression) )
+        ( (this->expression == nullptr) ? VOID : *get_type(this->expression) )
          != sym::current_function()->ret) {
         ZF_ERROR("line %d: expected return type of %s, found expression of type %s"
-        , this->expression->line, sym::current_function()->ret.to_human_str().c_str(), get_type(this->expression).to_human_str().c_str());
+        , this->expression->line, sym::current_function()->ret.to_human_str().c_str(), get_type(this->expression)->to_human_str().c_str());
     }
 }

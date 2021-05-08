@@ -54,7 +54,7 @@ void add_symbol(Symbol* s);
 void add_global_symbol(Symbol* s);
 
 Variable* resolve_var(std::string name);
-Function* resolve_fn(std::string name, std::vector<Type> args);
+Function* resolve_fn(std::string name, std::vector<Type*> args);
 
 bool in_global_scope();
 
