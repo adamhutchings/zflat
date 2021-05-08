@@ -43,8 +43,15 @@ struct Function : public Symbol {
 
 struct EnumVal : public Variable {
     int val;
+    bool bitfield = false;
     Enum* parent;
-    inline EnumVal(std::string n, int v, Enum* p) : Variable(n), parent(p) { val = v; s_type = T_ENUMSYM; }
+    inline EnumVal(std::string n, int v, Enum* p, bool b) : Variable(n), parent(p) {
+        val = v;
+        s_type = T_ENUMSYM;
+        bitfield = b;
+        type = new Type();
+        *type = parent->underlying_type();
+    }
 };
 
 void enter_scope();
