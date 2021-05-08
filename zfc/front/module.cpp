@@ -64,7 +64,7 @@ sym::Symbol* readsym(std::ifstream& file) {
             arg.type = TYPENAME;
             lex::unlex(arg);
             sym::Variable var(std::string("symbol_read_var_") + std::to_string(num));
-            var.type = *parse_type(file);
+            var.type = parse_type(file);
             fret->args.push_back(var);
             ++num; // always after first arg
         }
@@ -80,7 +80,7 @@ sym::Symbol* readsym(std::ifstream& file) {
         // Get type name
         ret = new sym::Variable(ident.str);
         auto vret = static_cast<sym::Variable*>(ret);
-        vret->type = *parse_type(file);
+        vret->type = parse_type(file);
     } else {
         ZF_SYMBOL_ERR("expected valid line %d", ident.line);
     }
@@ -103,7 +103,7 @@ void writesym(std::ofstream& file, sym::Symbol* sym) {
     switch (sym->s_type) {
     case sym::SymType::VAR:
         // Write x: int, for example
-        file << var->name << ": " << var->type.to_human_str() << "\n";
+        file << var->name << ": " << var->type->to_human_str() << "\n";
         return;
     case sym::SymType::FN:
         if (fun->extc) {
@@ -115,7 +115,7 @@ void writesym(std::ofstream& file, sym::Symbol* sym) {
             if (ct != 0) {
                 file << ", ";
             }
-            file << arg.type.to_human_str();
+            file << arg.type->to_human_str();
             ++ct;
         }
         file << "): ";

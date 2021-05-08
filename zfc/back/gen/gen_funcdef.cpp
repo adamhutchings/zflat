@@ -13,7 +13,7 @@ void FunctionNode::write(std::ofstream& file) {
         auto arg = this->symbol->args[i];
         if (i != 0)
             gen::write(file, ", ");
-        gen::write(file, arg.type.to_output_str() + " ");
+        gen::write(file, arg.type->to_output_str() + " ");
         if (arg.name != "$unnamed") {
             gen::write(file, arg.name);
         }

@@ -11,7 +11,7 @@ void UseNode::write(std::ofstream& file) {
         switch (decl->s_type) {
         case sym::SymType::VAR:
             gen::write(file, "extern ");
-            gen::write(file, var->type.to_output_str() + " " + var->name + ";");
+            gen::write(file, var->type->to_output_str() + " " + var->name + ";");
             return;
         case sym::SymType::FN:
             gen::write(file, fun->ret.to_output_str() + " " + fun->name + "(");
@@ -20,7 +20,7 @@ void UseNode::write(std::ofstream& file) {
                 if (ind != 0) {
                     gen::write(file, ", ");
                 }
-                gen::write(file, arg.type.to_output_str());
+                gen::write(file, arg.type->to_output_str());
                 ++ind;
             }
             gen::write(file, ");");

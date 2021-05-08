@@ -29,7 +29,7 @@ struct Symbol {
 };
 
 struct Variable : public Symbol {
-    Type type;
+    Type* type;
     inline Variable(std::string n) : Symbol(n, VAR) {}
 };
 

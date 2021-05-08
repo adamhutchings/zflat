@@ -21,7 +21,7 @@ void LiteralNode::write(std::ofstream& file) {
 
 void VariableNode::write(std::ofstream& file) {
     if (this->ref) gen::write(file, "& ");
-    if (this->sym->type.ref) gen::write (file, "* ");
+    if (this->sym->type->ref) gen::write (file, "* ");
     gen::write(file, this->sym->name);
 }
 
