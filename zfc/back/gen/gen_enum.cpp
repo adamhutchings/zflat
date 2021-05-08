@@ -10,6 +10,7 @@ void EnumDeclNode::write(std::ofstream& file) {
     def += typeToCStr(this->sym->underlying_type().primitive);
     def += " ";
     def += this->sym->name;
+    def += ";";
 
     gen::write(file, def);
 
