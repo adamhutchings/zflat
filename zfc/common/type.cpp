@@ -2,6 +2,21 @@
 
 std::vector<Type*> user_types;
 
+namespace {
+
+std::string get_type_base(Type* t) {
+    if (t->primitive != MAX_INVALID) {
+        return typeToZStr(t->primitive);
+    } else {
+        if (t->type_flavor == TT_ENUM) {
+            return reinterpret_cast<Enum*>(t)->name;
+        }
+    }
+    return "INVALID!!";
+}
+
+}
+
 BuiltinType zStrToType(std::string in) {
     if (in == "bool") return BOOL;
     if (in == "char") return CHAR;
@@ -133,14 +148,7 @@ Type* parse_type(std::ifstream& file) {
 
 std::string Type::to_human_str() {
     // std::string ret = this->ref ? "ref " : "";
-    std::string ret; // TODO - encode ref
-    if (this->primitive != MAX_INVALID) {
-        ret = typeToZStr(this->primitive);
-    } else {
-        if (this->type_flavor == TT_ENUM) {
-            ret = reinterpret_cast<Enum*>(this)->name;
-        }
-    }
+    std::string ret = get_type_base(this);
     for (int i = 0; i < this->indirection; i++) {
         ret += " [ ]";
     }
@@ -148,7 +156,7 @@ std::string Type::to_human_str() {
 }
 
 std::string Type::to_output_str() {
-    std::string ret = typeToCStr(this->primitive);
+    std::string ret = get_type_base(this);
     for (int i = 0; i < this->indirection; i++) {
         ret += " *";
     }
