@@ -13,7 +13,7 @@ Type* get_btype(BinaryExprNode* expr) {
             ZF_ERROR("invalid expression on line %d: operand cannot have void type", expr->line);
         }
 
-        if (left != right) {
+        if (*left != *right) {
             ZF_ERROR("line %d: operands don't match types (found %s and %s)", expr->line, left->to_human_str().c_str(), right->to_human_str().c_str());
         }
 
