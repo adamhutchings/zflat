@@ -19,7 +19,7 @@ void VarDeclNode::read(std::ifstream& file) {
         this->expr = new ExprNode();
         this->expr->read(file);
         auto left = get_type(this->expr), right = this->var->type;
-        if (*left != *right) {
+        if (!are_types_compatible(left, right)) {
             ZF_ERROR("line %d: assigning value of type %s to var of type %s"
             , this->line, left->to_human_str().c_str(), right->to_human_str().c_str());
         }
