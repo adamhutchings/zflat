@@ -10,6 +10,7 @@
 
 #include <string.h>
 
+#include <common/type.hpp>
 #include <front/trfrags.hpp>
 #include <util/error.hpp>
 
