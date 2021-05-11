@@ -10,7 +10,7 @@ ProgramNode::~ProgramNode() {
 
 void ProgramNode::apply(void(*fn)(ASTNode*)) {
     for (auto sub : this->components) {
-        fn(sub);
+        sub->apply(fn);
     }
     fn(this);
 }
@@ -19,38 +19,39 @@ void FunctionNode::apply(void(*fn)(ASTNode*)) {
     // for (auto decl : this->args) {
     //     fn(decl);
     // }
-    fn(this->body);
+    this->body->apply(fn);
     fn(this);
 }
 
 void StatementNode::apply(void(*fn)(ASTNode*)) {
-    fn(this->inner);
+    if (this->inner != nullptr)
+        this->inner->apply(fn);
     fn(this);
 }
 
 void BlockStatementNode::apply(void(*fn)(ASTNode*)) {
     for (auto stmt : this->statements) {
-        fn(stmt);
+        stmt->apply(fn);
     }
     fn(this);
 }
 
 void IfNode::apply(void(*fn)(ASTNode*)) {
-    fn(this->expr);
-    fn(this->stmt);
-    if (this->else_block != nullptr) fn(this->else_block);
+    this->expr->apply(fn);
+    this->stmt->apply(fn);
+    if (this->else_block != nullptr) this->else_block->apply(fn);
     fn(this);
 }
 
 void LoopNode::apply(void(*fn)(ASTNode*)) {
-    fn(this->expr);
-    if (this->pred != nullptr) fn(this->pred);
-    fn(this->stmt);
+    this->expr->apply(fn);
+    if (this->pred != nullptr) this->pred->apply(fn);
+    this->stmt->apply(fn);
     fn(this);
 }
 
 void SwitchNode::apply(void(*fn)(ASTNode*)) {
-    fn(this->expr);
+    this->expr->apply(fn);
     for (auto case_ : this->cases) {
         case_->apply(fn);
     }
@@ -64,12 +65,12 @@ void CaseNode::apply(void(*fn)(ASTNode*)) {
 }
 
 void ControlFlowNode::apply(void(*fn)(ASTNode*)) {
-    if (this->expression != nullptr) fn(this->expression);
+    if (this->expression != nullptr) this->expression->apply(fn);
     fn(this);
 }
 
 void VarDeclNode::apply(void(*fn)(ASTNode*)) {
-    if (this->expr != nullptr) fn(this->expr);
+    if (this->expr != nullptr) this->expr->apply(fn);
     fn(this);
 }
 
