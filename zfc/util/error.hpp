@@ -12,3 +12,8 @@
     fprintf(stderr, msg "\n" ZF_ARGS(__VA_ARGS__)); \
     exit(-1); \
 } while (0)
+
+#define ZF_WARN(msg, ...) do { \
+    fprintf(stderr, "zfc: warning: "); \
+    fprintf(stderr, msg "\n" ZF_ARGS(__VA_ARGS__)); \
+} while (0)

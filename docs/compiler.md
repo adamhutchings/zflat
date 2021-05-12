@@ -8,13 +8,9 @@ inside it - by default, it compiles each `src/*.zf` to `bin/*.o`.
 
 ## Compiler flags
 
-- `-i [path]` - look in `path/src` for files, where each `path/src/*.zf` is
-accessed by an import of `path.*`.
-- `-iext [ext]` - accept files ending in `.ext` as well as `.zf`, although `.zf`
-is prioritized still.
-- `--ino-stdlib` - do not use the standard library.
-- `-istd [path]` - use `path` as the stdlib path.
-- `-f [file]` - compile `file` to a `.o` file in the same diirectory.
-- `--c` - compile to C code rather than object code.
-- `--keep-temps` - keep temporary files (syntax tree, C code), which are in
-`bin/*.tree` and `bin*.auto.c`.
+`-I [file]` - compile just the single file `file`, by default to the same path
+with `.o` instead of `.zf`.
+`-c` - instead of generating a randomly-named C file and then compiling it to
+object code, generate a file with the same name except for `.c` at the end
+instead of `.zf`, and do not generate object code.
+`--help` - generate a help message and exit.
