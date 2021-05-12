@@ -19,7 +19,8 @@ void FunctionNode::apply(void(*fn)(ASTNode*)) {
     // for (auto decl : this->args) {
     //     fn(decl);
     // }
-    this->body->apply(fn);
+    if (this->body != nullptr) // Check for extc decls, etc.
+        this->body->apply(fn);
     fn(this);
 }
 
