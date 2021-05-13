@@ -49,6 +49,11 @@ void StatementNode::read(std::ifstream& file) {
             this->inner = new SwitchNode();
             this->inner->read(file);
             goto out;
+        case TreeComp::DEBUG:
+            lex::unlex(initial);
+            this->inner = new DebugNode();
+            this->inner->read(file);
+            goto out;
         default:
             ZF_TOK_ERR(initial, "control flow statement, value, or '{'");
     }
@@ -63,6 +68,7 @@ out:
         case SWITCH:
         case FSWITCH:
         case SEMICOLON:
+        case DEBUG:
             break;
         default:
             expect(file, SEMICOLON);

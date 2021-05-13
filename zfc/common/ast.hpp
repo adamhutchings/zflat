@@ -50,6 +50,7 @@ struct InnerExprNode;
 struct FuncCallNode;
 struct ControlFlowNode;
 struct VarDeclNode;
+struct DebugNode;
 struct EnumDeclNode;
 struct UseNode;
 
@@ -208,6 +209,15 @@ struct VarDeclNode : public InnerStatementNode {
     void write(std::ofstream& file) override;
     void apply( void (*fn)(ASTNode*) ) override;
     virtual ~VarDeclNode() {}
+};
+
+struct DebugNode : public InnerStatementNode {
+    int debug_val;
+    BlockStatementNode* block;
+    void read(std::ifstream& file) override;
+    void write(std::ofstream& file) override;
+    void apply( void (*fn)(ASTNode*) ) override;
+    virtual ~DebugNode() {}
 };
 
 struct EnumDeclNode : public ProgramSub {

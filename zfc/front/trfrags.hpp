@@ -42,6 +42,7 @@ enum TreeComp {
     REF,
     ENUM,
     BITFIELD,
+    DEBUG,
 
     // Tree fragments
     EXPRESSION,

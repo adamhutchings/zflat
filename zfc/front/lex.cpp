@@ -158,6 +158,7 @@ TreeComp get_keyword_type(std::string name) {
     if (name == "ref")           return TreeComp::REF;
     if (name == "enum")          return TreeComp::ENUM;
     if (name == "bitfield")      return TreeComp::BITFIELD;
+    if (name == "debug")         return TreeComp::DEBUG;
     return TreeComp::EGENERALERROR;
 }
 

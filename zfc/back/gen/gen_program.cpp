@@ -1,4 +1,5 @@
 #include <back/gen/gen_main.hpp>
+#include <common/debug.hpp>
 
 void ProgramNode::write(std::ofstream& file) {
 
@@ -12,6 +13,11 @@ void ProgramNode::write(std::ofstream& file) {
     for (auto decl : this->imports) {
         decl->write(file);
     }
+
+    // Write debug level
+    gen::write(file, "#define ZF_DEBUG_LEVEL ");
+    gen::write(file, std::to_string(debug::level));
+    gen::write(file, "\n");
 
     for (auto sub : this->components) {
         sub->write(file);
