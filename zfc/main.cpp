@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 
+#include <common/debug.hpp>
 #include <compile.hpp>
 
 int main(int argc, char** argv) {
@@ -14,6 +15,8 @@ int main(int argc, char** argv) {
     bool help = false;
     std::string one_file_path = "";
     std::vector<std::string> args;
+    // Default debug level, if no changes
+    debug::level = 1;
     while (argc-- > 0) {
         args.push_back(std::string(*(argv++)));
     }
@@ -28,6 +31,25 @@ int main(int argc, char** argv) {
             break;
         } else if (str == "-c") { 
             leave_at_c = true;
+        } else if (str.find("--debug=") == 0) {
+            int initial_debug_len = strlen("--debug=");
+            if (str.size() == initial_debug_len) {
+                ZF_ERROR("Expected value after --debug (ex: --debug=1)");
+            }
+            str = str.substr(initial_debug_len);
+            try {
+                debug::level = std::stoi(str);
+                if (debug::level < 0 || debug::level > debug::level_max) {
+                    ZF_ERROR("Expected valid debug value between 0 and %d (found %s)", debug::level_max, str.c_str());
+                }
+            } catch (std::invalid_argument a) {
+                ZF_ERROR("Expected valid integer debug value");
+            }
+        } else if (str == "--release") {
+            debug::level = 0;
+        } else if (str.find("-") == 0) {
+            // Other flag option
+            ZF_ERROR("unrecognized flag %s", str.c_str());
         } else {
             if (one_file) {
                 if (one_file_path == "") {
