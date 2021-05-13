@@ -5,10 +5,11 @@ void DebugNode::write(std::ofstream& file) {
     
     gen::write(file, "#if ZF_DEBUG_LEVEL >= ");
     gen::write(file, std::to_string(this->debug_val));
-    gen::write(file, "\n");
+    gen::newline(file);
 
     this->block->write(file);
 
-    gen::write(file, "\n#endif /* DEBUG */\n");
+    gen::newline(file);
+    gen::write(file, "#endif /* DEBUG */\n");
 
 }
