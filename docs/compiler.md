@@ -14,3 +14,5 @@ with `.o` instead of `.zf`.
 object code, generate a file with the same name except for `.c` at the end
 instead of `.zf`, and do not generate object code.
 `--help` - generate a help message and exit.
+`--debug=[num]` - set the debug level to `[num]` (must be between 0 and 4).
+`--release` - set the debug value to 0 (is 1 by default)
