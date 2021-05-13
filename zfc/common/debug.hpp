@@ -8,6 +8,6 @@ namespace debug {
 
 extern unsigned int level;
 
-extern const unsigned int level_default, level_max;
+extern unsigned int level_default, level_max;
 
 }

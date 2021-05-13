@@ -2,6 +2,6 @@
 
 namespace debug {
 
-int level = 0, level_default = 1, level_max = 4;
+unsigned int level = 0, level_default = 1, level_max = 4;
 
 }
