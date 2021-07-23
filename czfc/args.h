@@ -21,6 +21,9 @@
  */
 enum zf_args_error {
 
+    ZF_TOO_MANY_ERRORS,
+    ZF_TOO_MANY_FILES,
+
 };
 
 struct zf_args {
@@ -34,7 +37,7 @@ struct zf_args {
     }                         files_to_compile [MAX_FILES_TO_COMPILE];
     int                       nr_files_to_compile;
 
-    struct {
+    struct zf_parse_error_diagnostic {
         /* Which type of error it is. */
         enum zf_args_error    error;
         /* Which argument the error occurred on. */
