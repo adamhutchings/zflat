@@ -1,5 +1,5 @@
 mkdir -p cmake
 cd cmake
-cmake ../zfc
+cmake ../czfc
 make
 cd ..
