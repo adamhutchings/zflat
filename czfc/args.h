@@ -48,7 +48,7 @@ struct zf_args {
  * Parse command-line arguments. The argv pointer passed in must NOT include
  * the program name.
  */
-void zf_args_parse ( struct zf_args * args, int argc, char ** argv );
+void zf_args_parse (struct zf_args * args, int argc, char ** argv);
 
 /**
  * Stuck here - this is the program name so that any error macro can use it.
@@ -59,4 +59,4 @@ extern char                 * zf_program_name;
  * Initialize the program name. Pass in a pointer to the program name and arg
  * count, so they can be updated accordingly.
  */
-void zf_args_init_program_name ( char ** * program_namep, int * argcp );
+void zf_args_init_program_name (char ** * program_namep, int * argcp);
