@@ -1,5 +1,6 @@
 #include "args.h"
 
+#include <stdio.h>
 #include <string.h>
 
 /**
@@ -49,5 +50,38 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
         }
 
     }
+
+}
+
+/**
+ * Get an error message from an error code.
+ */
+static char * get_error_message(enum zf_args_error code);
+
+void zf_output_peripherals(struct zf_args * args, char ** argv) {
+
+    int i;
+
+    for (i = 0; i < args->nr_errors; ++i) {
+        fprintf(
+            stderr, "czfc: %s (detected at argument %s)\n",
+            get_error_message(args->errors[i].error),
+            argv[i]
+        );
+    }
+
+}
+
+static char * get_error_message(enum zf_args_error code) {
+
+    /**
+     * Message array
+     */
+    static const char * error_messages[ZF_ARGS_ERROR_MAX] = {
+        [ZF_TOO_MANY_ERRORS] = "Too many errors detected, stopping count",
+        [ZF_TOO_MANY_FILES]  = "Too many files passed in",
+    };
+
+    return error_messages[code];
 
 }
