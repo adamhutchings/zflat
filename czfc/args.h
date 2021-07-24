@@ -63,3 +63,10 @@ extern char                 * zf_program_name;
  * count, so they can be updated accordingly.
  */
 void zf_args_init_program_name (char ** * program_namep, int * argcp);
+
+/**
+ * Output all non-compiler options (errors, version number, etc.) to stderr.
+ * Pass in the command-line arguments so the error-causing options can be
+ * displayed.
+ */
+void zf_output_peripherals(struct zf_args * args, char ** argv);
