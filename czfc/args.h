@@ -23,6 +23,8 @@ enum zf_args_error {
 
     ZF_TOO_MANY_ERRORS,
     ZF_TOO_MANY_FILES,
+    
+    ZF_ARGS_ERROR_MAX,
 
 };
 
