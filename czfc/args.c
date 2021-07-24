@@ -17,6 +17,38 @@ void zf_args_init_program_name (char ** * program_namep, int * argcp) {
 
 }
 
+/**
+ * Internal - add an error message to the error list. Return 1 if the list has
+ * been capped with the max error value. position is the position of the bad
+ * arggument in argv.
+ */
+int zf_args_add_error (struct zf_args * args, enum zf_args_error error, int position) {
+
+    int ret;
+
+    ret = 0;
+
+    if (args->nr_errors >= MAX_PARSE_ERRORS) {
+        goto error;
+    }
+
+    if (args->nr_errors == MAX_PARSE_ERRORS - 1) {
+        /* Cap the error list */
+        args->errors[args->nr_errors] =
+            (struct zf_parse_error_diagnostic) { ZF_TOO_MANY_ERRORS, position };
+        goto error;
+    }
+
+    args->errors[args->nr_errors] = (struct zf_parse_error_diagnostic) { error, position };
+    
+error:
+    ret = 1;
+out:
+    ++args->nr_errors;
+    return ret;
+
+}
+
 void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 
     int i; /* Argument index */
@@ -28,17 +60,7 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
         /* For now no flags exist. */
         if (args->nr_files_to_compile >= MAX_FILES_TO_COMPILE) {
 
-            /* Try to add an error. */
-            if (args->nr_errors >= MAX_PARSE_ERRORS - 1) {
-                /* If there's only one error slot left, add "too many errors."
-                as a flag. */
-                args->errors[args->nr_errors++] =
-                    (struct zf_parse_error_diagnostic) { ZF_TOO_MANY_ERRORS, i };
-                return;
-            } else {
-                args->errors[args->nr_errors++] =
-                    (struct zf_parse_error_diagnostic) { ZF_TOO_MANY_FILES, i };
-            }
+            zf_args_add_error(args, ZF_TOO_MANY_FILES, i);
 
         } else {
 
