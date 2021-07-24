@@ -1,6 +1,6 @@
 #include "args.h"
 
-
+#include <string.h>
 
 /**
  * External reference from header.
