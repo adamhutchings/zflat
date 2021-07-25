@@ -64,10 +64,11 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 
         } else {
 
-            /* Add file to list of files to compile. 
-            TODO - have an actual output file name. */
-            args->files_to_compile[args->nr_files_to_compile++] = 
-                (struct zf_core_compiler_inputs) { argv[i], NULL };
+            /* Add file to list of files to compile. */
+            args->files_to_compile[args->nr_files_to_compile++].input_file
+                = argv[i];
+            /* The output file can be automatically determined by the driver. */
+            args->files_to_compile[args->nr_files_to_compile-1].output_file[0] = '\0';
 
         }
 

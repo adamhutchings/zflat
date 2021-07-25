@@ -16,6 +16,8 @@
  */
 #define MAX_PARSE_ERRORS      8
 
+#define OUTPUT_FILE_LEN_MAX   256
+
 /**
  * All types of errors that can occur.
  */
@@ -35,7 +37,7 @@ struct zf_args {
      */
     struct                    zf_core_compiler_inputs {
         char                * input_file;
-        char                * output_file;
+        char                  output_file [ OUTPUT_FILE_LEN_MAX ];
     }                         files_to_compile [MAX_FILES_TO_COMPILE];
     int                       nr_files_to_compile;
 
