@@ -78,7 +78,7 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 /**
  * Get an error message from an error code.
  */
-static char * get_error_message(enum zf_args_error code);
+static const char * get_error_message(enum zf_args_error code);
 
 void zf_output_peripherals(struct zf_args * args, char ** argv) {
 
@@ -94,7 +94,7 @@ void zf_output_peripherals(struct zf_args * args, char ** argv) {
 
 }
 
-static char * get_error_message(enum zf_args_error code) {
+static const char * get_error_message(enum zf_args_error code) {
 
     /**
      * Message array
