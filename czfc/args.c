@@ -67,7 +67,7 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
             /* Add file to list of files to compile. 
             TODO - have an actual output file name. */
             args->files_to_compile[args->nr_files_to_compile++] = 
-                (struct zf_core_compiler_inputs) { argv[i], "out.c" };
+                (struct zf_core_compiler_inputs) { argv[i], NULL };
 
         }
 
