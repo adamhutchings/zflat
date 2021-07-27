@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <output.h>
+
 /**
  * External reference from header.
  */
@@ -86,8 +88,8 @@ void zf_output_peripherals(struct zf_args * args, char ** argv) {
     int i;
 
     for (i = 0; i < args->nr_errors; ++i) {
-        fprintf(
-            stderr, "czfc: %s (detected at argument %s)\n",
+        ZF_PRINT_WITH_COLOR(ZF_CODE_BLUE,
+        "czfc: %s (detected at argument %s)\n",
             get_error_message(args->errors[i].error),
             argv[i]
         );
