@@ -13,7 +13,7 @@ unsigned zf_lexer_init(struct zf_lexer * lexer, const char * filename) {
 
     lexer->fp = fopen(filename, "r");
     if (lexer->fp == NULL) {
-        ZF_PRINT_WITH_COLOR(ZF_CODE_RED, "Cannot open file \"%s\"", filename);
+        ZF_PRINT_ERROR("Cannot open file \"%s\"", filename);
         return 1;
     }
 
