@@ -45,3 +45,8 @@ unsigned zf_lexer_init(struct zf_lexer *, const char * filename);
  * Fill a token with the next token from the file.
  */
 unsigned zf_lex(struct zf_lexer *, struct zf_token *);
+
+/**
+ * Destroy a lexer.
+ */
+void zf_lexer_destroy(struct zf_lexer *);

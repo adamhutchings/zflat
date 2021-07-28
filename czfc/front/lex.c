@@ -20,3 +20,7 @@ unsigned zf_lexer_init(struct zf_lexer * lexer, const char * filename) {
     return 0;
 
 }
+
+void zf_lexer_destroy(struct zf_lexer * lexer) {
+    fclose(lexer->fp);
+}
