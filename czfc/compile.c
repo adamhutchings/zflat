@@ -46,6 +46,16 @@ void default_output_file_name(const char * inputfile, char * buf) {
 
 void zf_execute_args(struct zf_args * args) {
 
+    int i;
 
+    for (i = 0; i < args->nr_files_to_compile; ++i) {
+        /* Get default output name if none exists. */
+        if (args->files_to_compile[i].output_file[0] == '\0') {
+            default_output_file_name(
+                args->files_to_compile[i].input_file,
+                args->files_to_compile[i].output_file
+            );
+        }
+    }
 
 }
