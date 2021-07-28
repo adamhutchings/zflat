@@ -20,9 +20,9 @@ are intuitive syntax, type-safety, and easy library management.
 - run `./scripts/build.sh` to start the build process
 
 ## Running
-- run the compiler at `./cmake/zfc`
+- run the compiler at `./cmake/czfc`
 - see instructions at [docs/compiler.md](https://github.com/adamhutchings/zflat/blob/main/docs/compiler.md)
 
 ## Compiler Test
-- `./cmake/zfc input/file.zf`
-- compiles to `input/file.o`
+- `./cmake/czfc input/file.zf`
+- compiles to `input/file.o` (in the future)
