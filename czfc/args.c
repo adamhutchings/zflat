@@ -145,7 +145,7 @@ static const char * get_error_message(enum zf_args_error code) {
     static const char * error_messages[ZF_ARGS_ERROR_MAX] = {
         [ZF_TOO_MANY_ERRORS] = "Too many errors detected, stopping count",
         [ZF_TOO_MANY_FILES]  = "Too many files passed in",
-        [ZF_UNKNOWN_FLAG]     = "Unknown flag",
+        [ZF_UNKNOWN_FLAG]    = "Unknown flag",
     };
 
     return error_messages[code];
