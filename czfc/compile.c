@@ -44,6 +44,13 @@ void default_output_file_name(const char * inputfile, char * buf) {
 
 }
 
+/**
+ * ACTUALLY call the compilaation functions.
+ */
+void zf_compile(char * inputfile, char * outputfile) {
+
+}
+
 void zf_execute_args(struct zf_args * args) {
 
     int i;
@@ -56,6 +63,16 @@ void zf_execute_args(struct zf_args * args) {
                 args->files_to_compile[i].output_file
             );
         }
+    }
+
+    /**
+     * Compile all files.
+     */
+    for (i = 0; i < args->nr_files_to_compile; ++i) {
+        zf_compile(
+            args->files_to_compile[i].input_file,
+            args->files_to_compile[i].output_file
+        );
     }
 
 }
