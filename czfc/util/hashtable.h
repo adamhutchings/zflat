@@ -5,13 +5,7 @@
 
 #pragma once
 
-#include <stdint.h>
-
-#define ZF_HASH_BUCKETS 1000000
-
-struct zf_hashtable {
-    void            * (buckets[ZF_HASH_BUCKETS]);
-};
+struct zf_hashtable;
 
 /**
  * Set an element in the hash table.

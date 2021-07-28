@@ -1,5 +1,13 @@
 #include "hashtable.h"
 
+#include <stdint.h>
+
+#define ZF_HASH_BUCKETS 1000000
+
+struct zf_hashtable {
+    void            * (buckets[ZF_HASH_BUCKETS]);
+};
+
 /**
  * Hashing algorithm - this is chosen more or less at random.
  */
