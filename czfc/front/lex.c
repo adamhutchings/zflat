@@ -4,6 +4,20 @@
 
 #include <output.h> /* error macros */
 
+/**
+ * Internal - get the next character.
+ */
+static int zf_lex_getc(struct zf_lexer * lexer) {
+    int c = getc(lexer->fp);
+    if (c == '\n') {
+        ++(lexer->lineno);
+        lexer->linepos = 0;
+    } else {
+        ++(lexer->linepos);
+    }
+    return c;
+}
+
 unsigned zf_lexer_init(struct zf_lexer * lexer, const char * filename) {
 
     memset(lexer, 0, sizeof *lexer);
