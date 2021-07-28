@@ -2,6 +2,8 @@
 
 #include <string.h> /* strncpy */
 
+#include <output.h>
+
 /**
  * Fill buf with the default output file name. buf is assumed to hold exactly
  * OUTPUT_FILE_LEN_MAX characters.
@@ -19,15 +21,16 @@ void default_output_file_name(const char * inputfile, char * buf) {
     file_name_long = dot - buf >= OUTPUT_FILE_LEN_MAX - 2;
 
     if (file_name_long) {
-        /* Warn about a file path being possibly too long */
+        ZF_PRINT_WARNING("File name is too long to have a proper extension");
     }
 
     if (dot == NULL) {
-        /* Warn about no extension */
+        ZF_PRINT_WARNING("File name \"%s\" has no extension", buf);
     }
 
     if (dot[1] != 'z' || dot[2] != 'f') {
-        /* Warn about non-zf filename */
+        ZF_PRINT_WARNING("File name does not have ending .zf,"
+        "has \".%s\" instead", dot + 1);
     }
 
     if (!file_name_long) {
