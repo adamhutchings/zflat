@@ -51,35 +51,6 @@ static enum {
 };
 
 /**
- * A function that tests if a character matches some criterion.
- */
-typedef int                 (*zf_lex_test)(int c);
-
-/**
- * Get the function for a given criterion. This only gets ONE criterion at a 
- * time - do not pass ZFL_WHITESPACE | ZFL_ALPHA.
- */
-static zf_lex_test zf_lex_get_test(int flag) {
-
-    switch (flag) {
-        case ZFL_WHITESPACE:
-            return isspace;
-        case ZFL_ALPHA:
-            return isalpha;
-        case ZFL_DIGIT:
-            return isdigit;
-        case ZFL_CSYMBOL:
-        /* This may nnot be 100% accurate - (see backslashes). We'll be able to
-         * catch the error (hey! \ isn't an operator!) but a more thorough
-         * solution may be in order later. */
-            return ispunct;
-        default:
-            return NULL;
-    }
-
-}
-
-/**
  * All character types which can begin a symbol.
  */
 static int                    zf_token_begin_flags =
