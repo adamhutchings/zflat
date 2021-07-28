@@ -53,7 +53,7 @@ unsigned zf_lexer_init(struct zf_lexer *, const char * filename);
 /**
  * Fill a token with the next token from the file. Return 0 is successful, or 1
  * if EOF. (A better solution with token types will be here soon.) Return 2 if a
- * chaaracter is not recognized.
+ * chaaracter is not recognized, or 3 if the token is too long.
  */
 unsigned zf_lex(struct zf_lexer *, struct zf_token *);
 
