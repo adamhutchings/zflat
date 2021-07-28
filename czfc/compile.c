@@ -33,7 +33,7 @@ void default_output_file_name(const char * inputfile, char * buf) {
 
     if (dot[1] != 'z' || dot[2] != 'f') {
         ZF_PRINT_WARNING("File name does not have ending .zf,"
-        "has \".%s\" instead", dot + 1);
+        "has \"%s\" instead", dot + 1);
     }
 
     if (!file_name_long) {
