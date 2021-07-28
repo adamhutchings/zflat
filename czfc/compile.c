@@ -28,6 +28,7 @@ void default_output_file_name(const char * inputfile, char * buf) {
 
     if (dot == NULL) {
         ZF_PRINT_WARNING("File name \"%s\" has no extension", buf);
+        dot = buf + strlen(buf);
     }
 
     if (dot[1] != 'z' || dot[2] != 'f') {
