@@ -2,6 +2,7 @@
 
 #include <string.h> /* strncpy */
 
+#include <front/lex.h>
 #include <output.h>
 
 /**
@@ -45,9 +46,16 @@ void default_output_file_name(const char * inputfile, char * buf) {
 }
 
 /**
- * ACTUALLY call the compilaation functions.
+ * ACTUALLY call the compilation functions.
  */
 void zf_compile(char * inputfile, char * outputfile) {
+
+    struct zf_lexer         * lexer;
+    struct zf_token         * token;
+
+    if (zf_lexer_init(&lexer, inputfile)) {
+        ZF_PRINT_ERROR("Lexer initialization failed.");
+    }
 
 }
 
