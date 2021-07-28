@@ -64,6 +64,7 @@ enum {
     ZFL_ALPHA               = 0x02,
     ZFL_DIGIT               = 0x04,
     ZFL_CSYMBOL             = 0x08,
+    ZFL_EOF                 = 0x10,
 };
 
 /**
@@ -99,6 +100,10 @@ static int zf_lex_test_any(int c, int flags) {
         if (ispunct(c)) return 1;
     }
 
+    if (flags & ZFL_EOF) {
+        if (c == EOF) return 1;
+    }
+
     return 0;
 
 }
@@ -129,12 +134,13 @@ static int zf_lex_end(int flag) {
 
     switch (flag) {
         case ZFL_ALPHA:
-            return ZFL_WHITESPACE | ZFL_CSYMBOL;
+            return ZFL_WHITESPACE | ZFL_CSYMBOL | ZFL_EOF;
         case ZFL_DIGIT:
-            return ZFL_WHITESPACE | ZFL_CSYMBOL;
+            return ZFL_WHITESPACE | ZFL_CSYMBOL| ZFL_EOF;
         case ZFL_CSYMBOL:
             /* Anything */
-            return ZFL_WHITESPACE | ZFL_ALPHA | ZFL_DIGIT | ZFL_CSYMBOL;
+            return ZFL_WHITESPACE | ZFL_ALPHA | ZFL_DIGIT
+            | ZFL_CSYMBOL | ZFL_EOF;
     }
 
     return 0;
