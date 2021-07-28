@@ -62,11 +62,23 @@ static int zf_compile(char * inputfile, char * outputfile) {
         goto error;
     }
 
-    while(!zf_lex(&lexer, &token)) {
+lex_loop:
+    switch (zf_lex(&lexer, &token)) {
+    case 0: /* Good */
         printf(
             "Token: %20s, line: %5d, linepos: %5d\n",
             token.data, token.lineno, token.linepos
         );
+        goto lex_loop;
+    case 1:
+        printf("End-of-file detected.\n");
+        break;
+    case 2:
+        printf("Unrecognized character.\n");
+        break;
+    case 3:
+        printf("Buffer overflow.\n");
+        break;
     }
 
 error:
