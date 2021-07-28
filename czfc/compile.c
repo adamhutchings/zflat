@@ -50,8 +50,8 @@ void default_output_file_name(const char * inputfile, char * buf) {
  */
 static int zf_compile(char * inputfile, char * outputfile) {
 
-    struct zf_lexer         * lexer;
-    struct zf_token         * token;
+    struct zf_lexer           lexer;
+    struct zf_token           token;
     int                       ret;
 
     ret = 0; /* Default */
@@ -61,11 +61,15 @@ static int zf_compile(char * inputfile, char * outputfile) {
         goto error;
     }
 
+    while(!zf_lex(&lexer, &token)) {
+        ;
+    }
+
 error:
     ret = 1;
 
 out:
-    zf_lexer_destroy(lexer);
+    zf_lexer_destroy(&lexer);
     return ret;
 
 }
