@@ -120,3 +120,84 @@ static int zf_lex_skip_whitespace(struct zf_lexer * lexer) {
     }
 
 }
+
+/**
+ * Which characters are past the END of a token?
+ */
+static int zf_lex_end(int flag) {
+
+    switch (flag) {
+        case ZFL_ALPHA:
+            return ZFL_WHITESPACE | ZFL_CSYMBOL;
+        case ZFL_DIGIT:
+            return ZFL_WHITESPACE | ZFL_CSYMBOL;
+        case ZFL_CSYMBOL:
+            /* Anything */
+            return ZFL_WHITESPACE | ZFL_ALPHA | ZFL_DIGIT | ZFL_CSYMBOL;
+    }
+
+    return 0;
+
+}
+
+/**
+ * Finally, main lexer routine.
+ */
+unsigned zf_lex(struct zf_lexer * lexer, struct zf_token * tok) {
+
+    /* What type is the beginning of the token? */
+    int begin_token_type;
+
+    /* Beginning character */
+    int begin_token_char;
+
+    /* Which flags can end a token */
+    int end_flags;
+
+    /* Skip whitespace BEFORE, not after, because a file can begin with
+     * whitespace. */
+    if (zf_lex_skip_whitespace(lexer)) return 1;
+
+    memset(tok, 0, sizeof *tok);
+
+    begin_token_char = zf_lex_getc(lexer);
+    /* Should be redundant. */
+    if (begin_token_char == EOF) return 1;
+    /* The function-to-type correspondences here are the same as above -
+     * fix later? */
+    if (isspace(begin_token_char))       begin_token_type = ZFL_WHITESPACE;
+    else if (isalpha(begin_token_char))  begin_token_type = ZFL_ALPHA;
+    else if (isnumber(begin_token_char)) begin_token_type = ZFL_DIGIT;
+    else if (ispunct(begin_token_char))  begin_token_type = ZFL_CSYMBOL;
+    else
+        return 2; /* Ivalid character encountered. */
+
+    end_flags = zf_lex_end(begin_token_type);
+
+    /* Fill the token's linepos, etc here, at the beginning. */
+    tok->linepos = lexer->linepos;
+    tok->lineno = lexer->lineno;
+
+    /* Reuse the begin_token_char variable to store the current character. */
+    do {
+
+        /* Make sure we won't overflow the token buffer. */
+        if (tok->len >= ZF_TOKEN_LEX_MAX - 1) {
+            /* -1 to leave room for the null terminator. */
+            return 3;
+        }
+
+        tok->data[tok->len++] = begin_token_char;
+
+        begin_token_char = zf_lex_getc(lexer);
+        if (zf_lex_test_any(begin_token_char, end_flags)) {
+            /* End of token passed! */
+            zf_lex_ungetc(lexer, begin_token_char);
+            /* Before we return, cap off data with nul. */
+            tok->data[tok->len] = '\0';
+            return 0;
+        }
+
+    } while (1);
+
+}
