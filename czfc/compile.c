@@ -73,7 +73,8 @@ lex_loop:
         goto lex_loop;
     case 1:
         printf("End-of-file detected.\n");
-        break;
+        /* EOF is not an error, unlike the rest. */
+        goto out;
     case 2:
         printf("Unrecognized character.\n");
         break;
