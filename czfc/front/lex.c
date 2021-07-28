@@ -12,6 +12,7 @@ static int zf_lex_getc(struct zf_lexer * lexer) {
     int c = getc(lexer->fp);
     if (c == '\n') {
         ++(lexer->lineno);
+        lexer->last_linepos = lexer->linepos;
         lexer->linepos = 0;
     } else {
         ++(lexer->linepos);
@@ -25,7 +26,9 @@ static int zf_lex_getc(struct zf_lexer * lexer) {
 static int zf_lex_ungetc(struct zf_lexer * lexer, int c) {
     if (c == '\n') {
         --(lexer->lineno);
-        /* TODO - deal with line positions. */
+        lexer->linepos = lexer->last_linepos;
+        /* Hopefully we never have to unget across more than one line */
+        lexer->last_linepos = 0;
     } else {
         --(lexer->linepos);
     }

@@ -33,6 +33,12 @@ struct zf_lexer {
     unsigned                  lineno
                             , linepos;
 
+    /**
+     * If we unget a newline character, the line position will be the length of
+     * the previous line, which is saved nowhere.
+     */
+    unsigned                  last_linepos;
+
 };
 
 /**
