@@ -118,6 +118,23 @@ void zf_output_peripherals(struct zf_args * args, char ** argv) {
         );
     }
 
+    if (args->flags & ZF_HELP_FLAG) {
+        ZF_PRINT_WITH_COLOR(ZF_CODE_BLUE,
+            "Usage: %s [options] <file>\n"
+            "Options:\n\t"
+            "-h: display this help message\n\t"
+            "-v: display version number\n",
+            zf_program_name
+        );
+    }
+
+    if (args->flags & ZF_VERSION_FLAG) {
+        ZF_PRINT_WITH_COLOR(ZF_CODE_BLUE,
+            "%s: version 0.0.0\n",
+            zf_program_name
+        );
+    }
+
 }
 
 static const char * get_error_message(enum zf_args_error code) {
