@@ -46,16 +46,19 @@ void default_output_file_name(const char * inputfile, char * buf) {
 }
 
 /**
- * ACTUALLY call the compilation functions.
+ * ACTUALLY call the compilation functions. Return 0 if succeeded, 1 otherwise.
  */
-void zf_compile(char * inputfile, char * outputfile) {
+static int zf_compile(char * inputfile, char * outputfile) {
 
     struct zf_lexer         * lexer;
     struct zf_token         * token;
 
     if (zf_lexer_init(&lexer, inputfile)) {
         ZF_PRINT_ERROR("Lexer initialization failed.");
+        return 1;
     }
+
+    return 0;
 
 }
 
@@ -77,10 +80,12 @@ void zf_execute_args(struct zf_args * args) {
      * Compile all files.
      */
     for (i = 0; i < args->nr_files_to_compile; ++i) {
-        zf_compile(
+        if (zf_compile(
             args->files_to_compile[i].input_file,
             args->files_to_compile[i].output_file
-        );
+        )) {
+            ZF_PRINT_ERROR("Compilation failed.");
+        }
     }
 
 }
