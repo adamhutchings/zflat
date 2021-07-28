@@ -52,13 +52,21 @@ static int zf_compile(char * inputfile, char * outputfile) {
 
     struct zf_lexer         * lexer;
     struct zf_token         * token;
+    int                       ret;
+
+    ret = 0; /* Default */
 
     if (zf_lexer_init(&lexer, inputfile)) {
         ZF_PRINT_ERROR("Lexer initialization failed.");
-        return 1;
+        goto error;
     }
 
-    return 0;
+error:
+    ret = 1;
+
+out:
+    zf_lexer_destroy(lexer);
+    return ret;
 
 }
 
