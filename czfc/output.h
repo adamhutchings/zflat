@@ -31,7 +31,15 @@
     ZF_RESET_COLOR(color); \
 } while (0)
 
-#define ZF_ERROR_OUT(...) do { \
-    ZF_PRINT_WITH_COLOR(ZF_CODE_RED, __VA_ARGS__); \
+#define ZF_PRINT_ERROR(msg, ...) do { \
+    ZF_PRINT_WITH_COLOR(ZF_CODE_RED, "Error: czfc: " msg "\n" ,##__VA_ARGS__); \
+} while (0)
+
+#define ZF_PRINT_WARNING(msg, ...) do { \
+    ZF_PRINT_WITH_COLOR(ZF_CODE_YELLOW, "Warning: czfc: " msg "\n" ,##__VA_ARGS__); \
+} while (0)
+
+#define ZF_EXIT() do { \
+    fprintf(ZF_OUTPUT_STREAM, "czfc: Exiting.\n"); \
     exit(-1); \
 } while (0)
