@@ -19,6 +19,18 @@ static int zf_lex_getc(struct zf_lexer * lexer) {
     return c;
 }
 
+/**
+ * Internal - unget character.
+ */
+static int zf_lex_ungetc(struct zf_lexer * lexer, int c) {
+    if (c == '\n') {
+        --(lexer->lineno);
+        /* TODO - deal with line positions. */
+    } else {
+        --(lexer->linepos);
+    }
+}
+
 unsigned zf_lexer_init(struct zf_lexer * lexer, const char * filename) {
 
     memset(lexer, 0, sizeof *lexer);
@@ -84,5 +96,24 @@ static int zf_lex_test_any(int c, int flags) {
     }
 
     return 0;
+
+}
+
+/**
+ * Skip whitespace. Return whether EOF was hit.
+ */
+static int zf_lex_skip_whitespace(struct zf_lexer * lexer) {
+
+    int c;
+
+    while (1) {
+        c = zf_lex_getc(lexer);
+        if (c == EOF) return 1;
+        if (zf_lex_test_any(c, zf_token_begin_flags)) {
+            /* We've read one character too far, one which begins a token. */
+            zf_lex_ungetc(lexer, c);
+            return 0;
+        }
+    }
 
 }
