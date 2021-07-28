@@ -32,6 +32,7 @@ static void zf_lex_ungetc(struct zf_lexer * lexer, int c) {
     } else {
         --(lexer->linepos);
     }
+    ungetc(c, lexer->fp);
 }
 
 unsigned zf_lexer_init(struct zf_lexer * lexer, const char * filename) {
