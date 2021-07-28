@@ -54,10 +54,33 @@ out:
 void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 
     int i; /* Argument index */
+    int accepting_flags;
 
     memset( args, 0, sizeof( struct zf_args ) );
 
+    accepting_flags = 1; /* After -- all args are accepted */
+    /* For example, accepting a file named -flag.zf if it exists for some absurd
+    reason */
+
     for (i = 0; i < argc; ++i) {
+
+        if (argv[i][0] == '-' && accepting_flags) {
+
+            switch (argv[i][1]) {
+                case '-':
+                    accepting_flags = 0;
+                    break;
+                case 'h':
+                    args->flags |= ZF_HELP_FLAG;
+                    break;
+                case 'v':
+                    args->flags |= ZF_VERSION_FLAG;
+                    break;
+                default:
+                    zf_args_add_error(args, ZF_UNKNOWN_FLAG, i);
+            }
+
+        }
 
         /* For now no flags exist. */
         if (args->nr_files_to_compile >= MAX_FILES_TO_COMPILE) {
