@@ -14,6 +14,9 @@ struct zf_token {
     /* The string content of the token. */
     char                      data[ZF_TOKEN_LEX_MAX];
 
+    /* How long the token is. */
+    unsigned                  len;
+
     /* What line number the token was on (for printing diagnostics and such) */
     unsigned                  lineno;
 
