@@ -1,5 +1,6 @@
 #include <compile.h>
 
+#include <stdio.h>  /* printf */
 #include <string.h> /* strncpy */
 
 #include <front/lex.h>
@@ -62,7 +63,10 @@ static int zf_compile(char * inputfile, char * outputfile) {
     }
 
     while(!zf_lex(&lexer, &token)) {
-        ;
+        printf(
+            "Token: %20s, line: %5d, linepos: %5d\n",
+            token.data, token.lineno, token.linepos
+        );
     }
 
 error:
