@@ -23,7 +23,7 @@ static int zf_lex_getc(struct zf_lexer * lexer) {
 /**
  * Internal - unget character.
  */
-static int zf_lex_ungetc(struct zf_lexer * lexer, int c) {
+static void zf_lex_ungetc(struct zf_lexer * lexer, int c) {
     if (c == '\n') {
         --(lexer->lineno);
         lexer->linepos = lexer->last_linepos;
@@ -58,7 +58,7 @@ void zf_lexer_destroy(struct zf_lexer * lexer) {
 /**
  * Internal use flags - these represent different types of characters.
  */
-static enum {
+enum {
     ZFL_WHITESPACE          = 0x01,
     ZFL_ALPHA               = 0x02,
     ZFL_DIGIT               = 0x04,
