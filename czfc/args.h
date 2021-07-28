@@ -30,6 +30,15 @@ enum zf_args_error {
 
 };
 
+/**
+ * All miscellaneous flags.
+ */
+#define ZF_HELP_FLAG          0x01
+#define ZF_VERSION_FLAG       0x02
+
+/* More will come later, no doubt. */
+
+
 struct zf_args {
     
     /* The files to compile. Each entry here has the input and output
@@ -48,6 +57,8 @@ struct zf_args {
         int                   position;
     }                         errors [ MAX_PARSE_ERRORS ];
     int                       nr_errors;
+
+    unsigned                  flags;
 
 };
 
