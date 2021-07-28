@@ -78,3 +78,40 @@ static zf_lex_test zf_lex_get_test(int flag) {
     }
 
 }
+
+/**
+ * All character types which can begin a symbol.
+ */
+static int                    zf_token_begin_flags =
+    ZFL_ALPHA | ZFL_DIGIT | ZFL_CSYMBOL;
+
+/**
+ * Character types which ALWAYS begin a symbol.
+ */
+static int                    zf_token_always_begin_flags =
+    ZFL_CSYMBOL;
+
+/**
+ * See if a character matches ANY flags.
+ */
+static int zf_lex_test_any(int c, int flags) {
+
+    if (flags & ZFL_WHITESPACE) {
+        if (isspace(c)) return 1;
+    }
+
+    if (flags & ZFL_ALPHA) {
+        if (isalpha(c)) return 1;
+    }
+
+    if (flags & ZFL_DIGIT) {
+        if (isnumber(c)) return 1;
+    }
+
+    if (flags & ZFL_CSYMBOL) {
+        if (ispunct(c)) return 1;
+    }
+
+    return 0;
+
+}
