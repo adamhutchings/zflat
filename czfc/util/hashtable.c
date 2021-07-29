@@ -43,9 +43,15 @@ static uint32_t zf_hash(const char * str) {
 
 }
 
-int zf_hashtable_set(
-    struct zf_hashtable * ht, const char * key, void * value
+/**
+ * Internal - find the bucket for getting or setting. Return the INDEX of the
+ * bucket, or -1 if not found. Set create to 1 if we should create a new bucket,
+ * or 0 if we should not.
+ */
+static int zf_hashtable_find_bucket(
+    struct zf_hashtable * ht, const char * key, int create
 ) {
+
     uint32_t hash;
     uint32_t pos;
     
@@ -54,35 +60,53 @@ int zf_hashtable_set(
     /* Three cases. Either we create a new value, we replace an old value, or
      * this slot is already filled so we look for the next free one. */
     if (ht->buckets[hash].key == NULL) {
-        ht->buckets[hash] = (struct zf_hash_entry) {
-            .key   = strdup(key),
-            .value = value
-        };
+        if (create) {
+            ht->buckets[hash].key = strdup(key);
+            return hash;
+        }
     } else if (strcmp(key, ht->buckets[hash].key) == 0) {
-        ht->buckets[hash].value = value;
+        return hash;
     } else {
 
         for (pos = hash; pos < hash + ZF_HASH_SEARCH_DISTANCE; ++pos) {
             if (ht->buckets[pos].key == NULL) {
-                ht->buckets[pos] = (struct zf_hash_entry) {
-                    .key   = strdup(key),
-                    .value = value
-                };
-                return 0;
+                if (create) {
+                    ht->buckets[hash].key = strdup(key);
+                    return pos;
+                }
             } else if (strcmp(key, ht->buckets[pos].key) == 0) {
-                ht->buckets[pos].value = value;
-                return 0;
+                return pos;
             }
         }
 
         /* OK, if that for loop didn't return anything, this is not good. */
-        return 1;
+        return -1;
 
     }
 
 }
 
+int zf_hashtable_set(
+    struct zf_hashtable * ht, const char * key, void * value
+) {
+    
+    int bucket;
+
+    bucket = zf_hashtable_find_bucket(ht, key, 1);
+
+    if (bucket == -1) return 1;
+
+    ht->buckets[bucket].value = value;
+    return 0;
+
+}
+
 void * zf_hashtable_get(struct zf_hashtable * ht, const char * key) {
-   uint32_t hash = zf_hash(key) % ZF_HASH_BUCKETS;
-   return ht->buckets[hash];
+   
+    int bucket;
+    bucket = zf_hashtable_find_bucket(ht, key, 0);
+
+    if (bucket == -1) return NULL;
+    return ht->buckets[bucket].value;
+
 }
