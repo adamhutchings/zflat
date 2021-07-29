@@ -128,6 +128,22 @@ static int zf_lex_skip_whitespace(struct zf_lexer * lexer) {
 }
 
 /**
+ * Skip comment, if any. Return whether any comment was skipped.
+ */
+static int zf_lex_skip_comment(struct zf_lexer * lexer) {
+
+    int c;
+
+    if (zf_lex_getc(lexer) != '~') {
+        return 0;
+    }
+
+    while (zf_lex_getc(lexer) != '~');
+    return 1;
+
+}
+
+/**
  * Which characters are past the END of a token?
  */
 static int zf_lex_end(int flag) {
