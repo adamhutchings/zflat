@@ -109,21 +109,28 @@ static int zf_lex_test_any(int c, int flags) {
 }
 
 /**
- * Skip whitespace. Return whether EOF was hit.
+ * Skip whitespace. Return whether any whitespace was skipped.
  */
 static int zf_lex_skip_whitespace(struct zf_lexer * lexer) {
 
     int c;
+    int whitespace_count;
+
+    whitespace_count = 0;
 
     while (1) {
         c = zf_lex_getc(lexer);
-        if (c == EOF) return 1;
+        if (c == EOF) goto out;
         if (zf_lex_test_any(c, zf_token_begin_flags)) {
             /* We've read one character too far, one which begins a token. */
             zf_lex_ungetc(lexer, c);
-            return 0;
+            goto out;
         }
+        ++whitespace_count;
     }
+
+out:
+    return whitespace_count;
 
 }
 
@@ -134,13 +141,32 @@ static int zf_lex_skip_comment(struct zf_lexer * lexer) {
 
     int c;
 
-    if (zf_lex_getc(lexer) != '~') {
-        zf_lex_ungetc(lexer, '~');
+    if ( (c = zf_lex_getc(lexer)) != '~') {
+        zf_lex_ungetc(lexer, c);
         return 0;
     }
 
     while (zf_lex_getc(lexer) != '~');
     return 1;
+
+}
+
+/**
+ * Skip all whitespace and comments.
+ */
+static void zf_lex_skip_whitespace_and_comments(struct zf_lexer * lexer) {
+
+    int any_skipped = 0;
+
+    while (1) {
+        any_skipped |= zf_lex_skip_whitespace(lexer);
+        any_skipped |= zf_lex_skip_comment(lexer);
+        if (!any_skipped) {
+            return;
+        } else {
+            any_skipped = 0;
+        }
+    }
 
 }
 
@@ -180,12 +206,12 @@ unsigned zf_lex(struct zf_lexer * lexer, struct zf_token * tok) {
 
     /* Skip whitespace BEFORE, not after, because a file can begin with
      * whitespace. */
-    if (zf_lex_skip_whitespace(lexer)) return 1;
+    zf_lex_skip_whitespace_and_comments(lexer);
 
     memset(tok, 0, sizeof *tok);
 
     begin_token_char = zf_lex_getc(lexer);
-    /* Should be redundant. */
+    /* No longer a redundant check. */
     if (begin_token_char == EOF) return 1;
     /* The function-to-type correspondences here are the same as above -
      * fix later? */
