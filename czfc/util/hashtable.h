@@ -13,9 +13,9 @@ struct zf_hashtable;
 void zf_hashtable_init(struct zf_hashtable * table);
 
 /**
- * Set an element in the hash table.
+ * Set an element in the hash table. Return 1 if failed.
  */
-void zf_hashtable_set(struct zf_hashtable * ht, const char * key, void * value);
+int zf_hashtable_set(struct zf_hashtable * ht, const char * key, void * value);
 
 /**
  * Get an element from the hash table.
