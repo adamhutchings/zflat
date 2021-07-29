@@ -135,6 +135,7 @@ static int zf_lex_skip_comment(struct zf_lexer * lexer) {
     int c;
 
     if (zf_lex_getc(lexer) != '~') {
+        zf_lex_ungetc(lexer, '~');
         return 0;
     }
 
