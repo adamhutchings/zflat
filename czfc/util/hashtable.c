@@ -110,3 +110,17 @@ void * zf_hashtable_get(struct zf_hashtable * ht, const char * key) {
     return ht->buckets[bucket].value;
 
 }
+
+void zf_hashtable_destroy(struct zf_hashtable * ht) {
+
+    int i;
+    char * key;
+
+    for (i = 0; i < ZF_HASH_BUCKETS; ++i) {
+        key = ht->buckets[i].key;
+        if (key) {
+            free(key);
+        }
+    }
+
+}

@@ -21,3 +21,8 @@ int zf_hashtable_set(struct zf_hashtable * ht, const char * key, void * value);
  * Get an element from the hash table.
  */
 void * zf_hashtable_get(struct zf_hashtable * ht, const char * key);
+
+/**
+ * Destroy a hash table.
+ */
+void zf_hashtable_destroy(struct zf_hashtable * ht);
