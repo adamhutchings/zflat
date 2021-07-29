@@ -1,6 +1,7 @@
 #include "hashtable.h"
 
 #include <stdint.h>
+#include <stdlib.h> /* free */
 #include <string.h>
 
 #define ZF_HASH_BUCKETS         10000
@@ -79,10 +80,10 @@ static int zf_hashtable_find_bucket(
             }
         }
 
-        /* OK, if that for loop didn't return anything, this is not good. */
-        return -1;
-
     }
+
+    /* OK, if nothing else worked, we're done. */
+    return -1;
 
 }
 
