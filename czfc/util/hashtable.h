@@ -8,6 +8,11 @@
 struct zf_hashtable;
 
 /**
+ * Initialize a hash table.
+ */
+void zf_hashtable_init(struct zf_hashtable * table);
+
+/**
  * Set an element in the hash table.
  */
 void zf_hashtable_set(struct zf_hashtable * ht, const char * key, void * value);
