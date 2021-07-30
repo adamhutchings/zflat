@@ -57,29 +57,22 @@ static int zf_hashtable_find_bucket(
     uint32_t pos;
     
     hash = zf_hash(key) % ZF_HASH_BUCKETS;
+    pos = hash; /* We iterate over this later. */
 
-    /* Three cases. Either we create a new value, we replace an old value, or
-     * this slot is already filled so we look for the next free one. */
-    if (ht->buckets[hash].key == NULL) {
-        if (create) {
-            ht->buckets[hash].key = strdup(key);
-            return hash;
-        }
-    } else if (strcmp(key, ht->buckets[hash].key) == 0) {
-        return hash;
-    } else {
-
-        for (pos = hash; pos < hash + ZF_HASH_SEARCH_DISTANCE; ++pos) {
-            if (ht->buckets[pos].key == NULL) {
-                if (create) {
-                    ht->buckets[hash].key = strdup(key);
-                    return pos;
-                }
-            } else if (strcmp(key, ht->buckets[pos].key) == 0) {
+    /* We iterate starting at the hashed position, and check - if there's a
+     * different key, go forward - if the key is the same, return this position,
+     * if the key is empty, either go forward or create a new bucket, if the
+     * flag is set.
+     */
+    for (; pos < hash + ZF_HASH_SEARCH_DISTANCE; ++pos) {
+        if (ht->buckets[pos].key == NULL) {
+            if (create) {
+                ht->buckets[hash].key = strdup(key);
                 return pos;
             }
+        } else if (strcmp(key, ht->buckets[pos].key) == 0) {
+            return pos;
         }
-
     }
 
     /* OK, if nothing else worked, we're done. */
