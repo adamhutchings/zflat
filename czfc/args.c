@@ -42,6 +42,7 @@ int zf_args_add_error (struct zf_args * args, enum zf_args_error error, int posi
     }
 
     args->errors[args->nr_errors] = (struct zf_parse_error_diagnostic) { error, position };
+    goto out;
     
 error:
     ret = 1;

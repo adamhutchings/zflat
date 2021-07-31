@@ -74,10 +74,10 @@ static int                    zf_token_begin_flags =
     ZFL_ALPHA | ZFL_DIGIT | ZFL_CSYMBOL;
 
 /**
- * Character types which ALWAYS begin a symbol.
+ * Character types which ALWAYS begin a symbol. Unused for now.
  */
-static int                    zf_token_always_begin_flags =
-    ZFL_CSYMBOL;
+/* static int                    zf_token_always_begin_flags =
+    ZFL_CSYMBOL; */
 
 /**
  * See if a character matches ANY flags.
