@@ -191,9 +191,10 @@ static int zf_lex_end(int flag) {
 }
 
 /**
- * Finally, main lexer routine.
+ * Finally, main lexer routine. This actually reads a token and returns it, as
+ * opposed to the main lexer routine which checks the token buffer.
  */
-unsigned zf_lex(struct zf_lexer * lexer, struct zf_token * tok) {
+static unsigned zf_ilex(struct zf_lexer * lexer, struct zf_token * tok) {
 
     /* What type is the beginning of the token? */
     int begin_token_type;
@@ -249,5 +250,29 @@ unsigned zf_lex(struct zf_lexer * lexer, struct zf_token * tok) {
         }
 
     } while (1);
+
+}
+
+unsigned zf_lex(struct zf_lexer * lexer, struct zf_token * token) {
+
+    if (lexer->unlexed_count) {
+        memcpy(token, lexer->tokbuf + lexer->unlexed_count, sizeof *token);
+        --(lexer->unlexed_count);
+        return 0;
+    }
+
+    return zf_ilex(lexer, token);
+
+}
+
+unsigned zf_unlex(struct zf_lexer * lexer, struct zf_token * token) {
+
+    if (lexer->unlexed_count >= ZF_TOKEN_LEX_MAX) {
+        return 1;
+    }
+
+    memcpy(lexer->tokbuf + lexer->unlexed_count, token, sizeof *token);
+    ++(lexer->unlexed_count);
+    return 0;
 
 }

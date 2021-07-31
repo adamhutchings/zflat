@@ -9,6 +9,9 @@
 /* I could see really, really long quotes being about this long. */
 #define ZF_TOKEN_LEX_MAX 512
 
+/* The number of tokens in the put-back buffer. */
+#define ZF_TOK_BUFSIZ    16
+
 struct zf_token {
 
     /* The string content of the token. */
@@ -42,6 +45,9 @@ struct zf_lexer {
      */
     unsigned                  last_linepos;
 
+    struct zf_token           tokbuf[ZF_TOK_BUFSIZ];
+    int                       unlexed_count;
+
 };
 
 /**
@@ -56,6 +62,11 @@ unsigned zf_lexer_init(struct zf_lexer *, const char * filename);
  * chaaracter is not recognized, or 3 if the token is too long.
  */
 unsigned zf_lex(struct zf_lexer *, struct zf_token *);
+
+/**
+ * Place a token back into the input stream. Return 1 if error, of 0 if none.
+ */
+unsigned zf_unlex(struct zf_lexer *, struct zf_token *);
 
 /**
  * Destroy a lexer.
