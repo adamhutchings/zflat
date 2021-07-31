@@ -57,8 +57,6 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
     int                              i; /* Argument index */
     int                              accepting_flags;
     struct zf_core_compiler_inputs   edited_input;
-    /* Whether the file name being parsed is an output file */
-    int                              parsing_output;
 
     memset( args, 0, sizeof( struct zf_args ) );
 
@@ -80,9 +78,6 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
                 case 'v':
                     args->flags |= ZF_VERSION_FLAG;
                     break;
-                case 'o':
-                    parsing_output = 1;
-                    break;
                 default:
                     zf_args_add_error(args, ZF_UNKNOWN_FLAG, i);
             }
@@ -98,14 +93,9 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 
             edited_input = args->files_to_compile[args->nr_files_to_compile];
 
-            if (!parsing_output) {
-                /* Add file to list of files to compile and skip on. */
-                edited_input.input_file
-                    = argv[i];
-             ++args->nr_files_to_compile;
-            } else {
-                strcpy(edited_input.output_file, argv[i]);
-            }
+            /* Add file to list of files to compile and skip on. */
+            edited_input.input_file = argv[i];
+            ++args->nr_files_to_compile;
             
             /* The output path is "" by default, so the compiler can determine
             it if no path has been set. */
