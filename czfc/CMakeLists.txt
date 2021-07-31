@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 set (CMAKE_CXX_STANDARD 11)
 project(zflat)
-set(CMAKE_CXX_FLAGS "-O3 -Wall -Wpedantic")
+add_compile_options(-O3 -Wall -Wpedantic -g)
 file(GLOB_RECURSE SOURCES ./*.c)
 add_executable(czfc ${SOURCES})
 target_include_directories(czfc PRIVATE .)
