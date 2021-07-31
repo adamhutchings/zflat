@@ -82,6 +82,7 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
                     break;
                 case 'o':
                     parsing_output = 1;
+                    break;
                 default:
                     zf_args_add_error(args, ZF_UNKNOWN_FLAG, i);
             }
