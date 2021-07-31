@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 set (CMAKE_CXX_STANDARD 11)
 project(zflat)
-add_compile_options(-O3 -Wall -Wpedantic -g)
+add_compile_options(-O3 -Wall -Wpedantic -g -Wno-gnu-zero-variadic-macro-arguments)
 file(GLOB_RECURSE SOURCES ./*.c)
 add_executable(czfc ${SOURCES})
 target_include_directories(czfc PRIVATE .)
