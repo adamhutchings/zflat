@@ -63,6 +63,8 @@ static enum zf_token_type zf_lex_type(const char * buf) {
     if (ispunct(ini))
         return ZFT_OPERATOR;
 
+    return ZFT_IDENT; /* As in zfc. when in doubt ... */
+
 }
 
 /**
