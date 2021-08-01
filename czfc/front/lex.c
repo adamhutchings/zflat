@@ -6,6 +6,66 @@
 #include <output.h> /* error macros */
 
 /**
+ * Internal - determine the type of a character buffer.
+ */
+static enum zf_token_type zf_lex_type(const char * buf) {
+
+    char ini; /* The start char */
+
+    /* TODO - improve this whole process */
+
+    ini = *buf;
+
+    if (ini == '\0') {
+        /* Shouldn't need to use this */
+        return ZFT_EOF;
+    }
+
+    if (isalpha(ini)) {
+        return ZFT_IDENT;
+    }
+
+    if (isdigit(ini)) {
+        /* Later, check for quotes, etc. */
+        return ZFT_LITERAL;
+    }
+
+    if (ini == '(')
+        return ZFT_OPAREN;
+
+    if (ini == ')')
+        return ZFT_CPAREN;
+
+    if (ini == ',')
+        return ZFT_COMMA;
+
+    if (ini == ';')
+        return ZFT_SEMICOLON;
+
+    if (ini == ':')
+        return ZFT_COLON;
+
+    if (ini == '.')
+        return ZFT_DOT;
+
+    if (ini == '[')
+        return ZFT_OBRACKET;
+
+    if (ini == ']')
+        return ZFT_CBRACKET;
+
+    if (ini == '{')
+        return ZFT_OBRACE;
+
+    if (ini == '}')
+        return ZFT_CBRACE;
+
+    if (ispunct(ini))
+        return ZFT_OPERATOR;
+
+}
+
+/**
  * Internal - get the next character.
  */
 static int zf_lex_getc(struct zf_lexer * lexer) {

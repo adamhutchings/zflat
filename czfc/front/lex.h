@@ -12,6 +12,25 @@
 /* The number of tokens in the put-back buffer. */
 #define ZF_TOK_BUFSIZ    16
 
+enum zf_token_type {
+
+    ZFT_EOF,
+    ZFT_IDENT,
+    ZFT_LITERAL,
+    ZFT_OPAREN,
+    ZFT_CPAREN,
+    ZFT_COMMA,
+    ZFT_SEMICOLON,
+    ZFT_COLON,
+    ZFT_DOT,
+    ZFT_OPERATOR,
+    ZFT_OBRACKET,
+    ZFT_CBRACKET,
+    ZFT_OBRACE,
+    ZFT_CBRACE,
+
+};
+
 struct zf_token {
 
     /* The string content of the token. */
@@ -26,7 +45,7 @@ struct zf_token {
     /* What possibly-empty string the token was on */
     unsigned                  linepos;
 
-    /* TODO - token types */
+    enum zf_token_type        type;
 
 };
 
