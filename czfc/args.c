@@ -56,7 +56,7 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 
     int                              i; /* Argument index */
     int                              accepting_flags;
-    struct zf_core_compiler_inputs   edited_input;
+    struct zf_core_compiler_inputs * edited_input;
 
     memset( args, 0, sizeof( struct zf_args ) );
 
@@ -84,17 +84,16 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 
         }
 
-        /* For now no flags exist. */
         if (args->nr_files_to_compile >= MAX_FILES_TO_COMPILE) {
 
             zf_args_add_error(args, ZF_TOO_MANY_FILES, i);
 
         } else {
 
-            edited_input = args->files_to_compile[args->nr_files_to_compile];
+            edited_input = &(args->files_to_compile[args->nr_files_to_compile]);
 
             /* Add file to list of files to compile and skip on. */
-            edited_input.input_file = argv[i];
+            edited_input->input_file = argv[i];
             ++args->nr_files_to_compile;
             
             /* The output path is "" by default, so the compiler can determine
