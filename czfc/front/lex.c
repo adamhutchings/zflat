@@ -273,7 +273,10 @@ static unsigned zf_ilex(struct zf_lexer * lexer, struct zf_token * tok) {
 
     begin_token_char = zf_lex_getc(lexer);
     /* No longer a redundant check. */
-    if (begin_token_char == EOF) return 1;
+    if (begin_token_char == EOF) {
+        tok->type = ZFT_EOF;
+        return 1;
+    }
     /* The function-to-type correspondences here are the same as above -
      * fix later? */
     if (isspace(begin_token_char))       begin_token_type = ZFL_WHITESPACE;
