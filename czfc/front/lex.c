@@ -306,6 +306,7 @@ static unsigned zf_ilex(struct zf_lexer * lexer, struct zf_token * tok) {
             zf_lex_ungetc(lexer, begin_token_char);
             /* Before we return, cap off data with nul. */
             tok->data[tok->len] = '\0';
+            tok->type = zf_lex_type(tok->data);
             return 0;
         }
 
