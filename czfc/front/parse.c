@@ -71,6 +71,15 @@ zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
 }
 
 /**
+ * Print diagnostic for token errors.
+ */
+#define ZFP_TOKEN_ERROR(lexer, expected, token) \
+    ZF_PRINT_ERROR(                             \
+        "line %d: expected %s, found token \"%s\"", \
+        lexer->lineno, expected, token.data \
+    )
+
+/**
  * Nothing for now.
  */
 static enum zfp_code
@@ -83,9 +92,51 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
 static enum zfp_code
 zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer) {
 
+    struct zf_token           token;
+
     memset(node, 0, sizeof *node);
     node->type = ZFA_NODE_IDENT;
 
+    for(;;) {
+
+        zf_lex(lexer, &token);
+        if (token.type != ZFT_IDENT) {
+            ZFP_TOKEN_ERROR(lexer, "identifier", token);
+            return ZFPI_TOK;
+        }
+
+        /* Add token contents to buffer. */
+        
+        /* But first, check for buffer overflow. */
+        /* +1 for nul terminator */
+        if (
+            node->as.ident.namebuf_len + strlen(token.data) + 1 
+            > ZF_IDENT_MAXLEN) {
+            goto buf;
+        }
+
+        strcpy(node->as.ident.namebuf + node->as.ident.namebuf_len, token.data);
+
+        /* Because names can be x.y.z, check for dot - if dot, add to buffer and
+         * continue on. Otherwise, unlex non-dot token. */
+        zf_lex(lexer, &token);
+        if (token.type != ZFT_DOT) {
+            zf_unlex(lexer, &token);
+            break;
+        } else {
+            /* +2 - one for nul terminator, one for dot */
+            if (node->as.ident.namebuf_len + 2 > ZF_IDENT_MAXLEN) {
+                goto buf;
+            }
+            node->as.ident.namebuf[node->as.ident.namebuf_len++] = '.';
+        }
+
+    }
+
     return ZFPI_GOOD;
+
+buf:
+    ZF_PRINT_ERROR("line %d: identifier too long", lexer->lineno);
+    return ZFPI_BUF;
 
 }
