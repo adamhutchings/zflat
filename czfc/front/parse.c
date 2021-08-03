@@ -1,6 +1,7 @@
 #include "parse.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <front/lex.h>
 #include <output.h>
@@ -8,6 +9,8 @@
 enum zfp_code {
 
     ZFPI_GOOD,            /* Nothing wrong */
+    ZFPI_SUB,             /* A subroutine of the current routine had an error */
+    ZFPI_BUF,             /* Buffer overflow */
 
 };
 
@@ -60,7 +63,6 @@ zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer);
 static enum zfp_code
 zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
 
-    node->type = ZFA_NODE_PROG;
     return zfp_parse_program(node, lexer);
 
 }
@@ -70,5 +72,17 @@ zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
  */
 static enum zfp_code
 zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
+    memset(node, 0, sizeof *node);
+    node->type = ZFA_NODE_PROG;
     return ZFPI_GOOD;
+}
+
+static enum zfp_code
+zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer) {
+
+    memset(node, 0, sizeof *node);
+    node->type = ZFA_NODE_IDENT;
+
+    return ZFPI_GOOD;
+
 }
