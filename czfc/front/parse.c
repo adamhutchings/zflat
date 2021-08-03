@@ -5,8 +5,14 @@
 #include <front/lex.h>
 #include <output.h>
 
+enum zfp_code {
+
+    ZFPI_GOOD,            /* Nothing wrong */
+
+};
+
 /* Forward */
-void zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer);
+enum zfp_code zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer);
 
 /**
  * Initialize lexer and after doing validation routines, pass control to the
@@ -46,13 +52,13 @@ out:
 }
 
 /* Forward declarations for parse routines */
-static void
+static enum zfp_internal_code
 zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer);
 
-void zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
+enum zfp_code zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
 
     node->type = ZFA_NODE_PROG;
-    zfp_parse_program(node, lexer);
+    return zfp_parse_program(node, lexer);
 
 }
