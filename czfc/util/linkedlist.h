@@ -20,7 +20,7 @@ void zfll_add(struct zf_linked_list *, void *);
  * Iterate over a list. The return value is the sum of all calls of the callback
  * function provided.
  */
-int zfll_iterate(struct zf_linked_list *, int (*)(void *, void *));
+int zfll_iterate(struct zf_linked_list *, int (*)(void *));
 
 /**
  * Destroy a list.

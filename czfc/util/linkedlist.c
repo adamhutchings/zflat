@@ -30,13 +30,13 @@ void zfll_add(struct zf_linked_list * list, void * elem) {
 
 }
 
-int zfll_iterate(struct zf_linked_list * list, int (*callback)(void *, void *)) {
+int zfll_iterate(struct zf_linked_list * list, int (*callback)(void *)) {
 
     struct zfll_node_t * node;
     int                  sum;
 
     for (node = list->head, sum = 0; node != NULL; node = node->next) {
-        sum += callback(node->data, list);
+        sum += callback(node->data);
     }
 
     return sum;
