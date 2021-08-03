@@ -12,7 +12,8 @@ enum zfp_code {
 };
 
 /* Forward */
-enum zfp_code zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer);
+static enum zfp_code
+zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer);
 
 /**
  * Initialize lexer and after doing validation routines, pass control to the
@@ -52,7 +53,7 @@ out:
 }
 
 /* Forward declarations for parse routines */
-static enum zfp_internal_code
+static enum zfp_code
 zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer);
 
