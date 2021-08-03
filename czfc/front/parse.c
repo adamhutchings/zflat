@@ -56,9 +56,18 @@ static enum zfp_internal_code
 zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer);
 
-enum zfp_code zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
+static enum zfp_code
+zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
 
     node->type = ZFA_NODE_PROG;
     return zfp_parse_program(node, lexer);
 
+}
+
+/**
+ * Nothing for now.
+ */
+static enum zfp_code
+zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
+    return ZFPI_GOOD;
 }
