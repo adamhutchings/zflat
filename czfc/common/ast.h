@@ -28,6 +28,7 @@ struct zfa_ident {
      * after parsing, the actual link will be resolved.
      */
     char const                namebuf [ ZF_IDENT_MAXLEN ];
+    int                       namebuf_len;
 
 };
 
