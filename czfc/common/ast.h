@@ -29,7 +29,7 @@ struct zfa_ident {
      */
     char const                namebuf [ ZF_IDENT_MAXLEN ];
 
-}
+};
 
 struct zfa_node {
 
