@@ -195,3 +195,33 @@ buf:
     return ZFPI_BUF;
 
 }
+
+static enum zfp_code
+zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer) {
+    /* TODO */
+}
+
+static enum zfp_code
+zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
+    /* TODO */
+}
+
+static enum zfp_code
+zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
+    /* TODO */
+}
+
+static enum zfp_code
+zfp_parse_funccall(struct zfa_node * node, struct zf_lexer * lexer) {
+    /* TODO */
+}
+
+static enum zfp_code
+zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer) {
+    /* TODO */
+}
+
+static enum zfp_code
+zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
+    /* TODO */
+}
