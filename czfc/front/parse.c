@@ -61,7 +61,7 @@ out:
 /* Forward declarations for parse routines */
 static enum zfp_code
 zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer)
+zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer),
@@ -103,7 +103,7 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
     for (;;) {
 
         zf_lex(lexer, &test1);
-        if (test1.type == ZF_TOK_EOF) {
+        if (test1.type == ZFT_EOF) {
             /* We're done parsing */
             break;
         }
@@ -113,7 +113,7 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
          * A variable declaration begins with name - colon (x : int), and a
          * function declaration begins with name - oparen (x (): int).
          */
-        if (test1.type != ZF_TOK_IDENT) {
+        if (test1.type != ZFT_IDENT) {
             ZFP_TOKEN_ERROR(lexer, "identifier", test1);
             return ZFPI_TOK;
         }
@@ -122,11 +122,11 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
         decl = malloc(sizeof *decl);
 
         switch (test2.type) {
-        case ZF_TOK_COLON:
+        case ZFT_COLON:
             /* Variable declaration */
             zfp_parse_decl(decl, lexer);
             break;
-        case ZF_TOK_OPAREN:
+        case ZFT_OPAREN:
             /* Function declaration */
             zfp_parse_function(decl, lexer);
             break;
@@ -137,8 +137,6 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
 
         /* Add the new decl to the list */
         zfll_add(&node->as.prog.decls, decl);
-
-        }
 
     }
 

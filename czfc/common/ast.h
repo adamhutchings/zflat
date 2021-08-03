@@ -115,7 +115,7 @@ struct zfa_node {
         struct zfa_expr        expr;
         struct zfa_decl        decl;
         struct zfa_funccall    funccall;
-        struct zfa_blockstmt   blockstmt;
+        struct zfa_block_stmt  blockstmt;
         struct zfa_function    function;
     } as; /* Named "as" so we can say node "as" ident, etc. */
 
