@@ -28,5 +28,21 @@ struct zfa_ident {
      * after parsing, the actual link will be resolved.
      */
     char const                namebuf [ ZF_IDENT_MAXLEN ];
-    
+
 }
+
+struct zfa_node {
+
+    /* The type of the node. */
+    enum zfa_node_type {
+        ZFA_NODE_NONE,        /* For when a node is NULL */
+        ZFA_NODE_PROG,        /* A program */
+        ZFA_NODE_IDENT,       /* A declaration */
+    } type;
+
+    union {
+        struct zfa_program     prog;
+        struct zfa_ident       ident;
+    } as; /* Named "as" so we can say node "as" ident, etc. */
+
+};
