@@ -277,6 +277,7 @@ static unsigned zf_ilex(struct zf_lexer * lexer, struct zf_token * tok) {
     /* No longer a redundant check. */
     if (begin_token_char == EOF) {
         tok->type = ZFT_EOF;
+        strcpy(tok->data, "[ eof ]");
         return 1;
     }
     /* The function-to-type correspondences here are the same as above -
