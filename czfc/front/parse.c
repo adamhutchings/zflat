@@ -121,6 +121,12 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
         /* Allocate more space for a decl */
         decl = malloc(sizeof *decl);
 
+        /* Unlex the tokens. If someday the unlex function modifies the tokens,
+         * PLEASE FIX HERE!
+         */
+        zf_unlex(lexer, &test2);
+        zf_unlex(lexer, &test1);
+
         switch (test2.type) {
         case ZFT_COLON:
             /* Variable declaration */
