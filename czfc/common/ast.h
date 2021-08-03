@@ -79,6 +79,20 @@ struct zfa_function {
 
 };
 
+struct zfa_block_stmt {
+
+    /* A list of statement pointers - a statement of type expr is a statement
+    which is just like x = 2, a statement of type funccall is a statement which
+    is like x(2), etc. */
+    struct zf_linked_list     stmts;
+
+};
+
+struct zfa_funccall {
+    struct zfa_node         * ident;
+    struct zf_linked_list     params;
+};
+
 struct zfa_node {
 
     /* The type of the node. */
@@ -86,6 +100,12 @@ struct zfa_node {
         ZFA_NODE_NONE,        /* For when a node is NULL */
         ZFA_NODE_PROG,        /* A program */
         ZFA_NODE_IDENT,       /* A declaration */
+        ZFA_NODE_VALUE,       /* A value */
+        ZFA_NODE_EXPR,        /* An expression */
+        ZFA_NODE_DECL,        /* A declaration */
+        ZFA_NODE_FUNCCALL,    /* A function call */
+        ZFA_NODE_BLOCK_STMT,  /* A block statement */
+        ZFA_NODE_FUNCTION,    /* A function declaration */
     } type;
 
     union {
