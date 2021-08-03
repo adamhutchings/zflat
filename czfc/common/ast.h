@@ -111,6 +111,12 @@ struct zfa_node {
     union {
         struct zfa_program     prog;
         struct zfa_ident       ident;
+        struct zfa_value       value;
+        struct zfa_expr        expr;
+        struct zfa_decl        decl;
+        struct zfa_funccall    funccall;
+        struct zfa_blockstmt   blockstmt;
+        struct zfa_function    function;
     } as; /* Named "as" so we can say node "as" ident, etc. */
 
 };
