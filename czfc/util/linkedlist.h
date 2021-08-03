@@ -4,7 +4,16 @@
 
 #pragma once
 
-struct zf_linked_list;
+struct zfll_node_t {
+
+    void                    * data;
+    struct zfll_node_t      * next;
+
+};
+
+struct zf_linked_list {
+    struct zfll_node_t      * head;
+};
 
 /**
  * Initialize a new list.

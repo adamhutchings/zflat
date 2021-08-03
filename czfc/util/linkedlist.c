@@ -2,17 +2,6 @@
 
 #include <stdlib.h>
 
-struct zfll_node_t {
-
-    void                    * data;
-    struct zfll_node_t      * next;
-
-};
-
-struct zf_linked_list {
-    struct zfll_node_t      * head;
-};
-
 void zfll_init(struct zf_linked_list * list) {
 
     list->head = NULL;
