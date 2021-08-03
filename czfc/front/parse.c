@@ -12,6 +12,8 @@ enum zfp_code {
     ZFPI_GOOD,            /* Nothing wrong */
     ZFPI_SUB,             /* A subroutine of the current routine had an error */
     ZFPI_BUF,             /* Buffer overflow */
+    ZFPI_ALLOC,           /* Memory allocation error */
+    ZFPI_TOK,             /* Unexpected token */
 
 };
 
