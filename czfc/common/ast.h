@@ -27,7 +27,7 @@ struct zfa_ident {
     /* The name is stored WHOLE here, as "x.y.z" in the case mentioned above -
      * after parsing, the actual link will be resolved.
      */
-    char const                namebuf [ ZF_IDENT_MAXLEN ];
+    char                      namebuf [ ZF_IDENT_MAXLEN ];
     int                       namebuf_len;
 
 };
