@@ -32,6 +32,53 @@ struct zfa_ident {
 
 };
 
+/* A value which is not a literal. */
+
+#define ZF_VALUE_MAXLEN       256
+
+struct zfa_value {
+    char                      namebuf [ ZF_VALUE_MAXLEN ];
+    int                       namebuf_len;
+};
+
+#define OPBUF_SIZE            8
+
+/**
+ * An expression has a left-hand side, an operator, and a right-hand side. Both
+ * sides may be either a value or another expression.
+ */
+struct zfa_expr {
+
+    struct zfa_node         * left, * right;
+    /* We'll make this better in the future. */
+    char                      opbuf [ OPBUF_SIZE ];
+
+};
+
+#define TYPE_MAX_LEN          64
+
+struct zfa_decl {
+
+    char                      typebuf [ TYPE_MAX_LEN ];
+    int                       typebuf_len;
+
+    struct zfa_node         * expr; /* Can be NULL, as in int x; */
+    /* Or not, as in int x = 2; */
+
+    struct zfa_node         * identifier;
+
+};
+
+struct zfa_function {
+
+    /* A complete function declaration */
+    struct zfa_decl           decl; /* expr here must be NULL */
+
+    /* exprs on these must be null for now, but not when we make default args */
+    struct zf_linked_list     params; /* linked list of decl */
+
+};
+
 struct zfa_node {
 
     /* The type of the node. */
