@@ -108,9 +108,9 @@ zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer) {
         /* Add token contents to buffer. */
         
         /* But first, check for buffer overflow. */
-        /* +1 for nul terminator */
+        /* nul terminator is already in buffer, don't check */
         if (
-            node->as.ident.namebuf_len + strlen(token.data) + 1 
+            node->as.ident.namebuf_len + strlen(token.data)
             > ZF_IDENT_MAXLEN) {
             goto buf;
         }
@@ -124,8 +124,8 @@ zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer) {
             zf_unlex(lexer, &token);
             break;
         } else {
-            /* +2 - one for nul terminator, one for dot */
-            if (node->as.ident.namebuf_len + 2 > ZF_IDENT_MAXLEN) {
+            /* one extra byte for dot */
+            if (node->as.ident.namebuf_len + 1 > ZF_IDENT_MAXLEN) {
                 goto buf;
             }
             node->as.ident.namebuf[node->as.ident.namebuf_len++] = '.';
