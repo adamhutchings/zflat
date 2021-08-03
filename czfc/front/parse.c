@@ -61,7 +61,13 @@ out:
 /* Forward declarations for parse routines */
 static enum zfp_code
 zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer);
+zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer)
+zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_funccall(struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer);
 
 static enum zfp_code
 zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
@@ -80,13 +86,64 @@ zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
     )
 
 /**
- * Nothing for now.
+ * Parse a list of function and variable declarations.
  */
 static enum zfp_code
 zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
+
+    struct zf_token test1, test2;
+    struct zfa_node * decl;
+
     memset(node, 0, sizeof *node);
     node->type = ZFA_NODE_PROG;
+
+    /* Start the list of decls */
+    zfll_init(&node->as.prog.decls);
+
+    for (;;) {
+
+        zf_lex(lexer, &test1);
+        if (test1.type == ZF_TOK_EOF) {
+            /* We're done parsing */
+            break;
+        }
+        zf_lex(lexer, &test2);
+
+        /**
+         * A variable declaration begins with name - colon (x : int), and a
+         * function declaration begins with name - oparen (x (): int).
+         */
+        if (test1.type != ZF_TOK_IDENT) {
+            ZFP_TOKEN_ERROR(lexer, "identifier", test1);
+            return ZFPI_TOK;
+        }
+
+        /* Allocate more space for a decl */
+        decl = malloc(sizeof *decl);
+
+        switch (test2.type) {
+        case ZF_TOK_COLON:
+            /* Variable declaration */
+            zfp_parse_decl(decl, lexer);
+            break;
+        case ZF_TOK_OPAREN:
+            /* Function declaration */
+            zfp_parse_function(decl, lexer);
+            break;
+        default:
+            ZFP_TOKEN_ERROR(lexer, ": or (", test2);
+            return ZFPI_TOK;
+        }
+
+        /* Add the new decl to the list */
+        zfll_add(&node->as.prog.decls, decl);
+
+        }
+
+    }
+
     return ZFPI_GOOD;
+
 }
 
 static enum zfp_code
