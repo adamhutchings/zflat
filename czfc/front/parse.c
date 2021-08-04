@@ -350,7 +350,85 @@ done:
 
 static enum zfp_code
 zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
-    /* TODO */
+
+    struct zfa_node          * ident, * type, * expr;
+    struct zf_token            token;
+
+    memset(node, 0, sizeof *node);
+    node->type = ZFA_NODE_DECL;
+
+    /* Parse identifier */
+    ident = malloc(sizeof *ident);
+    if (zfp_parse_ident(ident, lexer)) {
+        return ZFPI_SUB;
+    }
+    if (!ident) {
+        ZF_PRINT_ERROR("Failed to allocate identifier node.");
+        return ZFPI_ALLOC;
+    }
+
+    node->as.decl.identifier = ident;
+
+    /* (Some) repeated code - cleanup? */
+    zf_lex(lexer, &token);
+    if (token.type != ZFT_COLON) {
+        ZFP_TOKEN_ERROR(lexer, ":", token);
+        return ZFPI_TOK;
+    }
+
+    /* Type name */
+    /* Okay, this treats types like identifiers, but types themselves are stored
+     * as a character buffer. We need to fix this.
+     */
+    type = malloc(sizeof *type);
+    if (zfp_parse_ident(type, lexer)) {
+        return ZFPI_SUB;
+    }
+    if (!type) {
+        ZF_PRINT_ERROR("Failed to allocate type node.");
+        return ZFPI_ALLOC;
+    }
+    
+    if (type.as.ident.namebuf_len > TYPE_MAX_LEN) {
+        ZF_PRINT_ERROR("line %d: type too long", lexer->lineno);
+        return ZFPI_BUF;
+    }
+    strcpy(node->as.decl.typebuf, type.as.ident.namebuf);
+    node->as.decl.typebuf_len = type.as.ident.namebuf_len;
+
+    /* See whether there's an expr following or not. */
+    zf_lex(lexer, &token);
+    if (token.type == ZFT_OPERATOR) {
+
+        /* TODO - better check for equals sign */
+        if (strcmp(token.data, "=")) {
+            ZFP_TOKEN_ERROR(lexer, "=", token);
+            return ZFPI_TOK;
+        }
+
+        /* Parse expression */
+        expr = malloc(sizeof *expr);
+        if (!expr) {
+            ZF_PRINT_ERROR("Failed to allocate expression node.");
+            return ZFPI_ALLOC;
+        }
+        if (zfp_parse_expr(expr, lexer)) {
+            return ZFPI_SUB;
+        }
+
+        node->as.decl.expr = expr;
+
+    } else {
+        /* No expression. */
+        /* Should be a semicolon here, though. */
+        if (token.type != ZFT_SEMICOLON) {
+            ZFP_TOKEN_ERROR(lexer, ";", token);
+            return ZFPI_TOK;
+        }
+    }
+
+    return ZFPI_GOOD;
+
 }
 
 static enum zfp_code
