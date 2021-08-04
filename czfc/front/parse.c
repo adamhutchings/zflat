@@ -204,7 +204,29 @@ buf:
 
 static enum zfp_code
 zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer) {
-    /* TODO */
+    
+    struct zf_token           token;
+
+    memset(node, 0, sizeof *node);
+    node->type = ZFA_NODE_VALUE;
+
+    token = zf_lex(lexer);
+
+    if (token.type != ZFT_LITERAL) {
+        ZFP_TOKEN_ERROR(lexer, "literal", token);
+        return ZFPI_TOK;
+    }
+
+    if (token.len > ZF_VALUE_MAXLEN - 1) {
+        ZF_PRINT_ERROR("line %d: literal too long", lexer->lineno);
+        return ZFPI_BUF;
+    }
+
+    strcpy(node->as.value.data, token.data);
+    node->as.value.len = token.len;
+
+    return ZFPI_GOOD;
+
 }
 
 static enum zfp_code
