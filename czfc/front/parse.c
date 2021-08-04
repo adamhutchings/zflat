@@ -44,7 +44,9 @@ struct zfa_node * zfp_parse(const char * filename) {
     }
     
     /* Core parse */
-    zfp_iparse(parse_tree, &lexer);
+    if (zfp_iparse(parse_tree, &lexer)) {
+        ZF_PRINT_ERROR("parse failed");
+    }
     goto out;
 
 error:
@@ -119,7 +121,10 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
         }
 
         /* Allocate more space for a decl */
-        decl = malloc(sizeof *decl);
+        if ( !(decl = malloc(sizeof *decl)) ) {
+            ZF_PRINT_ERROR("Failed to allocate declaration node.");
+            return ZFPI_ALLOC;
+        }
 
         /* Unlex the tokens. If someday the unlex function modifies the tokens,
          * PLEASE FIX HERE!
@@ -130,11 +135,15 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
         switch (test2.type) {
         case ZFT_COLON:
             /* Variable declaration */
-            zfp_parse_decl(decl, lexer);
+            if (zfp_parse_decl(decl, lexer)) {
+                return ZFPI_SUB;
+            }
             break;
         case ZFT_OPAREN:
             /* Function declaration */
-            zfp_parse_function(decl, lexer);
+            if (zfp_parse_function(decl, lexer)) {
+                return ZFPI_SUB;
+            }
             break;
         default:
             ZFP_TOKEN_ERROR(lexer, ": or (", test2);
@@ -244,13 +253,19 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
     node->type = ZFA_NODE_EXPR;
 
     /* In case we need to stuff this with a value */
-    expr = malloc(sizeof *expr);
+    if ( !(expr = malloc(sizeof *expr)) ) {
+        ZF_PRINT_ERROR("Failed to allocate expression node.");
+        return ZFPI_ALLOC;
+    }
 
     /* To begin with, if just a value, return the value. */
     if (token.type == ZFT_LITERAL) {
 
         zf_unlex(lexer, &token);
-        zfp_parse_value(expr, lexer);
+        if (zfp_parse_value(expr, lexer)) {
+            free(expr);
+            return ZFPI_SUB;
+        }
 
         goto cont_check;
 
@@ -260,7 +275,10 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
     if (token.type == ZFT_IDENT) {
 
         zf_unlex(lexer, &token);
-        zfp_parse_ident(expr, lexer);
+        if (zfp_parse_ident(expr, lexer)) {
+            free(expr);
+            return ZFPI_SUB;
+        }
 
         goto cont_check;
 
@@ -279,7 +297,10 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
 
         /* No unlex */
 
-        zfp_parse_expr(expr, lexer);
+        if (zfp_parse_expr(expr, lexer)) {
+            free(expr);
+            return ZFPI_SUB;
+        }
 
         /* ")" check */
         zf_lex(lexer, &token);
@@ -300,7 +321,11 @@ cont_check:
         node->as.expr.left = expr;
         /* Operator parsing - TODO fix */
         strcpy(node->as.expr.opbuf, token.data);
-        node->as.expr.right = malloc(sizeof *node);
+        if ( !(node->as.expr.right = malloc(sizeof *node)) ) {
+            ZF_PRINT_ERROR("Failed to allocate expression node.");
+            free(expr);
+            return ZFPI_ALLOC;
+        }
         zfp_parse_expr(node->as.expr.right, lexer);
         goto done;
     } else {
