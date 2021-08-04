@@ -210,7 +210,7 @@ zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer) {
     memset(node, 0, sizeof *node);
     node->type = ZFA_NODE_VALUE;
 
-    token = zf_lex(lexer);
+    zf_lex(lexer, &token);
 
     if (token.type != ZFT_LITERAL) {
         ZFP_TOKEN_ERROR(lexer, "literal", token);
@@ -222,8 +222,8 @@ zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer) {
         return ZFPI_BUF;
     }
 
-    strcpy(node->as.value.data, token.data);
-    node->as.value.len = token.len;
+    strcpy(node->as.value.namebuf, token.data);
+    node->as.value.namebuf_len = token.len;
 
     return ZFPI_GOOD;
 
@@ -299,7 +299,7 @@ cont_check:
         /* Turn expr into left-hand side of operator */
         node->as.expr.left = expr;
         /* Operator parsing - TODO fix */
-        strcpy(node->as.expr.op, token.data);
+        strcpy(node->as.expr.opbuf, token.data);
         node->as.expr.right = malloc(sizeof *node);
         zfp_parse_expr(node->as.expr.right, lexer);
         goto done;
@@ -307,7 +307,7 @@ cont_check:
         /* Expression does not continue. Copy intermediate value to node
             * and free malloc'd memory. */
         memcpy(node, expr, sizeof *node);
-        free(expr)
+        free(expr);
         goto done;
     }
 
