@@ -351,25 +351,25 @@ done:
 static enum zfp_code
 zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
 
-    struct zfa_node          * ident, * type, * expr;
-    struct zf_token            token;
+    struct zfa_node          * type, * expr;
+    struct zf_token            token, ident;
 
     memset(node, 0, sizeof *node);
     node->type = ZFA_NODE_DECL;
 
-    /* Parse identifier */
-    ident = malloc(sizeof *ident);
-    if (zfp_parse_ident(ident, lexer)) {
-        return ZFPI_SUB;
+    zf_lex(lexer, &ident);
+    if (token.type != ZFT_IDENT) {
+        ZFP_TOKEN_ERROR(lexer, "identifier", ident);
+        return ZFPI_TOK;
     }
-    if (!ident) {
-        ZF_PRINT_ERROR("Failed to allocate identifier node.");
-        return ZFPI_ALLOC;
+    if (strlen(token.data) >= ZF_IDENT_MAXLEN) {
+        ZF_PRINT_ERROR("line %d: buffer overflow in token name", lexer->lineno);
+        return ZFPI_BUF;
     }
+    strcpy(node->as.decl.namebuf, token.data);
+    node->as.decl.namebuf_len = token.len;
 
-    node->as.decl.identifier = ident;
-
-    /* (Some) repeated code - cleanup? */
+    /* Check for colon */
     zf_lex(lexer, &token);
     if (token.type != ZFT_COLON) {
         ZFP_TOKEN_ERROR(lexer, ":", token);
@@ -389,12 +389,12 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
         return ZFPI_ALLOC;
     }
     
-    if (type.as.ident.namebuf_len > TYPE_MAX_LEN) {
+    if (type->as.ident.namebuf_len > TYPE_MAX_LEN) {
         ZF_PRINT_ERROR("line %d: type too long", lexer->lineno);
         return ZFPI_BUF;
     }
-    strcpy(node->as.decl.typebuf, type.as.ident.namebuf);
-    node->as.decl.typebuf_len = type.as.ident.namebuf_len;
+    strcpy(node->as.decl.typebuf, type->as.ident.namebuf);
+    node->as.decl.typebuf_len = type->as.ident.namebuf_len;
 
     /* See whether there's an expr following or not. */
     zf_lex(lexer, &token);

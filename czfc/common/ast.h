@@ -65,7 +65,8 @@ struct zfa_decl {
     struct zfa_node         * expr; /* Can be NULL, as in int x; */
     /* Or not, as in int x = 2; */
 
-    struct zfa_node         * identifier;
+    char                      namebuf [ ZF_IDENT_MAXLEN ];
+    int                       namebuf_len;
 
 };
 
