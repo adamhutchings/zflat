@@ -163,7 +163,6 @@ static enum zfp_code
 zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer) {
 
     struct zf_token           token;
-    enum zfp_code             code;
 
     memset(node, 0, sizeof *node);
     node->type = ZFA_NODE_IDENT;
@@ -245,6 +244,7 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
     struct zf_token           token;
     /* This can be used as an intermediate value */
     struct zfa_node         * expr;
+    enum zfp_code             code;
     
     /* TODO - operator precedence. Oh boy. */
 
@@ -307,7 +307,7 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
         zf_lex(lexer, &token);
         if (token.type != ZFT_CPAREN) {
             ZFP_TOKEN_ERROR(lexer, ")", token);
-            goto error_tok_free_expr;
+            goto error_out;
         }
 
         goto cont_check;
