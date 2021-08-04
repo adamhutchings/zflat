@@ -62,14 +62,14 @@ out:
 
 /* Forward declarations for parse routines */
 static enum zfp_code
-zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_funccall(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer);
+zfp_parse_program      (struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_ident        (struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_value        (struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_expr         (struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_decl         (struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_funccall     (struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_blockstmt    (struct zfa_node * node, struct zf_lexer * lexer),
+zfp_parse_function     (struct zfa_node * node, struct zf_lexer * lexer);
 
 static enum zfp_code
 zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer) {
