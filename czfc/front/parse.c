@@ -333,6 +333,8 @@ cont_check:
         /* Expression does not continue. Copy intermediate value to node
             * and free malloc'd memory. */
         memcpy(node, expr, sizeof *node);
+        /* Also remember to unlex the token */
+        zf_unlex(lexer, &token);
         free(expr);
         goto done;
     }
