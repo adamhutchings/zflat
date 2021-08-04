@@ -163,6 +163,7 @@ static enum zfp_code
 zfp_parse_ident(struct zfa_node * node, struct zf_lexer * lexer) {
 
     struct zf_token           token;
+    enum zfp_code             code;
 
     memset(node, 0, sizeof *node);
     node->type = ZFA_NODE_IDENT;
@@ -263,8 +264,8 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
 
         zf_unlex(lexer, &token);
         if (zfp_parse_value(expr, lexer)) {
-            free(expr);
-            return ZFPI_SUB;
+            code = ZFPI_SUB;
+            goto error_out;
         }
 
         goto cont_check;
@@ -276,8 +277,8 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
 
         zf_unlex(lexer, &token);
         if (zfp_parse_ident(expr, lexer)) {
-            free(expr);
-            return ZFPI_SUB;
+            code = ZFPI_SUB;
+            goto error_out;
         }
 
         goto cont_check;
@@ -298,8 +299,8 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
         /* No unlex */
 
         if (zfp_parse_expr(expr, lexer)) {
-            free(expr);
-            return ZFPI_SUB;
+            code = ZFPI_SUB;
+            goto error_out;
         }
 
         /* ")" check */
@@ -323,8 +324,8 @@ cont_check:
         strcpy(node->as.expr.opbuf, token.data);
         if ( !(node->as.expr.right = malloc(sizeof *node)) ) {
             ZF_PRINT_ERROR("Failed to allocate expression node.");
-            free(expr);
-            return ZFPI_ALLOC;
+            code = ZFPI_ALLOC;
+            goto error_out;
         }
         zfp_parse_expr(node->as.expr.right, lexer);
         goto done;
@@ -336,9 +337,9 @@ cont_check:
         goto done;
     }
 
-error_tok_free_expr:
+error_out:
     free(expr);
-    return ZFPI_TOK;
+    return code;
 
 done:
     return ZFPI_GOOD;
