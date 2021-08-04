@@ -231,7 +231,93 @@ zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer) {
 
 static enum zfp_code
 zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
-    /* TODO */
+
+    struct zf_token           token;
+    /* This can be used as an intermediate value */
+    struct zfa_node         * expr;
+    
+    /* TODO - operator precedence. Oh boy. */
+
+    zf_lex(lexer, &token);
+
+    memset(node, 0, sizeof *node);
+    node->type = ZFA_NODE_EXPR;
+
+    /* In case we need to stuff this with a value */
+    expr = malloc(sizeof *expr);
+
+    /* To begin with, if just a value, return the value. */
+    if (token.type == ZFT_LITERAL) {
+
+        zf_unlex(lexer, &token);
+        zfp_parse_value(expr, lexer);
+
+        goto cont_check;
+
+    }
+
+    /* If just an identifier, return the identifier. */
+    if (token.type == ZFT_IDENT) {
+
+        zf_unlex(lexer, &token);
+        zfp_parse_ident(expr, lexer);
+
+        goto cont_check;
+
+    }
+
+    /* If an expression in parentheses, swallow up the "(", parse an expression,
+     * and swallow up the ")". If an operator follows, then turn the expr we
+     * just parsed into the left-hand side of this operator.
+     */
+
+    /* Also, an aside - we do not need to worry about the order of operations
+     * just yet. I'll code that later. Probably.
+     */
+
+    if (token.type == ZFT_OPAREN) {
+
+        /* No unlex */
+
+        zfp_parse_expr(expr, lexer);
+
+        /* ")" check */
+        zf_lex(lexer, &token);
+        if (token.type != ZFT_CPAREN) {
+            ZFP_TOKEN_ERROR(lexer, ")", token);
+            goto error_tok_free_expr;
+        }
+
+        goto cont_check;
+        
+    }
+
+cont_check:
+    /* Check if expression continues */
+    zf_lex(lexer, &token);
+    if (token.type == ZFT_OPERATOR) {
+        /* Turn expr into left-hand side of operator */
+        node->as.expr.left = expr;
+        /* Operator parsing - TODO fix */
+        strcpy(node->as.expr.op, token.data);
+        node->as.expr.right = malloc(sizeof *node);
+        zfp_parse_expr(node->as.expr.right, lexer);
+        goto done;
+    } else {
+        /* Expression does not continue. Copy intermediate value to node
+            * and free malloc'd memory. */
+        memcpy(node, expr, sizeof *node);
+        free(expr)
+        goto done;
+    }
+
+error_tok_free_expr:
+    free(expr);
+    return ZFPI_TOK;
+
+done:
+    return ZFPI_GOOD;
+
 }
 
 static enum zfp_code
