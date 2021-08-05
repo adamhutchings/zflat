@@ -512,6 +512,12 @@ zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer) {
                 return ZFPI_SUB;
             }
             zfll_add(&node->as.blockstmt.stmts, stmt);
+            /* Expect a semicolon after the expression. */
+            zf_lex(lexer, &token);
+            if (token.type != ZFT_SEMICOLON) {
+                ZFP_TOKEN_ERROR(lexer, ";", token);
+                return ZFPI_TOK;
+            }
         }
 
     }
