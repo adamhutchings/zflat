@@ -621,10 +621,10 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
         ZF_PRINT_ERROR("line %d: buffer overflow in ret type", lexer->lineno);
         return ZFPI_BUF;
     }
-    strcpy(node->as.function.decl.retbuf, token.data);
-    node->as.function.decl.retbuf_len = token.len;
+    strcpy(node->as.function.decl.typebuf, token.data);
+    node->as.function.decl.typebuf_len = token.len;
 
-    zfp_parse_blockstmt(&node->as.function.body, lexer);
+    zfp_parse_blockstmt(node->as.function.body, lexer);
 
     return ZFPI_GOOD;
 
