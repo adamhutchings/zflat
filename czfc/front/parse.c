@@ -244,6 +244,9 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
     /* This can be used as an intermediate value */
     struct zfa_node         * expr;
     enum zfp_code             code;
+
+    /* Default */
+    code = ZFPI_GOOD;
     
     /* TODO - operator precedence. Oh boy. */
 
