@@ -67,7 +67,6 @@ zfp_parse_ident        (struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_value        (struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_expr         (struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_decl         (struct zfa_node * node, struct zf_lexer * lexer),
-zfp_parse_funccall     (struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_blockstmt    (struct zfa_node * node, struct zf_lexer * lexer),
 zfp_parse_function     (struct zfa_node * node, struct zf_lexer * lexer);
 
@@ -329,6 +328,39 @@ cont_check:
         }
         zfp_parse_expr(node->as.expr.right, lexer);
         goto done;
+    } else if (token.type == ZFT_OPAREN) {
+        /* expr is a function call. */
+        node->as.funccall.ident = expr;
+        int paramct;
+        zfll_init(&node->as.funccall.params);
+        for (paramct = 0; ; ++paramct) {
+            zf_lex(lexer, &token);
+            if (token.type == ZFT_CPAREN) {
+                break;
+            } else {
+                zf_unlex(lexer, &token);
+            }
+            if (paramct) {
+                /* Expect a comma */
+                zf_lex(lexer, &token);
+                if (token.type != ZFT_COMMA) {
+                    ZFP_TOKEN_ERROR(lexer, ",", token);
+                    code = ZFPI_TOK;
+                    goto error_out;
+                }
+            }
+            expr = malloc(sizeof *expr);
+            if (!expr) {
+                ZF_PRINT_ERROR("Failed to allocate expression node.");
+                code = ZFPI_ALLOC;
+                goto error_out;
+            }
+            if (zfp_parse_expr(expr, lexer)) {
+                code = ZFPI_SUB;
+                goto error_out;
+            }
+            zfll_add(&node->as.funccall.params, expr);
+        }
     } else {
         /* Expression does not continue. Copy intermediate value to node
             * and free malloc'd memory. */
@@ -429,11 +461,6 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
 
     return ZFPI_GOOD;
 
-}
-
-static enum zfp_code
-zfp_parse_funccall(struct zfa_node * node, struct zf_lexer * lexer) {
-    /* TODO */
 }
 
 static enum zfp_code
