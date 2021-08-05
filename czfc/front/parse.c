@@ -465,7 +465,59 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
 
 static enum zfp_code
 zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer) {
-    /* TODO */
+    
+    struct zfa_node          * stmt;
+    struct zf_token            token, token2;
+
+    memset(node, 0, sizeof *node);
+    node->type = ZFA_NODE_BLOCK_STMT;
+
+    zf_lex(lexer, &token);
+    if (token.type != ZFT_OBRACE) {
+        ZFP_TOKEN_ERROR(lexer, "{", token);
+        return ZFPI_TOK;
+    }
+
+    zfll_init(&node->as.blockstmt.stmts);
+
+    for (;;) {
+
+        zf_lex(lexer, &token);
+        if (token.type == ZFT_CBRACE) {
+            break;  
+        } else {
+            zf_unlex(lexer, &token);
+        }
+
+        stmt = malloc(sizeof *stmt);
+        if (!stmt) {
+            ZF_PRINT_ERROR("Failed to allocate statement node.");
+            return ZFPI_ALLOC;
+        }
+
+        /* Parse an expression */
+
+        /* The "expression" is a declaration, IF token 2 is a ":" . */
+        zf_lex(lexer, &token);
+        zf_lex(lexer, &token2);
+        zf_unlex(lexer, &token2);
+        zf_unlex(lexer, &token);
+        if (token2.type == ZFT_COLON) {
+            if (zfp_parse_decl(stmt, lexer)) {
+                return ZFPI_SUB;
+            }
+        } else {
+            /* No colon. This is an expression. */
+            if (zfp_parse_expr(stmt, lexer)) {
+                return ZFPI_SUB;
+            }
+            zfll_add(&node->as.blockstmt.stmts, stmt);
+        }
+
+    }
+
+    return ZFPI_GOOD;
+
 }
 
 static enum zfp_code
