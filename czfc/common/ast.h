@@ -78,6 +78,8 @@ struct zfa_function {
     /* exprs on these must be null for now, but not when we make default args */
     struct zf_linked_list     params; /* linked list of decl */
 
+    struct zfa_node         * body;
+
 };
 
 struct zfa_block_stmt {

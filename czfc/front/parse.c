@@ -543,5 +543,90 @@ zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer) {
 
 static enum zfp_code
 zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
-    /* TODO */
+    
+    struct zf_token            token;
+    int                        params;
+    struct zfa_node          * param;
+
+    memset(node, 0, sizeof *node);
+    node->type = ZFA_NODE_FUNCTION;
+
+    zf_lex(lexer, &token);
+    if (token.type != ZFT_IDENT) {
+        ZFP_TOKEN_ERROR(lexer, "identifier", token);
+        return ZFPI_TOK;
+    }
+    if (strlen(token.data) >= ZF_IDENT_MAXLEN) {
+        ZF_PRINT_ERROR("line %d: buffer overflow in token name", lexer->lineno);
+        return ZFPI_BUF;
+    }
+    strcpy(node->as.function.decl.namebuf, token.data);
+    node->as.function.decl.namebuf_len = token.len;
+
+    zf_lex(lexer, &token);
+    if (token.type != ZFT_OPAREN) {
+        ZFP_TOKEN_ERROR(lexer, "(", token);
+        return ZFPI_TOK;
+    }
+
+    zfll_init(&node->as.function.params);
+
+    for (params = 0; ; ++params) {
+
+        /* end of paramslist check */
+        zf_lex(lexer, &token);
+        if (token.type == ZFT_CPAREN) {
+            break;
+        }
+        zf_unlex(lexer, &token);
+
+        /* Comma if we're not at the beginning of the list. */
+        if (params > 0) {
+            zf_lex(lexer, &token);
+            if (token.type != ZFT_COMMA) {
+                ZFP_TOKEN_ERROR(lexer, ",", token);
+                return ZFPI_TOK;
+            }
+            zf_unlex(lexer, &token);
+        }
+
+        /* Parse a param */
+        param = malloc(sizeof *param);
+        if (!param) {
+            ZF_PRINT_ERROR("Failed to allocate parameter node.");
+            return ZFPI_ALLOC;
+        }
+
+        if (zfp_parse_decl(param, lexer)) {
+            return ZFPI_SUB;
+        }
+        zfll_add(&node->as.function.params, param);
+
+    }
+
+    /* Get return type */
+    zf_lex(lexer, &token);
+    if (token.type != ZFT_COLON) {
+        ZFP_TOKEN_ERROR(lexer, ":", token);
+        return ZFPI_TOK;
+    }
+    /* TODO - accept functions without return types */
+    zf_lex(lexer, &token);
+    if (token.type != ZFT_IDENT) {
+        ZFP_TOKEN_ERROR(lexer, "type name", token);
+        return ZFPI_TOK;
+    }
+
+    if (strlen(token.data) >= ZF_IDENT_MAXLEN) {
+        ZF_PRINT_ERROR("line %d: buffer overflow in ret type", lexer->lineno);
+        return ZFPI_BUF;
+    }
+    strcpy(node->as.function.decl.retbuf, token.data);
+    node->as.function.decl.retbuf_len = token.len;
+
+    zfp_parse_blockstmt(&node->as.function.body, lexer);
+
+    return ZFPI_GOOD;
+
+
 }
