@@ -3,7 +3,7 @@
 #include <stdio.h>  /* printf */
 #include <string.h> /* strncpy */
 
-#include <front/lex.h>
+#include <front/parse.h>
 #include <output.h>
 
 /**
@@ -52,43 +52,12 @@ void default_output_file_name(const char * inputfile, char * buf) {
  */
 static int zf_compile(char * inputfile, char * outputfile) {
 
-    struct zf_lexer           lexer;
-    struct zf_token           token;
-    int                       ret;
+    struct zfa_node         * root;
 
-    ret = 0; /* Default */
+    root = zfp_parse(inputfile);
 
-    if (zf_lexer_init(&lexer, inputfile)) {
-        ZF_PRINT_ERROR("Lexer initialization failed.");
-        goto error;
-    }
-
-lex_loop:
-    switch (zf_lex(&lexer, &token)) {
-    case 0: /* Good */
-        printf(
-            "Token: %20s, line: %5d, linepos: %5d\n",
-            token.data, token.lineno, token.linepos
-        );
-        goto lex_loop;
-    case 1:
-        printf("End-of-file detected.\n");
-        /* EOF is not an error, unlike the rest. */
-        goto out;
-    case 2:
-        printf("Unrecognized character.\n");
-        break;
-    case 3:
-        printf("Buffer overflow.\n");
-        break;
-    }
-
-error:
-    ret = 1;
-
-out:
-    zf_lexer_destroy(&lexer);
-    return ret;
+    /* TODO check return type */
+    return 0;
 
 }
 
