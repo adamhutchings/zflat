@@ -323,7 +323,7 @@ static unsigned zf_ilex(struct zf_lexer * lexer, struct zf_token * tok) {
 unsigned zf_lex(struct zf_lexer * lexer, struct zf_token * token) {
 
     if (lexer->unlexed_count) {
-        memcpy(token, lexer->tokbuf + lexer->unlexed_count, sizeof *token);
+        memcpy(token, lexer->tokbuf + lexer->unlexed_count - 1, sizeof *token);
         --(lexer->unlexed_count);
         return 0;
     }
