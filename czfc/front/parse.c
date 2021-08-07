@@ -454,12 +454,7 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
         node->as.decl.expr = expr;
 
     } else {
-        /* No expression. */
-        /* Should be a semicolon here, though. */
-        if (token.type != ZFT_SEMICOLON) {
-            ZFP_TOKEN_ERROR(lexer, ";", token);
-            return ZFPI_TOK;
-        }
+        zf_unlex(lexer, &token);
     }
 
     return ZFPI_GOOD;
