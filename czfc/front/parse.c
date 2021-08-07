@@ -393,7 +393,7 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
     node->type = ZFA_NODE_DECL;
 
     zf_lex(lexer, &ident);
-    if (token.type != ZFT_IDENT) {
+    if (ident.type != ZFT_IDENT) {
         ZFP_TOKEN_ERROR(lexer, "identifier", ident);
         return ZFPI_TOK;
     }
