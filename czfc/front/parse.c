@@ -618,6 +618,10 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
     strcpy(node->as.function.decl.typebuf, token.data);
     node->as.function.decl.typebuf_len = token.len;
 
+    if ( !(node->as.function.body = malloc(sizeof *node->as.function.body)) ) {
+        ZF_PRINT_ERROR("Failed to allocate function body node.");
+        return ZFPI_ALLOC;
+    }
     zfp_parse_blockstmt(node->as.function.body, lexer);
 
     return ZFPI_GOOD;
