@@ -582,7 +582,6 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
                 ZFP_TOKEN_ERROR(lexer, ",", token);
                 return ZFPI_TOK;
             }
-            zf_unlex(lexer, &token);
         }
 
         /* Parse a param */
