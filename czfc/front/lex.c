@@ -102,7 +102,7 @@ unsigned zf_lexer_init(struct zf_lexer * lexer, const char * filename) {
     memset(lexer, 0, sizeof *lexer);
 
     /* Linepos start at 1, column start at 0 */
-    lexer->linepos = 1;
+    lexer->linepos = lexer->lineno = 1;
 
     lexer->fp = fopen(filename, "r");
     if (lexer->fp == NULL) {
