@@ -329,7 +329,9 @@ cont_check:
             code = ZFPI_ALLOC;
             goto error_out;
         }
-        zfp_parse_expr(node->as.expr.right, lexer);
+        if (zfp_parse_expr(node->as.expr.right, lexer)) {
+            return ZFPI_SUB;
+        }
         goto done;
     } else if (token.type == ZFT_OPAREN) {
         /* expr is a function call. */
@@ -622,7 +624,9 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
         ZF_PRINT_ERROR("Failed to allocate function body node.");
         return ZFPI_ALLOC;
     }
-    zfp_parse_blockstmt(node->as.function.body, lexer);
+    if (zfp_parse_blockstmt(node->as.function.body, lexer)) {
+        return ZFPI_SUB;
+    }
 
     return ZFPI_GOOD;
 
