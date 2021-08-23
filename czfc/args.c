@@ -60,6 +60,11 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
 
     memset( args, 0, sizeof( struct zf_args ) );
 
+    if (argc == 0) {
+        args->flags |= ZF_EMPTY_FLAG;
+        return;
+    }
+
     accepting_flags = 1; /* After -- all args are accepted */
     /* For example, accepting a file named -flag.zf if it exists for some absurd
     reason */
@@ -78,6 +83,12 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
                 case 'v':
                     args->flags |= ZF_VERSION_FLAG;
                     break;
+                case 't':
+                    if (!strcmp(&(argv[i][2]), "oken-dump")) {
+                        args->flags |= ZF_TOKEN_STREAM_FLAG;
+                        break;
+                    }
+                    /* Fall through to unknown option */
                 default:
                     zf_args_add_error(args, ZF_UNKNOWN_FLAG, i);
             }
@@ -138,6 +149,14 @@ void zf_output_peripherals(struct zf_args * args, char ** argv) {
         ZF_PRINT_WITH_COLOR(ZF_CODE_BLUE,
             "%s: version 0.0.0\n",
             zf_program_name
+        );
+    }
+
+    if (args->flags & ZF_EMPTY_FLAG) {
+        ZF_PRINT_WITH_COLOR(ZF_CODE_BLUE,
+            "%s - compiler for Z-flat\n"
+            "run \"%s -h\" for more info\n",
+            zf_program_name, zf_program_name
         );
     }
 

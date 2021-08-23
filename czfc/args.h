@@ -36,6 +36,8 @@ enum zf_args_error {
  */
 #define ZF_HELP_FLAG          0x01
 #define ZF_VERSION_FLAG       0x02
+#define ZF_EMPTY_FLAG         0x04
+#define ZF_TOKEN_STREAM_FLAG  0x08
 
 /* More will come later, no doubt. */
 
