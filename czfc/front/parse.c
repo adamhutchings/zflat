@@ -237,150 +237,132 @@ zfp_parse_value(struct zfa_node * node, struct zf_lexer * lexer) {
 
 }
 
+/**
+ * Internal - parse a single value - this means a literal, a variable, or an
+ * entire expression in parentheses.
+ */
+static enum zfp_code
+zfp_parse_atomic_expr(struct zfa_node * node, struct zf_lexer * lexer) {
+
+    struct zf_token           token;
+    enum zfp_code             code;
+
+    memset(node, 0, sizeof *node);
+
+    zf_lex(lexer, &token);
+    switch (token.type) {
+    case ZFT_LITERAL:
+        /* Parse a single literal. */
+        zf_unlex(lexer, &token);
+        if (zfp_parse_value(node, lexer)) {
+            return ZFPI_SUB;
+        }
+        goto out;
+    case ZFT_IDENT:
+        /* Parse a single identifier. */
+        zf_unlex(lexer, &token);
+        if (zfp_parse_ident(node, lexer)) {
+            return ZFPI_SUB;
+        }
+        goto out;
+    case ZFT_OPAREN:
+        /* Swallow the paren and parse an expr */
+        if (zfp_parse_expr(node, lexer)) {
+            return ZFPI_SUB;
+        }
+        /* Expect a closing paren. */
+        zf_lex(lexer, &token);
+        if (token.type != ZFT_CPAREN) {
+            ZFP_TOKEN_ERROR(lexer, ")", token);
+            return ZFPI_TOK;
+        }
+        goto out;
+    default:
+        ZFP_TOKEN_ERROR(lexer, "literal, identifier, or (", token);
+        return ZFPI_TOK;
+    }
+
+out:
+    code = ZFPI_GOOD;
+    return code;
+
+}
+
 static enum zfp_code
 zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
 
-    struct zf_token           token;
-    /* This can be used as an intermediate value */
-    struct zfa_node         * expr;
-    enum zfp_code             code;
-
-    /* Default */
-    code = ZFPI_GOOD;
-    
     /* TODO - operator precedence. Oh boy. */
 
-    zf_lex(lexer, &token);
+    struct zf_token           token;
+    
+    /* expr stores the expression we're currently building, and expr2 stores the
+     * current expression "in the pipeline."
+     */
+    struct zfa_node         * expr, * expr2;
 
     memset(node, 0, sizeof *node);
     node->type = ZFA_NODE_EXPR;
 
-    /* In case we need to stuff this with a value */
-    if ( !(expr = malloc(sizeof *expr)) ) {
-        ZF_PRINT_ERROR("Failed to allocate expression node.");
-        return ZFPI_ALLOC;
-    }
+    expr = NULL;
 
-    /* To begin with, if just a value, return the value. */
-    if (token.type == ZFT_LITERAL) {
+    for (;;) {
 
-        zf_unlex(lexer, &token);
-        if (zfp_parse_value(expr, lexer)) {
-            code = ZFPI_SUB;
-            goto error_out;
+        /* Keep parsing atomic expressions, building a very one-sided tree. */
+
+        /* If expr is not NULL, we've already seen an expression, so we expect
+         * an operator. */
+        if (expr) {
+            zf_lex(lexer, &token);
+            if (token.type != ZFT_OPERATOR) {
+                goto out; /* We're done */
+            }
         }
 
-        goto cont_check;
-
-    }
-
-    /* If just an identifier, return the identifier. */
-    if (token.type == ZFT_IDENT) {
-
-        zf_unlex(lexer, &token);
-        if (zfp_parse_ident(expr, lexer)) {
-            code = ZFPI_SUB;
-            goto error_out;
+        /* Parse the next atomic expression. */
+        expr2 = malloc(sizeof *expr2);
+        if (!expr2) {
+            ZF_PRINT_ERROR("failed to allocate expression node");
+            return ZFPI_ALLOC;
         }
-
-        goto cont_check;
-
-    }
-
-    /* If an expression in parentheses, swallow up the "(", parse an expression,
-     * and swallow up the ")". If an operator follows, then turn the expr we
-     * just parsed into the left-hand side of this operator.
-     */
-
-    /* Also, an aside - we do not need to worry about the order of operations
-     * just yet. I'll code that later. Probably.
-     */
-
-    if (token.type == ZFT_OPAREN) {
-
-        /* No unlex */
-
-        if (zfp_parse_expr(expr, lexer)) {
-            code = ZFPI_SUB;
-            goto error_out;
-        }
-
-        /* ")" check */
-        zf_lex(lexer, &token);
-        if (token.type != ZFT_CPAREN) {
-            ZFP_TOKEN_ERROR(lexer, ")", token);
-            goto error_out;
-        }
-
-        goto cont_check;
-        
-    }
-
-cont_check:
-    /* Check if expression continues */
-    zf_lex(lexer, &token);
-    if (token.type == ZFT_OPERATOR) {
-        /* Turn expr into left-hand side of operator */
-        node->as.expr.left = expr;
-        /* Operator parsing - TODO fix */
-        strcpy(node->as.expr.opbuf, token.data);
-        if ( !(node->as.expr.right = malloc(sizeof *node)) ) {
-            ZF_PRINT_ERROR("Failed to allocate expression node.");
-            code = ZFPI_ALLOC;
-            goto error_out;
-        }
-        if (zfp_parse_expr(node->as.expr.right, lexer)) {
+        if (zfp_parse_atomic_expr(expr2, lexer)) {   
             return ZFPI_SUB;
         }
-        goto done;
-    } else if (token.type == ZFT_OPAREN) {
-        /* expr is a function call. */
-        node->as.funccall.ident = expr;
-        int paramct;
-        zfll_init(&node->as.funccall.params);
-        for (paramct = 0; ; ++paramct) {
-            zf_lex(lexer, &token);
-            if (token.type == ZFT_CPAREN) {
-                break;
-            } else {
-                zf_unlex(lexer, &token);
-            }
-            if (paramct) {
-                /* Expect a comma */
-                zf_lex(lexer, &token);
-                if (token.type != ZFT_COMMA) {
-                    ZFP_TOKEN_ERROR(lexer, ",", token);
-                    code = ZFPI_TOK;
-                    goto error_out;
-                }
-            }
+
+        /* if expr is NULL, no tree-formation is needed. */
+        if (!expr) {
+            expr = expr2;
+        } else {
+
+            struct zfa_node * expr3;
+
+            /* Save value of expr. */
+            expr3 = expr;
+
             expr = malloc(sizeof *expr);
             if (!expr) {
-                ZF_PRINT_ERROR("Failed to allocate expression node.");
-                code = ZFPI_ALLOC;
-                goto error_out;
+                ZF_PRINT_ERROR("failed to allocate expression node");
+                return ZFPI_ALLOC;
             }
-            if (zfp_parse_expr(expr, lexer)) {
-                code = ZFPI_SUB;
-                goto error_out;
+
+            expr->as.expr.left = expr3;
+
+            if (token.len >= OPBUF_SIZE) {
+                ZF_PRINT_ERROR("operator too long");
+                return ZFPI_BUF;
             }
-            zfll_add(&node->as.funccall.params, expr);
+            memcpy(expr->as.expr.opbuf, token.data, token.len);
+
+            expr->as.expr.right = expr2;
+
         }
-    } else {
-        /* Expression does not continue. Copy intermediate value to node
-            * and free malloc'd memory. */
-        memcpy(node, expr, sizeof *node);
-        /* Also remember to unlex the token */
-        zf_unlex(lexer, &token);
-        free(expr);
-        goto done;
+
     }
 
-error_out:
-    free(expr);
-    return code;
+out:
+    node->as.expr.left = expr->as.expr.left;
+    node->as.expr.right = expr->as.expr.right;
+    memcpy(node->as.expr.opbuf, expr->as.expr.opbuf, OPBUF_SIZE);
 
-done:
     return ZFPI_GOOD;
 
 }
