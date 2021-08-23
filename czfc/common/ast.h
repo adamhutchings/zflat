@@ -73,7 +73,7 @@ struct zfa_decl {
 struct zfa_function {
 
     /* A complete function declaration */
-    struct zfa_decl           decl; /* expr here must be NULL */
+    struct zfa_node         * decl; /* expr here must be NULL */
 
     /* exprs on these must be null for now, but not when we make default args */
     struct zf_linked_list     params; /* linked list of decl */
@@ -123,3 +123,13 @@ struct zfa_node {
     } as; /* Named "as" so we can say node "as" ident, etc. */
 
 };
+
+/**
+ * Set the operation to apply recursively to this node and children.
+ */
+void zfa_node_setop(int (*op)(struct zfa_node *));
+
+/**
+ * Apply the currently set operation recursively.
+ */
+int zfa_node_apply(struct zfa_node * node);
