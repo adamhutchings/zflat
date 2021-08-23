@@ -9,4 +9,4 @@
 /**
  * Allocate and create a complete syntax tree.
  */
-struct zfa_node * zfp_parse(const char * filename);
+struct zfa_node * zfp_parse(const char * filename, unsigned flags);

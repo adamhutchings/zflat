@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <args.h>
 #include <front/lex.h>
 #include <output.h>
 
@@ -37,7 +38,7 @@ zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer);
  * Initialize lexer and after doing validation routines, pass control to the
  * actual core parsing code.
  */
-struct zfa_node * zfp_parse(const char * filename) {
+struct zfa_node * zfp_parse(const char * filename, unsigned flags) {
 
     struct zf_lexer           lexer;
     struct zfa_node         * parse_tree;
@@ -47,6 +48,25 @@ struct zfa_node * zfp_parse(const char * filename) {
     if (zf_lexer_init(&lexer, filename)) {
         ZF_PRINT_ERROR("Failed to create lexer.");
         return NULL;
+    }
+
+    if (flags & ZF_TOKEN_STREAM_FLAG) {
+
+        struct zf_token       token;
+        for (;;) {
+            if (zf_lex(&lexer, &token) > 1) {
+                ZF_PRINT_ERROR("Failed to get next token.");
+                goto out;
+            }
+            if (token.type == ZFT_EOF) {
+                goto out;
+            }
+            printf(
+                "Content: %20s, type: %5d, lineno: %5d, linepos: %5d\n",
+                token.data, token.type, token.lineno, token.linepos
+            );
+        }
+
     }
 
     P_ALLOCNODE(parse_tree, "program tree");

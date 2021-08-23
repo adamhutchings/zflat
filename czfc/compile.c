@@ -50,11 +50,11 @@ void default_output_file_name(const char * inputfile, char * buf) {
 /**
  * ACTUALLY call the compilation functions. Return 0 if succeeded, 1 otherwise.
  */
-static int zf_compile(char * inputfile, char * outputfile) {
+static int zf_compile(char * inputfile, char * outputfile, unsigned flags) {
 
     struct zfa_node         * root;
 
-    root = zfp_parse(inputfile);
+    root = zfp_parse(inputfile, flags);
 
     /* TODO check return type */
     return 0;
@@ -81,7 +81,8 @@ void zf_execute_args(struct zf_args * args) {
     for (i = 0; i < args->nr_files_to_compile; ++i) {
         if (zf_compile(
             args->files_to_compile[i].input_file,
-            args->files_to_compile[i].output_file
+            args->files_to_compile[i].output_file,
+            args->flags
         )) {
             ZF_PRINT_ERROR("Compilation failed.");
         }
