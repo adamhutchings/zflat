@@ -22,6 +22,18 @@ static enum zfp_code
 zfp_iparse(struct zfa_node * node, struct zf_lexer * lexer);
 
 /**
+ * Macro - set node to a newly alloc'd node - if allocation fails, print out an
+ * error message using name. THIS FUNCTION WILL goto alloc_error; JUST BE AWARE.
+ */
+#define P_ALLOCNODE(node, name) do { \
+    node = malloc(sizeof *node); /* Pool allocator in the future? */ \
+    if (node == NULL) { \
+        ZF_PRINT_ERROR("Failed to allocate " name " node."); \
+        goto alloc_error; \
+    } \
+} while (0)
+
+/**
  * Initialize lexer and after doing validation routines, pass control to the
  * actual core parsing code.
  */
@@ -34,14 +46,10 @@ struct zfa_node * zfp_parse(const char * filename) {
 
     if (zf_lexer_init(&lexer, filename)) {
         ZF_PRINT_ERROR("Failed to create lexer.");
-        goto error;
+        return NULL;
     }
 
-    parse_tree = malloc(sizeof *parse_tree);
-    if (!parse_tree) {
-        ZF_PRINT_ERROR("Failed to allocate parse tree.");
-        goto error;
-    }
+    P_ALLOCNODE(parse_tree, "program tree");
     
     /* Core parse */
     if (zfp_iparse(parse_tree, &lexer)) {
@@ -49,11 +57,9 @@ struct zfa_node * zfp_parse(const char * filename) {
     }
     goto out;
 
-error:
-    if (parse_tree) {
-        free(parse_tree);
-        parse_tree = NULL;
-    }
+alloc_error:
+    free(parse_tree);
+    parse_tree = NULL;
 
 out:
     return parse_tree;
@@ -120,10 +126,7 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
         }
 
         /* Allocate more space for a decl */
-        if ( !(decl = malloc(sizeof *decl)) ) {
-            ZF_PRINT_ERROR("Failed to allocate declaration node.");
-            return ZFPI_ALLOC;
-        }
+        P_ALLOCNODE(decl, "top-level declaration");
 
         /* Unlex the tokens. If someday the unlex function modifies the tokens,
          * PLEASE FIX HERE!
@@ -155,6 +158,9 @@ zfp_parse_program(struct zfa_node * node, struct zf_lexer * lexer) {
     }
 
     return ZFPI_GOOD;
+
+alloc_error:
+    return ZFPI_ALLOC;
 
 }
 
@@ -320,11 +326,7 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
         }
 
         /* Parse the next atomic expression. */
-        expr2 = malloc(sizeof *expr2);
-        if (!expr2) {
-            ZF_PRINT_ERROR("failed to allocate expression node");
-            return ZFPI_ALLOC;
-        }
+        P_ALLOCNODE(expr2, "expression");
         if (zfp_parse_atomic_expr(expr2, lexer)) {   
             return ZFPI_SUB;
         }
@@ -339,11 +341,7 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
             /* Save value of expr. */
             expr3 = expr;
 
-            expr = malloc(sizeof *expr);
-            if (!expr) {
-                ZF_PRINT_ERROR("failed to allocate expression node");
-                return ZFPI_ALLOC;
-            }
+            P_ALLOCNODE(expr, "expression");
 
             expr->as.expr.left = expr3;
 
@@ -358,6 +356,9 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
         }
 
     }
+
+alloc_error:
+    return ZFPI_ALLOC;
 
 out:
     node->as.expr.left = expr->as.expr.left;
@@ -397,16 +398,9 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
     }
 
     /* Type name */
-    /* Okay, this treats types like identifiers, but types themselves are stored
-     * as a character buffer. We need to fix this.
-     */
-    type = malloc(sizeof *type);
+    P_ALLOCNODE(type, "type");
     if (zfp_parse_ident(type, lexer)) {
         return ZFPI_SUB;
-    }
-    if (!type) {
-        ZF_PRINT_ERROR("Failed to allocate type node.");
-        return ZFPI_ALLOC;
     }
     
     if (type->as.ident.namebuf_len > TYPE_MAX_LEN) {
@@ -427,11 +421,7 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
         }
 
         /* Parse expression */
-        expr = malloc(sizeof *expr);
-        if (!expr) {
-            ZF_PRINT_ERROR("Failed to allocate expression node.");
-            return ZFPI_ALLOC;
-        }
+        P_ALLOCNODE(expr, "expression");
         if (zfp_parse_expr(expr, lexer)) {
             return ZFPI_SUB;
         }
@@ -453,6 +443,9 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
     }
 
     return ZFPI_GOOD;
+
+alloc_error:
+    return ZFPI_ALLOC;
 
 }
 
@@ -482,11 +475,7 @@ zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer) {
             zf_unlex(lexer, &token);
         }
 
-        stmt = malloc(sizeof *stmt);
-        if (!stmt) {
-            ZF_PRINT_ERROR("Failed to allocate statement node.");
-            return ZFPI_ALLOC;
-        }
+        P_ALLOCNODE(stmt, "statement");
 
         /* Parse an expression */
 
@@ -530,6 +519,9 @@ zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer) {
     }
 
     return ZFPI_GOOD;
+
+alloc_error:
+    return ZFPI_ALLOC;
 
 }
 
@@ -582,11 +574,7 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
         }
 
         /* Parse a param */
-        param = malloc(sizeof *param);
-        if (!param) {
-            ZF_PRINT_ERROR("Failed to allocate parameter node.");
-            return ZFPI_ALLOC;
-        }
+        P_ALLOCNODE(param, "function parameter");
 
         if (zfp_parse_decl(param, lexer)) {
             return ZFPI_SUB;
@@ -615,15 +603,14 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
     strcpy(node->as.function.decl->as.decl.typebuf, token.data);
     node->as.function.decl->as.decl.typebuf_len = token.len;
 
-    if ( !(node->as.function.body = malloc(sizeof *node->as.function.body)) ) {
-        ZF_PRINT_ERROR("Failed to allocate function body node.");
-        return ZFPI_ALLOC;
-    }
+    P_ALLOCNODE(node->as.function.body, "function body");
     if (zfp_parse_blockstmt(node->as.function.body, lexer)) {
         return ZFPI_SUB;
     }
 
     return ZFPI_GOOD;
 
+alloc_error:
+    return ZFPI_ALLOC;
 
 }
