@@ -539,8 +539,8 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
         ZF_PRINT_ERROR("line %d: buffer overflow in token name", lexer->lineno);
         return ZFPI_BUF;
     }
-    strcpy(node->as.function.decl.namebuf, token.data);
-    node->as.function.decl.namebuf_len = token.len;
+    strcpy(node->as.function.decl->as.decl.namebuf, token.data);
+    node->as.function.decl->as.decl.namebuf_len = token.len;
 
     zf_lex(lexer, &token);
     if (token.type != ZFT_OPAREN) {
@@ -599,8 +599,8 @@ zfp_parse_function(struct zfa_node * node, struct zf_lexer * lexer) {
         ZF_PRINT_ERROR("line %d: buffer overflow in ret type", lexer->lineno);
         return ZFPI_BUF;
     }
-    strcpy(node->as.function.decl.typebuf, token.data);
-    node->as.function.decl.typebuf_len = token.len;
+    strcpy(node->as.function.decl->as.decl.typebuf, token.data);
+    node->as.function.decl->as.decl.typebuf_len = token.len;
 
     if ( !(node->as.function.body = malloc(sizeof *node->as.function.body)) ) {
         ZF_PRINT_ERROR("Failed to allocate function body node.");
