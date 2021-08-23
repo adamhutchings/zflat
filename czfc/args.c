@@ -82,6 +82,8 @@ void zf_args_parse (struct zf_args * args, int argc, char ** argv) {
                     zf_args_add_error(args, ZF_UNKNOWN_FLAG, i);
             }
 
+            continue;
+
         }
 
         if (args->nr_files_to_compile >= MAX_FILES_TO_COMPILE) {
