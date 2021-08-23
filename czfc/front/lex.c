@@ -343,3 +343,27 @@ unsigned zf_unlex(struct zf_lexer * lexer, struct zf_token * token) {
     return 0;
 
 }
+
+const char * zf_token_type_name(enum zf_token_type type) {
+
+    /* Read out of a static array. */
+    static const char * const names[ ZFT_MAX ] = {
+        "[end-of-file]",
+        "identifier",
+        "literal",
+        "opening paren",
+        "closing paren",
+        "comma",
+        "semicolon",
+        "colon",
+        "dot",
+        "operator",
+        "opening bracket",
+        "closing bracket",
+        "opening brace",
+        "closing brace",
+    };
+
+    return names[type];
+
+}

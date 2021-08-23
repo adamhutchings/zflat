@@ -28,6 +28,7 @@ enum zf_token_type {
     ZFT_CBRACKET,
     ZFT_OBRACE,
     ZFT_CBRACE,
+    ZFT_MAX,
 
 };
 
@@ -91,3 +92,8 @@ unsigned zf_unlex(struct zf_lexer *, struct zf_token *);
  * Destroy a lexer.
  */
 void zf_lexer_destroy(struct zf_lexer *);
+
+/**
+ * Get a string representation of a token type.s
+ */
+const char * zf_token_type_name(enum zf_token_type);
