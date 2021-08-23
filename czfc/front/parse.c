@@ -314,6 +314,7 @@ zfp_parse_expr(struct zfa_node * node, struct zf_lexer * lexer) {
         if (expr) {
             zf_lex(lexer, &token);
             if (token.type != ZFT_OPERATOR) {
+                zf_unlex(lexer, &token);
                 goto out; /* We're done */
             }
         }
@@ -441,6 +442,16 @@ zfp_parse_decl(struct zfa_node * node, struct zf_lexer * lexer) {
         zf_unlex(lexer, &token);
     }
 
+    /**
+     * Expect a semicolon at the end. This is necessary because these can be
+     * top-level decls.
+     */
+    zf_lex(lexer, &token);
+    if (token.type != ZFT_SEMICOLON) {
+        ZFP_TOKEN_ERROR(lexer, ";", token);
+        return ZFPI_TOK;
+    }
+
     return ZFPI_GOOD;
 
 }
@@ -507,7 +518,9 @@ zfp_parse_blockstmt(struct zfa_node * node, struct zf_lexer * lexer) {
 
             /* Expect a semicolon after the expression. */
             zf_lex(lexer, &token);
-            if (token.type != ZFT_SEMICOLON) {
+            if (token.type != ZFT_SEMICOLON
+            &&  stmt->type != ZFA_NODE_DECL
+            &&  stmt->type != ZFA_NODE_BLOCK_STMT) {
                 ZFP_TOKEN_ERROR(lexer, ";", token);
                 return ZFPI_TOK;
             }
