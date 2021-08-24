@@ -11,6 +11,11 @@
 struct zf_symtab;
 
 /**
+ * Initializes a symtab.
+ */
+void zf_symtab_init(struct zf_symtab * symtab);
+
+/**
  * Enter a new scope.
  */
 void zfs_enter_scope(struct zf_symtab * symtab);
@@ -39,3 +44,8 @@ int zfs_get_def(
     const char * name,
     struct zf_symbol * sym
 );
+
+/**
+ * Destroys a symbol table.
+ */
+void zfs_destroy(struct zf_symtab * symtab);
