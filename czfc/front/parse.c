@@ -62,8 +62,11 @@ struct zfa_node * zfp_parse(const char * filename, unsigned flags) {
                 goto out;
             }
             printf(
-                "Content: %20s, type: %5d, lineno: %5d, linepos: %5d\n",
-                token.data, token.type, token.lineno, token.linepos
+                "Content: %15s, type: %15s, lineno: %5d, linepos: %5d\n",
+                token.data,
+                zf_token_type_name(token.type),
+                token.lineno,
+                token.linepos
             );
         }
 
