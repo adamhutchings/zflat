@@ -11,9 +11,9 @@
 struct zf_symtab;
 
 /**
- * Initializes a symtab.
+ * Initializes a symtab. Returns 1 if error.
  */
-void zf_symtab_init(struct zf_symtab * symtab);
+int zf_symtab_init(struct zf_symtab * symtab);
 
 /**
  * Enter a new scope.
