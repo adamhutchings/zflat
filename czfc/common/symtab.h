@@ -13,7 +13,12 @@ struct zf_symtab;
 /**
  * Initializes a symtab.
  */
-void zf_symtab_init(struct zf_symtab * symtab);
+void zf_symtab_init(
+    struct zf_symtab * symtab,
+    struct zf_symtab * parent,
+    const char * srcfile,
+    int srcline
+);
 
 /**
  * Enter a new scope.
