@@ -56,3 +56,29 @@ int zf_symtab_init(struct zf_symtab * symtab) {
     return 0;
 
 }
+
+int zfs_enter_scope(struct zf_symtab * symtab, int line) {
+
+    /* Initialize a new scope with the parent of the current scope and init it
+     * and everything. */
+    struct zf_symscope * new;
+    new = malloc(sizeof *new);
+    if (!new) {
+        ZF_PRINT_ERROR("Cannot allocate new scope");
+        return 1;
+    }
+
+    zfscope_init(new, symtab->active, symtab->active->srcfile, line);
+    zfll_add(&symtab->active->children, new);
+    
+    return 0;
+
+}
+
+int zfs_exit_scope(struct zf_symtab * symtab, int line) {
+
+    symtab->active->endline = line;
+    symtab->active = symtab->active->parent;
+    return 0;
+
+}

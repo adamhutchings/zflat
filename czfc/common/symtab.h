@@ -16,14 +16,14 @@ struct zf_symtab;
 int zf_symtab_init(struct zf_symtab * symtab);
 
 /**
- * Enter a new scope.
+ * Enter a new scope at a given line.
  */
-void zfs_enter_scope(struct zf_symtab * symtab);
+int zfs_enter_scope(struct zf_symtab * symtab, int line);
 
 /**
- * Exit the current scope.
+ * Exit the current scope at a given line.
  */
-void zfs_exit_scope(struct zf_symtab * symtab);
+void zfs_exit_scope(struct zf_symtab * symtab, int line);
 
 /**
  * Add a new definition. Returns 1 and prints an error if something happened
