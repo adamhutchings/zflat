@@ -5,7 +5,20 @@
 
 #pragma once
 
-struct zf_hashtable;
+/**
+ * So that we can verify that a given lookup actually produced the correct key,
+ * we store the key AND the value.
+ */
+struct zf_hash_entry {
+    char            * key;
+    void            * value;
+};
+
+#define ZF_HASH_BUCKETS         10000
+
+struct zf_hashtable {
+    struct zf_hash_entry     buckets[ZF_HASH_BUCKETS];
+};
 
 /**
  * Initialize a hash table.

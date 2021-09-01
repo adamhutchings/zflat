@@ -4,25 +4,10 @@
 #include <stdlib.h> /* free */
 #include <string.h>
 
-#define ZF_HASH_BUCKETS         10000
-
 /**
  * How far down the hash table do we search for a new entry?
  */
 #define ZF_HASH_SEARCH_DISTANCE 10
-
-/**
- * So that we can verify that a given lookup actually produced the correct key,
- * we store the key AND the value.
- */
-struct zf_hash_entry {
-    char            * key;
-    void            * value;
-};
-
-struct zf_hashtable {
-    struct zf_hash_entry     buckets[ZF_HASH_BUCKETS];
-};
 
 void zf_hashtable_init(struct zf_hashtable * table) {
     memset(table, 0, sizeof *table);

@@ -35,7 +35,7 @@ struct zfs_sym {
         struct zfs_func     * func;
     } as;
 
-    zfs_kind                  type;
+    enum zfs_kind             type;
 
     /* What file this is from, for error messages, etc. */
     char                    * srcfile;

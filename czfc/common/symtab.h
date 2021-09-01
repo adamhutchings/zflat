@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <symbol.h>
+#include <common/symbol.h>
 #include <util/hashtable.h>
 #include <util/linkedlist.h>
 
@@ -23,7 +23,7 @@ int zfs_enter_scope(struct zf_symtab * symtab, int line);
 /**
  * Exit the current scope at a given line.
  */
-void zfs_exit_scope(struct zf_symtab * symtab, int line);
+int zfs_exit_scope(struct zf_symtab * symtab, int line);
 
 /**
  * Add a new definition. Returns 1 and prints an error if something happened
@@ -32,7 +32,7 @@ void zfs_exit_scope(struct zf_symtab * symtab, int line);
 int zfs_add_def(
     struct zf_symtab * symtab,
     const char * name,
-    struct zf_symbol * sym
+    struct zfs_sym * sym
 );
 
 /**
@@ -42,7 +42,7 @@ int zfs_add_def(
 int zfs_get_def(
     struct zf_symtab * symtab,
     const char * name,
-    struct zf_symbol * sym
+    struct zfs_sym * sym
 );
 
 /**
